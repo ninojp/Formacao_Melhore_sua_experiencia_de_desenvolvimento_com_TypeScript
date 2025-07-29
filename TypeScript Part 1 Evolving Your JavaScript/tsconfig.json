@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/js",
+        "target": "es2020",
+        "noEmitOnError": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["app/**/*.ts"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+}
+//Este codigo foi criado por I.A e modificado por min. Portanto está diferente do arquivo da aula.
+/*
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "rootDir": "./app",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    ...
+*/
