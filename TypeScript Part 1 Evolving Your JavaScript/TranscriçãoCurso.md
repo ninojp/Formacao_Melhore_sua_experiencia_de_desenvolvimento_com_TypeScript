@@ -523,14 +523,339 @@ Nesta aula, aprendemos sobre:
 - Modificadores de acesso private e public;
 - Benefícios iniciais da linguagem TypeScript.
 
-## Aula 3 - 
+## Aula 3 - Benefícios da Tipagem estática
 
-### Aula 3 -  - Vídeo 1
-### Aula 3 -  - Vídeo 2
-### Aula 3 -  - Vídeo 3
-### Aula 3 -  - Vídeo 4
-### Aula 3 -  - Vídeo 5
-### Aula 3 -  - Vídeo 6
-### Aula 3 -  - Vídeo 7
-### Aula 3 -  - Vídeo 8
-### Aula 3 -  - Vídeo 9
+### Aula 3 - O controller de negociação - Vídeo 1
+
+Transcrição  
+[00:00] Agora que temos o entendimento inicial do TypeScript, a dinâmica de forças entre compilador, arquivo TS e temos nossa modelagem de negociação vamos começar a construir nossa aplicação.
+
+[00:13] Eu vou dar o npm run start para ele rodar o compilador em tempo real o TypeScript e abrir a nossa aplicação. O que eu quero fazer? Nossa aplicação, quando eu clicar em incluir ela tem que conseguir pegar a data que o usuário incluiu, a quantidade, o valor e criar uma instância de negociação. Por enquanto só vamos criar essa instância e exibir no console do navegador.
+
+[00:41] Será que o TypeScript nos ajuda, atrapalha, como é essa história toda? Vamos ver como fazemos isso tudo usando a linguagem em TypeScript. Primeira coisa que eu vou fazer aqui eu vou usar o conceito controller.
+
+[00:55] Um controller vai uma classe, vamos criar uma instância dessa classe, ela que vai controlar a interação desse form e quando eu clicar em incluir é essa negociação controller que vamos criar que vai pegar os dados do formulário e criar o meu modelo.
+
+[01:15] Esse controller vai ser a ponte entre as interações do usuário na minha página e a criação de modelos, ele vai ser o meio de campo. Ele vai ter uma dependência de elementos de UI, a minha data, a minha quantidade, o meu valor, e vai fazer a comunicação disso com o nosso modelo.
+
+[01:35] Vou voltar para o meu projeto, dentro de "App" eu tenho a pasta "controllers > New File" e vou criar um novo arquivo que eu vou chamar de negociacao-controller.ts. Cuidado, não é “js” é “ts”. Eu tenho a minha negociação controller aqui. Vou começar porque vou querer usar isso em algum outro lugar da minha aplicação, por isso vou começar com: export class Negociacaocontroller {.
+
+[02:09] O que essa negociação controller vai ter? Eu preciso, assim que ela for instanciada, ela tem uma referência para o input da data, da quantidade e do valor. De começo o que vou colocar é o seguinte: vou criar private inputData; private inputQuantidade; private inputValor; }.
+
+[02:54] No momento quando o meu construtor for inicializado dessa classe, olha o que vou fazer: constructor() { this.inputData =. Precisamos ter um conhecimento de JavaScript, lá na pasta "dist" vou abrir o html, sabemos que o campo data tem o id data, que o campo valor tem o id valor e que o campo quantidade tem o id quantidade.
+
+[03:23] Preciso usar o document querySelector para pegar essa função e colocar aqui no meu código. Vou fazer: document.querySelector, isso aqui é JavaScript puro não tem nada de TypeScript, vou pegar o elemento que tem data, this.inputQuantidade vai ser document.querySelector (‘#quantidade), para pegar o input da quantidade.
+
+[03:53] E this.inputValor = document.querySelector (‘#valor’). Então: constructor() { this.inputData = document.querySelector('#data'); this.inputQuantidade = document.querySelector('#quantidade'); this.inputValor = document.querySelector('#valor'); }.
+
+[04:05] Isso significa que no momento que eu criar a instância de negociação controller, se estou criando uma instância de negociação controller o constructor vai ser executado. Aí vou ao DOM e pego esses elementos do dom atribuo aqui nessas propriedades do construtor da minha classe.
+
+[04:25] Porque quando eu chamar o método adiciona, adiciona(), esse método tem que primeiro fazer: console.log(this.inputData);. Só para sabermos se realmente pegamos essas funções quando eu chamar.
+
+[04:54] Na verdade, sabemos que eu tenho que criar uma negociação pegando a data, a quantidade e valor. Inicialmente vou dar um console.log para vermos como as coisas se encaixam. adiciona() { console.log(this.inputData); console.log(this.inputQuantidade); console.log(this.inputValor); }.
+
+[05:06] Por aqui não tem mistério nenhum, a única novidade olhando aqui de TypeScript para nós é o modificador private aqui. Quando a minha negociação controller for criada ela vai guardar o inputValor, inputQuantidade e o inputData em uma propriedade da classe e toda vez que eu chamar o método adiciona ele vai imprimir no console esses elementos do dom que eu peguei.
+
+### Aula 3 - Integração com o formulário - Vídeo 2
+
+Transcrição  
+[00:00] Vou lá em "app.ts" e quem eu quero importar é o negociação-controller. Só que vou mostrar uma coisa legal para vocês aqui, um atalho. Porém, temos que tomar cuidado, olha o que vou fazer: vou dizer queconst controller = new NegociacaoController();. Quando eu escrevo, o Visual Studio Code já vai me dá um atalho para importar o negociação-controller.
+
+[00:33] Vou clicar aqui, quando eu faço isso, ele fez o auto complete para mim. import { NegociacaoController } from './controllers/negociacao-controller'; const controller = new NegociacaoController();
+
+[00:41] Atenção redobrada, fez o auto complete para mim e fez o import automático. Maravilhoso. Mas você precisa colocar js no final, senão isso não vai funcionar. import { NegociacaoController } from './controllers/negociacao-controller.js'; Se você já viu código escrito em Angular, Reach ou Vue JS, eles não precisam colocar o js porque o sistema de build deles por debaixo dos panos vai lá e coloca esse js para eles.
+
+[01:09] Para nós precisamos colocar, por isso cuidado com esse auto import para que você não esqueça de colocar o js no final, senão o seu código não vai funcionar. É um atalho bem legal, vamos tentar usá-lo.
+
+[01:27] Criei meu controller. A sacada é que todas as vezes que você submete o formulário, olha aqui eu tenho o form e aqui eu tenho o botão, button primary.
+
+[01:39] Toda vez que você submeter esse formulário eu quero chamar o método adiciona do meu controller, para isso eu preciso pegar esse formulário que está na minha página e colocar no meu código. Vou fazer: const form = document.querySelector('.form');, peguei o form e sabemos que se é um form vou colocar: form.addEventListener.
+
+[02:18] Olha como o TypeScript é legal, eu fiz o querySelector e ele está me dizendo que está retornando algo do tipo element, que ganhou um tipo implícito element e por ser isso entende que todo element tem o addEventListener.
+
+[02:38] Se você submeter form, submit, vou pegar o evento, vou passar o evento, pego o evento e vou chamar controller.adiciona();. form.addEventListener('submit', event => { controller.adiciona(); }).
+
+[02:59] Vamos recapitular, quando a minha aplicação inicia vai criar uma instância de negociação controller, ela tem dentro dela uma referência por input da quantidade, por input da data, input do valor. E eu peguei o form e disse que toda vez que você submeter esse form eu vou chamar o adiciona.
+
+[03:22] Sabemos que se eu fizer isso com a minha página ela vai recarregar. Vou mostrar para vocês um problema que temos que resolver aqui básico do JavaScript, mas ele é a ponta do iceberg para mostrar uma coisa bem legal aqui em TypeScript. Salvei, não tive erro de compilação. Quando eu chamar agora o adiciona, vamos voltar ao navegador, abrir o console. Vou escolher uma data qualquer, uma quantidade, um valor e vou clicar em incluir.
+
+[04:33] Quando eu olho no console, você vai ver que eu vou clicar em incluir, a minha página está fazendo refresh. Ela está até exibindo no console, mas está fazendo refresh e não pode porque sabemos que todo formulário quando você submete, ele faz um refresh da página.
+
+[04:52] Como a nossa aplicação tenta copiar uma single page application, que é uma página que não recarrega durante o seu uso, eu preciso cancelar o evento padrão do formulário que é submissão, vou fazer: event.preventDefault();.
+
+[05:14] O TypeScript já inferiu que form é do tipo event, é como se eu já tivesse colocado o event aqui, mas como é parâmetro tem que está entre parênteses. O TypeScript automaticamente, como ele sabe que esse daqui é uma Arrow Function para o addEventListener, ele automaticamente infere que form é um event do tipo submit e vai fazer o auto complete para mim.
+
+[05:43] Vou salvar, vou voltar para o navegador, vou limpar e digitar qualquer coisa, clico em incluir. Está tudo bonito, tudo maravilhoso.
+
+[05:58] Conseguimos ver aqui tranquilamente que os inputs que colocamos no incluir quando eu clico exibindo foram obtidos pelo dom e a minha página não faz refresh. Agora vamos construir a nossa negociação com a informação que o usuário colocou para nós.
+
+### Aula 3 - Surpresa ao instanciar uma negociação - Vídeo 3
+
+Transcrição
+[00:00] Agora que estamos com tudo pronto, “com a faca e o queijo na mão”, vimos que quando eu coloco as datas, a quantidade, o valor e clico em incluir eu tenho acesso aos elementos do dom. Sabemos que todo input tem a propriedade .value, que eu tenho acesso ao valor desse input, eu tenho os insumos para criar a minha negociação. Vamos voltar para lá.
+
+[00:27] Vou voltar para o meu código, eu não vou fazer mais isso daqui porque vou ter uma const negociao = new Negociacao. Presta atenção, cuidado. O Visual Studio, de novo, me deu a opção de importar diretamente aqui em cima do meu código de negociação. Eu vou fazer isso: const negociao = new Negociacao();, fiz.
+
+[01:04] Ele não importou, mas se eu clicar no azul, aparece “negociação importar”, eu posso fazer isso. Ele vai automaticamente importar para você não ter que digitar o caminho, mas você não pode esquecer de colocar o js no final senão não vai funcionar.
+
+[01:31] Agora eu vou passar os valores que a minha negociação está esperando. O primeiro é a data, ( this.inputData.value, this;inputQuantidade.value, this.inputValor.value); } e por fim tenho uma negociação criada Não há nenhum erro de compilação, parece que meu código vai funcionar em runtime.
+
+[02:01] Agora vou fazer um console.log(negociacao);. Vou salvar, vou esperar compilar. Tudo bonito, tudo maravilhoso. Verifique se você colocou o js aqui. Vou voltar para o navegador, vou dar um clear aqui, tirar esse “preserve log” e dar um clear. Vou colocar qualquer data, quantidade e valor, vou clicar em incluir e vemos nossa negociação que foi criada.
+
+[02:31] Felicidade? Não. Não é felicidade nenhuma é tristeza porque se você olhar essa negociação, primeiro, a data tinha que ser um date e não essa string. Segundo, a quantidade está como string, o valor está como string. Isso faz parte da definição da nossa classe, eu espero que a quantidade seja um número, espero que o valor seja um número, espero que a data seja uma data.
+
+[02:59] Se eu quiser fazer alguma operação matemática para somar a quantidade, o valor de uma negociação com a outra eu vou ter um bug porque duas strings somadas viram concatenação, não vai funcionar conforme o esperado.
+
+[03:13] O que aconteceu? Por que o TypeScript não está brilhando aqui? Não está brilhando porque o nome já diz: TypeScript, faltou dizermos quais são os tipos dessas propriedades da minha negociação para que o TypeScript me diga que não posso colocar string porque não fará sentido.
+
+[03:34] É isso que vamos entender no próximo vídeo, como é que “tipamos” a nossa classe negociação utilizando o recurso da tipagem estática do TypeScript para evitar que na hora que eu esteja escrevendo esse código ele me avise que vai dar problema. Como eu faço isso? Vamos lá ver.
+
+### Aula 3 - O tipo implícito any - Vídeo 4
+
+Transcrição  
+[00:00] O que aconteceu? Não estamos usando a linguagem TypeScript. Deixa eu explicar. Eu vou lá para negociação, vou passar o mouse por cima de data, qual é o tipo que o Visual Studio Code está inferindo a partir do compilador TypeScript?
+
+[00:19] Any, quantidade, valor, any. Você sabe que any em inglês é qualquer coisa, isso significa que a minha negociação, o construtor da minha negociação está aceitando qualquer coisa que você passar. Se você passar um abacaxi como data esse abacaxi vai entrar. Eu não tenho checagem nenhuma.
+
+[00:47] O TypeScript adota o tipo any implicitamente. Isso é legal porque você consegue escrever um código rápido que você não precisa pensar muito, mas isso causa problemas no seu código como acabamos de ver. O que vamos fazer? A primeira coisa antes de tiparmos esse construtor, dizer que data tem que ser sempre date, quantidade tem que ser sempre número e valor tem que ser sempre número.
+
+[01:10] Eu vou alterar uma configuração no compilador que eu sugiro quando você está começando um projeto do zero, você ativar. É que é para dizer para o TypeScript para ele não adotar o tipo any implicitamente, só se você por algum motivo do seu código você quiser que aquele campo seja any, por algum motivo de compatibilidade, ou seja o que for.
+
+[01:34] Como fazemos isso? Vamos lá no meu "tsconfig", estou dentro do meu “tsconfig” tenho uma propriedade logo aqui que é "noImplicityAny" e eu vou colocar aqui true. Se segurem na cadeira porque quando eu ativar isso, o nosso programa vai parar de funcionar. Salvei. Já começou a ter erro de compilação em vários lugares. Vamos começar por partes.
+
+[02:07] Vou lá para o meu "negociacao.ts" e vamos ver o que precisamos resolver. Já está mostrando aquele ponto que deu problema no construtor. O parâmetro data tem um tipo implícito any, eu tenho que dizer qual é o tipo correto. Qual é o tipo correto? Eu quero que seja date. Qual é o tipo da quantidade? Aí você sempre faz assim: quantidade: number. Qual é o tipo valor? valor: number. constructor(data: Date, quantidade: number, valor: number).
+
+[02:35] Se você vem de linguagens como Java o tipo vem antes, aqui em TypeScript vem depois. Estou dizendo que na data só vai entrar date, quantidade number, valor number. E como esses valores aqui estão recebendo no construtor o TypeScript consegue inferir porque se você recebeu um date e aqui é o momento que você está atribuindo o valor a data ele consegue entender, se eu passo o mouse, que o valor é do tipo number, quantidade e date.
+
+[03:11] Para ficar claro garanta, coloque o tipo aqui também: private _data: Date; private _quantidade: Number; private _valor: Number;. Quem está olhando a definição da sua classe vai ver number, o que não pode é que se aqui é number e aqui é string não vai encaixar, por isso você faz isso. E temos como simplificar isso, mas ainda não é a hora de lidar com simplificação é a hora de entendermos os fundamentos.
+
+[03:37] Tipei o negociação, salvei. Ainda tem três erros que estão acontecendo lá no meu negociacao-controller. Vou lá em negociacao-controller. Faz sentido esse erro que estamos vendo? Faz, porque estou declarando uma propriedade da classe e não estou dizendo qual é o tipo.
+
+[04:00] Inclusive, o TypeScript está te dizendo para evitar usar input. Como resolvemos isso? Vamos resolver agora o problema do negociacao-controller em um vídeo separado porque tem bastante coisa para vermos.
+
+### Aula 3 - Revisando o tipo any - Exercício
+
+Nos últimos vídeos, conferimos algumas situações envolvendo o tipo any do TypeScript. Marque apenas as opções verdadeiras sobre esse tipo:
+
+Alternativa correta  
+Por padrão, o tipo any é assumido automaticamente pelo TypeScript quando não definimos o tipo das nossas variáveis.
+
+> Por exemplo, escrever apenas const nome; é o mesmo que escrever const nome: any; para o TypeScript.
+
+Alternativa correta  
+É possível desativar o tipo implícito any passando uma configuração especial para o compilador no arquivo tsconfig.json. Isso fará com que o compilador emita um erro em todos os locais que o tipo any foi adotado implicitamente.
+
+> A configuração do tsconfig.json é, dentro de "compilerOptions", adicionar a propriedade "noImplicityAny": true.
+
+### Aula 3 - Ajustando nosso controller - Vídeo 5
+
+Transcrição  
+[00:00] Como resolvemos esse problema de compilação resultante da ativação do noImplicitAny? A maneira mais fácil é você chegar aqui e dizer que o tipo dele é any, eu estou explicitando que o tipo dele é any. private inputDate: any; private inputQuantidade: any; private inputValor: any;.
+
+[00:22] Você pode perguntar "Flávio, é tão simples assim?" É, mas qual é a ideia? A ideia é você evitar o tipo any. A primeira coisa é que como estou utilizando o tipo any qualquer coisa pode ser qualquer coisa e se eu tentar usar o autocomplete, se eu chegar aqui this.inputValor., por exemplo, eu não tenho nenhuma sugestão do compilador da IDE com base nas informações do TypeScript do que eu posso fazer com esse valor. Resolveu, mas resolveu meia boca.
+
+[00:58] Vamos colocar um tipo que faça sentido. Uma coisa importante para ressaltarmos aqui para vocês ficarem espertos, é que esse tipo date que eu coloquei, esses tipos number, o TypeScript já vem com eles, já vem dentro dele para a linguagem JavaScript todos os tipos padrões da linguagem JavaScript.
+
+[01:19] É por isso que tem um tipo date, tem um tipo number e por debaixo dos panos todos esses tipos vão me dar acesso a todos os métodos e propriedades que fazem sentido para esse tipo.
+
+[01:32] Tanto isso é verdade que, eu chego no inputData:, this.inputData., não tem nada aqui, nenhum autocomplete que eu mostrei para vocês e agora se eu volto lá para negociação: this._data. é date quando eu dou ponto ele mostra todos os métodos relacionados a date.
+
+[02:02] Porque o TypeScript tem certeza que só pode entrar um date aí em tempo de compilação. Isso significa que em runtime, se você não fizer nenhuma mágica para tentar colocar algo diferente lá dentro, você só vai ter um date.
+
+[02:18] Voltando a falar nos tipos do TypeScript, o TypeScript também vem com tipos para elementos do dom. Essa data que estamos trabalhando aqui é do tipo html input element. Faz sentido porque o date, a quantidade e o valor se eu olho lá no meu html eles são input number, e input date, type date.
+
+[02:52] Como é que fazemos isso? Vamos voltar lá para a nossa “negociação controller”, vou dizer que data, quantidade e valor são do tipo HTMLInputElement. Não precisa importar porque isso aqui já é padrão do TypeScript.
+
+[03:16] Eu salvei, quando eu salvo estou com meu ambiente rodando, eu ainda tenho um erro de compilação. Se tivéssemos isso tudo bonito desde o início não cairemos naquele problema que tivemos de colocar strings dentro do nosso objeto, da nossa instância de negociação.
+
+[03:36] Se você vai descendo aqui no seu código ou você clica na tecla "Ctrl" e clica, ele está reclamando. O que ele está reclamando?
+
+[03:45] Ele está reclamando que agora que ele sabe que esse input é um html element, todo html element eu tenho agora o autocomplete: addEventListener, value. Sabemos que de um html input element, de um elemento do dom do tipo input, eu pego o valor através de .value. Olha que lindo, o TypeScript está me dizendo que todo input .value, o retorno dele é uma string, você está tentando passar uma string como se fosse um valor de date.
+
+[04:23] O compilador está nos avisando, como eu tipei quantidade como html input element, ele está me lembrando que eu pegar data que é value. Porque todo input quando você dá .value é sempre uma string.
+
+[04:39] Eu tenho que arrumar algum jeito de converter antes de passar para negociação, um input value aqui como um date. E também para cá, quando eu resolver esse problema aqui vai pular para essa linha daqui porque value é uma string e o nosso construtor da quantidade se vermos da negociação, é number.
+
+[05:05] Precisamos fazer uma pré-conversão que graças ao TypeScript se tivéssemos fazendo todo ambiente configurado desde o início ele já me daria a dica que não é assim, que eu tenho que converter esses dados do elemento do dom para que seja possível passar para instância. É isso que vamos fazer no próximo vídeo.
+
+### Aula 3 - Revisando código TypeScript - Exercício
+
+Marina configurou seu arquivo tsconfig.json da seguinte maneira:
+
+```JavaScript
+{
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "app/js",
+        "noEmitOnError": true,
+        "noImplicitAny": false
+    },
+    "include": [
+        "app/ts/**/*"
+    ]
+}
+```
+
+Em seguida declarou a seguinte classe:
+
+```JavaScript
+ class Controller {
+
+   private inputPreco: HTMLInputElement;
+
+    constructor() {
+        this.inputPreco = document.querySelector('#preco');
+    }
+
+    adiciona(event) {
+
+        event.preventDefault();
+
+        alert(this.inputPreco.value);
+    }
+}
+```
+
+Marque as alternativas verdadeiras a respeito da classe Controller:
+
+Alternativa correta  
+O código compila e é um código TypeScript válido.
+
+> Apesar do parâmetro event não estar tipado com o tipo Event, o código compila, pois em seu arquivo tsconfig.json Marina usou "noImplicitAny": false. Nem era necessário ela ter definido que a propriedade é false, pois esse é o padrão. Um erro de compilação aconteceria se ela tivesse usado "noImplicitAny": true.
+
+### Aula 3 - Convertendo dados de entrada - Vídeo 6
+
+Transcrição  
+[00:00] Vamos fazer essa conversão. A primeira coisa que eu tenho que converter é essa string que representa uma data um objeto do tipo date. Vou fazer: const date = new Date();. Se eu faço isso ele vai criar uma data na data de hoje, eu não quero isso eu quero que ele crie uma data respeitando o que o usuário digitou.
+
+[00:23] Para fazer isso precisamos passar uma string, por exemplo, nesse formato: ano, mês e dia separados por vírgula. O construtor de date entende e cria uma data bonita representando essa data. Porém, quando estamos lendo do teclado, do value, do meu campo, da data, ele vem com hífen.
+
+[00:47] O que eu preciso fazer? Eu preciso substituir todos os hifens por vírgula e então passar a string para o date. Para fazer isso vou criar uma expressão regular, sabemos que toda expressão regular é feita com “barra barra”, “//”. O que vou dizer?
+
+[01:05] Encontra tudo que é hífen, mas não quero que você encontre só o primeiro não eu quero que você encontre todos, o primeiro, o segundo, o terceiro, o quarto, todas as ocorrências eu coloco um g de global. const exp = /-/g;
+
+[01:15] Olha que bacana, se eu passo o mouse aqui em cima, de novo, como estou atribuindo essa variável pela primeira vez o TypeScript entende que essa é uma expressão regular. Se é uma expressão regular eu consigo chamar os métodos exp.test da expressão regular e por aí vai.
+
+[01:38] Criei a expressão regular e agora vou dizer que o date vai ganhar o valor de this.inputData.value., como value é uma string ele também me mostrou todos os métodos relacionados da string e vou usar o replace.
+
+[01:54] O replace pode receber como parâmetro a primeira expressão regular e segundo o que você quer colocar no lugar quando a expressão regular encontrar o que você está procurando. Eu vou pedir para substituir com vírgula. cont date = new Date(this.inputData.value.replace(exp, ',')); No construtor estou passando o resultado de replace e vai procurar todo mundo que tem hífen e vai substituir por vírgula e criar o meu date.
+
+[02:22] Segunda linha, eu vou ter a quantidade que conseguimos converter para inteiro através de parseInt(this.inputQuantidade.value);. E const valor eu vou usar o parseFloat porque esse valor pode ter decimais, vai ser const valor = parseFloat(this.inputValor.value);.
+
+[02:51] Agora que eu tenho todos os valores convertidos eu vou trocar aqui para o meu construtor, vou apagar aqui, vou passar. const negociacao = new Negociacao(date, quantidade, valor);.
+
+[03:08] Se eu pego agora aqui e coloco o date por último, const negociacao = new Negociacao(quantidade, valor, date);, vai ter erro de compilação porque estou tentando passar um number para o primeiro parâmetro do meu construtor que é um date. O TypeScript também te ajuda nisso.
+
+[03:20] O meu código está compilando, vou salvar. Nenhum erro. Volto para o navegador. Vou lá e coloco: 1/11/1111, coloco a quantidade 2 e o valor 111, clico em "incluir". Está lá perfeito, a minha data com o objeto data aqui representado, a quantidade numérica e o valor numérico.
+
+[03:46] Vou colocar aqui uma 12 para vermos aqui. Fiz 12 aqui, coloquei o decimal. Está convertido, está tudo bonito, temos certeza que a nossa negociação tem os tipos que estamos esperando, mas podemos melhorar mais um pouco. É isso que vamos ver no próximo vídeo, é só questão de organização. Vamos ver no próximo vídeo como organizamos isso aqui melhor.
+
+### Aula 3 - Convertendo uma data - Exercício
+
+Você está contruindo uma classe JavaScript e, em um de seus métodos, você precisa criar um objeto Date a partir de uma string. Como você faria isso?
+
+Alternativa correta  
+const date = new Date('2021,10,20');
+
+Alternativa correta! A string passada pelo construtor deve ter o ano, mês e dia separados por vírgula.
+
+### Aula 3 - Organizando melhor nosso código - Vídeo 7
+
+Transcrição  
+[00:00] Se você está lendo o método adiciona, o que você quer ler? Se você começar a ler esse método você vai ver expressão regular, pegou date, pegou quantidade, converteu valor para no final criar uma negociação. Se o adiciona a ideia é criarmos uma negociação, podemos deixar o nosso código um pouco mais claro.
+
+[00:19] Para isso vou criar um método criaNegociacao();. Esse método criaNegociacao eu vou mover esse código que cria a negociação para dentro dele. E agora que eu movi para dentro dele vou dar return Negociacao, se eu passo em cima sobre o nome do método vemos que o método retorna uma negociação do tipo negociação e agora vou fazer o seguinte: const negociacao = this.criaNegociacao();
+
+[01:09] Fica mais claro eu isolando isso. Vou salvar. Volto para o navegador, vou criar a minha negociação, clico em "incluir" e está lá bonito, gerou a minha negociação.
+
+[01:28] Agora uma coisa que estamos falando aqui para organizar melhor o nosso código é o seguinte, vimos que é uma boa ideia tipar variáveis, trabalharmos com tipos, mas também podemos colocar tipos em retorno de métodos. Se eu passar o mouse em cima do adiciona, você vai ver que o adiciona o TypeScript está dizendo que o tipo de retorno desse método é void porque ele não retorna nada.
+
+[01:56] Se eu passo o mouse aqui em cima do criarNegociacao, qual o tipo de retorno? O JavaScript é inteligente o suficiente para entender que como você está retornando uma negociação, ele entende que o tipo de retorno do criarNegociacao é uma negociação.
+
+[02:13] Tanto é verdade que se eu disser que negociação é uma string vou ter um erro de compilação porque o string eu não posso atribuir uma negociação no tipo string, porque estou forçando o tipo string aqui.
+
+[02:28] É uma boa prática. Eu sugiro que não peguemos carona nessa inferência do TypeScript, vamos tipar os retornos, os métodos. Já que adiciona não retorna nada, vamos colocar void. Se criarNegociacao retorna negociacao, deixa isso mais claro.
+
+[02:56] Porque tem uma pegadinha, quando você está criando o método, olha o que eu poderia ter feito, eu poderia ter tirado o retorno daqui, eu poderia ter escrito o método ao invés de retornar a negociação, eu podia retornar um valor.
+
+[03:12] O que esse método está retornando agora? Number. É porque eu errei, não era para retornar valor era para retornar negociação. Se você já começa tipando o seu método quando você retornar algo que antes de você implementar o método você acabou de implementar algo que não condiz com o tipo do retorno, você já ver um erro. O que eu fiz? Não é valor é negociação, vou retornar a negociação.
+
+[03:43] Eu sugiro vocês fazerem isso. Vai começar a escrever o método a primeira coisa eu sei que quando eu terminar de executar esse método ou ele não vai retornar nada, ou ele vai retornar uma negociação, você já coloca o tipo. E olha que legal, o tipo está aqui e eu não dei retorno nenhum, o TypeScript está falando que não retornei nada e se não retorno nada tenho que retornar um valor ou coloco criarNegociacao como void, já que void não retorna nada.
+
+[04:11] Você está blindado antes de escrever o seu método de que você tem certeza que você não vai comer uma gafe e que você sempre vai retornar uma negociação como retorno. E se eu omitir o retorno de novo o TypeScript vai me dizer que eu esperava retornar uma negociação, mas não retornou. Vamos usar isso daqui, vou tipar todos os métodos da nossa aplicação. Negociação, void, constructor não tipamos.
+
+[04:43] Vou voltar para a negociação. Meu get implicitamente está retornando um date, mas vou colocar explicitamente que retorna Date, que quantidade retorna number, que valor retorna number e que o volume retorna number. Se eu tivesse cometido um erro aqui, o TypeScript iria me indicar. Vamos fazer isso, evitar o tipo any. Você só usa o tipo Any se realmente for preciso, tipa as propriedades de classe e os métodos que recebem os constructor.
+
+[05:25] Se for uma variável que você está criando você pode deixar uma variável dentro de um método, você pode deixar que o TypeScript infira esse tipo de variável para você. Parâmetro de método, parâmetro de constructor, retorno de método e propriedades de classe vai lá e coloca o tipo que você está esperando.
+
+[05:42] Mesmo que você queira usar any você vai lá e diz que você quer usar any. Fica essa dica. Vou salvar e tudo continua funcionando, está uma beleza. Vamos para o próximo assunto.
+
+### Aula 3 - Limpando o formulário - Vídeo 8
+
+Transcrição
+[00:00] Antes de irmos para o próximo capítulo, vamos fazer uma melhoria na nossa aplicação. O que está acontecendo? Eu vou lá no meu formulário, eu digito uma data, digito uma quantidade, digito um valor, clico em "incluir". Em teoria eu teria que incluir em uma tabela, fazer alguma coisa, mas estamos exibindo no console.
+
+[00:20] O esperado é que se você acabou de incluir, vamos limpar o formulário e colocar o focus diretamente no campo da data para que o usuário já possa sair digitando e cadastrando uma nova negociação. Como vamos fazer isso? É JavaScript puro, mas o TypeScript nos ajuda a lembrar muita coisa sem precisarmos ir lá consultar a documentação do JavaScript e por aí vai.
+
+[00:47] Eu vou criar um método limparFormulario(), esse método vai ser void, não vai fazer nada. Qual é a ideia? Ele não está pronto ainda, mas eu sei que após exibir a minha negociação, assim que eu criei uma negociação, exibe em uma tabela ou exibe no console.log eu quero limpar formulário. this.LimparFormulario();
+
+[01:23] Esse método vai ter que chegar aqui, pegar cada input começando pelo data, this.inputData.value = ' ' e vou limpar, vou passar uma string em branco. Vou chegar no segundo this.inputQuantidade.value = ' '; e vou passar uma string em branco.
+
+[01:43] Olha só o TypeScript me ajudando, esqueci de colocar value e ele está dizendo que string não pode ser atribuído para html input element. Vou colocar agora this.inputValor.value - ' '; também vai ser uma string em branco.
+
+[02:00] Eu sei que após limpar todos esses métodos o inputData eu quero colocar o focus. Para fazer o focus no elemento do dom você coloca .f e como o TypeScript sabe que focus é um elemento do dom já te mostra o método focus, this.inputData.focus();
+
+[02:22] Toda vez que eu adicionar uma negociação eu vou primeiro exibir no console, depois eu limpo e vai ser isso. Vou salvar, meu método é void, por isso não retorna nada, vou salvar. Vou voltar para o navegador, deu refresh, vou digitar aqui, vou clicar em "incluir". Cliquei, exibiu, limpou meu formulário e já colocou o foco no data. Muito melhor que a experiência do usuário.
+
+[02:57] O que eu queria ressaltar aqui é que como esse input data, o input valor são elementos do dom o TypeSript sabe, porque você tipou com html input element, ele sabe que inputData é um elemento dom por isso te dá um monte de opções, até querySelector. Ele vai te dar todos os métodos e propriedades desse elemento do dom.
+
+[03:21] Está chegando a hora de puxarmos um pouco mais no curso e vamos lá, vamos continuar. Vamos para uma revisão no próximo vídeo.
+
+### Aula 3 - Revisão - Vídeo 9
+
+Transcrição  
+[00:00] Agora vou fazer uma revisão. A primeira coisa que vimos é que na nossa “negociação controller” quando definimos propriedades de uma classe, se não colocamos o tipo essa classe ganha implícito any. Ou seja, o TypeScript não sabe no momento da declaração dessa propriedade da sua classe qual é o tipo dessa propriedade, ele adota o tipo any.
+
+[00:29] O problema do tipo any é que você pode passar qualquer valor para dentro desse tipo que a aplicação vai continuar aceitando, você volta a ter mais ou menos o mesmo comportamento do JavaScript padrão.
+
+[00:42] Porque o JavaScript padrão não faz a crítica de tipos. O que vimos é que a boa prática é você em propriedades de uma classe você definir um tipo da propriedade da classe, definir tipos também não só da propriedade da classe, mas também parâmetros de métodos.
+
+[01:03] Se o meu constructor da minha classe recebe parâmetros, é uma boa prática eu explicitar o tipo. Vai deixar claro que se o desenvolvedor tentar passar algum tipo diferente daquele esperado eu vou ter um erro em tempo de compilação.
+
+[01:18] Vimos também a ideia de ativar no nosso compilador, se voltarmos lá no centro nervoso do TypeScript, o "tsconfig.json", a boa prática de começarmos um projeto do zero é colocar "noImplicitAny": true. Isso significa que o TypeSript vai te forçar a colocar any ou colocar um tipo da sua escolha na declaração de propriedades de classe e por aí vai.
+
+[01:47] Vimos também que o TypeScript eu não preciso, nesse caso, na hora que estou criando uma instância de negociação eu não preciso colocar o tipo porque quando a variável está existindo no momento e eu faço uma atribuição, o TypeScript consegue inferir o tipo.
+
+[02:02] Diferente do meu controller porque aqui eu não tenho nenhuma atribuição inicial para esse método. O TypeScript não tem como, se eu fizer isso daqui, deixar assim, o TypeScript não sabe qual é esse valor porque a atribuição está sendo feita no constructor.
+
+[02:23] Se eu chegar aqui e fazer ‘nome’, em string, eu não precisaria colocar o tipo string aqui, porque como estou atribuindo valor nesse momento que a minha instância de classe é criada, ele infere que esse método é do tipo string. Fazer isso daqui é perda de tempo, você pode fazer também, mas só se você sentir necessidade de colocar isso porque a ideia do TypeScript é você ter tipagem estática e tentar escrever um pouco menos.
+
+[03:00] No caso do html input eu não tenho aqui como saber qual é o valor inicial dessa propriedade, por isso que eu tive que colocar o tipo porque a atribuição não está sendo feita através do constructor. Vimos também que métodos é interessante colocarmos o tipo de retorno do método, se você vem em linguagens como Java normalmente o tipo é antes, é na declaração do nome do método.
+
+[03:33] Vimos que quando um método não retorna nada colocamos void e por aí vai. Resumindo as boas práticas: começou um projeto do zero noImplicitAny, vai declarar propriedades de uma classe, define o tipo logo. Se você não sabe o tipo ou se você ainda quer utilizar o any nada te impede de você chegar lá e explicitar o tipo any.
+
+[03:55] Mas você sabe que ao utilizar o tipo any eu perco todo auto complete, toda a checagem do TypeScript porque se esse método é qualquer coisa o TypeScript não consegue inferir, porém se esse método for um html input element agora a coisa muda de sentido, eu tenho o typecheckin, eu posso verificar tudo o que eu posso fazer com essa propriedade.
+
+[04:20] Por fim, limpamos o nosso código, isolamos o código que cria a negociação do próprio método, o código que limpa o formulário é o próprio para que o método adicione esse método que temos, mais fácil de ler. Vamos para o próximo capítulo, lá a coisa começa a ficar um pouco mais puxada, mas como esse curso é o curso de fundamentos vou pegar leve com vocês. Vamos lá.
+
+### Aula 3 - O que aprendemos?
+
+Nesta aula, aprendemos sobre:
+
+- O tipo implícito any;
+- Benefícios da tipagem estática;
+- Mais configurações do compilador tsc;
+- Retorno de método explícito;
+- Conversão de valores da interface do usuário.
+
+## Aula 4 - 
+
+### Aula 4 -  - Vídeo 1
+### Aula 4 -  - Vídeo 2
+### Aula 4 -  - Vídeo 3
+### Aula 4 -  - Vídeo 4
+### Aula 4 -  - Vídeo 5
+### Aula 4 -  - Vídeo 6
+### Aula 4 -  - Vídeo 7
+### Aula 4 -  - Vídeo 8
+### Aula 4 -  - Vídeo 9

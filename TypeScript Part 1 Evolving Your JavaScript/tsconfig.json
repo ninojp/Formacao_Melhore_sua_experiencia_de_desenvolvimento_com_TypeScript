@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
         "outDir": "./dist/js",
-        "target": "es2020",
+        "target": "es6",
         "noEmitOnError": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true
+        "noImplicitAny": true
     },
     "include": ["app/**/*.ts"],
     "exclude": ["node_modules", "**/*.spec.ts"]
