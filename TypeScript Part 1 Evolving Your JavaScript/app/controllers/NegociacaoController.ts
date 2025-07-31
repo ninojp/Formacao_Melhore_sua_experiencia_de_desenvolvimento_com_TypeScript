@@ -1,19 +1,24 @@
 import Negociacao from "../models/Negociacao.js";
+import Negociacoes from "../models/Negociacoes.js";
 
 export default class NegociacaoController {
     private inputData: HTMLInputElement;
     private inputQuantidade: HTMLInputElement;
     private inputValor: HTMLInputElement;
+    private negociacoes = new Negociacoes();;
+
     constructor() {
         this.inputData = document.querySelector('#data');
         this.inputQuantidade = document.querySelector('#quantidade');
         this.inputValor = document.querySelector('#valor');
-        // this.inputQuantidade = document.getElementById('quantidade');
-        //ERRO! O getElementById retorna uma REFERÊNCIA ao primeiro OBJETO com o id
+        // this.inputQuantidade = document.getElementById('quantidade');//ERRO! O getElementById retorna uma REFERÊNCIA ao primeiro OBJETO com o id
     };
     adiciona():void {
         const negociacao = this.criaNegociacao();
-        console.log(negociacao);
+        this.negociacoes.adiciona(negociacao);
+        this.negociacoes.lista().pop();//REGRAS de modelo de negócio:Não deveria ser possivel deletar itens.
+        console.log(this.negociacoes.lista());
+        this.limpaFormulario();
     };
     criaNegociacao():Negociacao {
         const exp = /-/g;
@@ -23,7 +28,7 @@ export default class NegociacaoController {
         return new Negociacao(date, quantidade, valor);
     };
     limpaFormulario():void {
-        // const form = document.querySelector('.form') as HTMLFormElement | null;// Type assertion para garantir que form não é null
+        // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null
         // form?.reset();//ERRO! O reset() não funciona com o querySelector
         this.inputData.value = '';
         this.inputQuantidade.value = '';

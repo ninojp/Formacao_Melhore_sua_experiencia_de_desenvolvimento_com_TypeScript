@@ -848,14 +848,227 @@ Nesta aula, aprendemos sobre:
 - Retorno de método explícito;
 - Conversão de valores da interface do usuário.
 
-## Aula 4 - 
+## Aula 4 - Avançando na modelagem do domínio
 
-### Aula 4 -  - Vídeo 1
-### Aula 4 -  - Vídeo 2
-### Aula 4 -  - Vídeo 3
-### Aula 4 -  - Vídeo 4
-### Aula 4 -  - Vídeo 5
-### Aula 4 -  - Vídeo 6
-### Aula 4 -  - Vídeo 7
-### Aula 4 -  - Vídeo 8
-### Aula 4 -  - Vídeo 9
+### Aula 4 - Projeto da aula anterior
+
+Você pode ir acompanhando o passo a passo do desenvolvimento do nosso projeto e, caso deseje, você pode [baixar o projeto da aula anterior](https://github.com/alura-cursos/typescript-curso-1/archive/ab1c31d9dbb189373c4a43b15ad630daffc1248f.zip).
+
+Bons estudos!
+
+### Aula 4 - Modelo de uma lista de negociações - Vídeo 1
+
+Transcrição  
+[00:00] Vamos partir para mais uma parte aqui da especificação da nossa aplicação. Já temos a nossa negociação que após criada não pode ser modificada, tudo maravilhoso. Porém, na nossa aplicação no futuro vamos ter uma tabela onde vamos mostrar todas as negociações incluídas, inseridas pelo usuário.
+
+[00:24] Uma coisa importante é que nessa lista de negociação eu só posso incluir eu não posso remover. Porque eu criei a negociação e coloquei nessa lista eu não posso remover nenhum dado dessa lista. Porque não faz sentido eu ter a negociação do dia 10, uma lista de negociações e alguém chegar lá no dia depois e adicionar uma negociação nova nela.
+
+[00:48] Eu tenho que materializar isso no nosso código para garantir que a minha lista me permita adicionar, mas não remover itens.
+
+[00:59] Eu não posso utilizar, se voltarmos ao nosso código, uma array do JavaScript padrão porque o array me permite adicionar e remover. Eu vou criar um novo modelo chamado Negociações, no plural, e esse modelo vai encapsular essa lista de negociações.
+
+[01:19] Através da instância de negociações eu vou pedir: por favor, adicionar. Por favor, me dê uma lista das negociações. É nessa instância que vai um rap envolta do array de negociações que eu peço para ele adicionar, listar para mim o que ele tem. Com isso eu vou garantir que ninguém vai tocar, ninguém vai modificar a lista de negociações. Ficou claro?
+
+[01:51] Eu vou voltar lá para a nossa pasta “models”, não é js, lá dentro de ts da pasta “app”, vou criar um novo arquivo chamado negociacoes.ts. Eu tenho uma negociação, mas eu tenho uma função que representa uma lista de negociações. Como estou utilizando o sistema de modo do TypeScript eu vou escrever export class Negociacoes {}.
+
+[02:22] O que esse método vai ter? Vai ter que guardar de maneira privada uma lista de negociações. Sabemos que se eu quero tornar algo privado que o desenvolvedor não tenha acesso na hora que está programando, apenas a classe através de seus métodos, se eu pedir para ele adicionar, só ela pode pegar a negociação que eu passei para ele e adicionar na lista, como eu faço isso?
+
+[02:47] Eu vou colocar aqui: private negociacoes = [];e vai começar com um array vazio. Vou salvar. Esse método vai evoluir ainda, mas o mais importante é entender que ele guarda uma lista de negociações. Eu vou criar um método, que vamos ver lá na frente, adicionar negociação, lista negociações, mas é só uma instância de negociação que pode alterar e modificar essa lista do array, porque se eu deixasse exposto qualquer um poderia remover ou apagar.
+
+[03:29] De imediato, temos um problema, que problema é esse? Parece ser um problema com a tipagem do any implícito. Se eu passar o mouse em cima ele está dizendo que esse método tem um tipo implícito any[].
+
+[03:48] Vamos entender melhor disso no próximo vídeo e a como resolver também.
+
+### Aula 4 - Primeiro contato com Generics - Vídeo 2
+
+Transcrição  
+[00:00] A primeira coisa que estamos entendendo é que o TypeScript está inferindo que esse array é do tipo any. Significa que você pode colocar qualquer coisa dentro desse array.
+
+[00:18] Em JavaScript eu faço isso aqui: const lista = [];, eu posso fazer: lista.push(10);, dentro de push vou colocar dentro dele um número. Agora posso fazer lista.push('10'); com o número em formato string. lista.push(new Date());. Uma lista em JavaScript padrão você pode colocar qualquer coisa lá dentro.
+
+[00:58] E se você tem uma lista que só é para ter um determinado tipo você só tem como saber se você cometeu um erro não colocando um tipo diferente em runtime, você não consegue descobrir em tempo de compilação.
+
+[01:13] Olha a sacada do TypeScript, eu vou dizer que esse método tem um tipo array. Quando eu coloco esse tipo array aqui o TypeScript está começando a reclamar e vai me dar essa mensagem, para quem nunca viu na vida parece uma coisa do outro do mundo, ele está dizendo: Generic type 'array<T>', já faz esse diamante, e coloca um T no meio, esse T é Type.
+
+[01:46] Sempre que você ver esse T grande é Type. Ele está dizendo: Generic type '*array*<T>' requires 1 type argument(s). Ele está dizendo que o tipo genérico array precisa de um tipo. Qual é a sacada? Você está dizendo que negociações é um array, quando você diz que é um array o TypeScript vai fazer o autocomplete, vai verificar seu código, tudo para que negociações siga os métodos e propriedades de um array.
+
+[02:14] O TypeScript está te perguntando qual é o valor que vai estar lá dentro. É uma lista de que? É uma lista de coelho, é uma lista de boi, é uma lista de vaca? Olha o que queremos, queremos que esse array seja uma lista de negociações.
+
+[02:30] Vou abrir o diamante que vale dinheiro e agora vou escrever negociação. private negociacoes: *array*<Negociacao> = []; Vou dar "enter", ele fez o import automático, se ele não fez você adiciona esse import e o js no final. import { Negociacao } from './negociacao.js';
+
+[02:46] Quando eu fiz isso eu não cometi mais nenhum erro na negociação. Por quê? Vou mostrar um exemplo para vermos. Vou criar uma lista const list = [];, uma lista em branco. Quando eu fiz isso aqui atribuindo o TypeScript está dizendo aqui que array não é uma propriedade de uma classe e ele está inferindo que é uma lista do tipo any.
+
+[03:16] Vou colocar list.push('10'); em string, list.push(11);. Fiz isso porque eu atribuí o valor aqui, programaticamente ele adotou o any aqui. Se bem que era para ele reclamar, não sei porque não reclamou. Suponho que é porque estou fazendo esse teste fora do código.
+
+[03:42] O mais importante aqui é você ver o seguinte: eu posso colocar qualquer coisa, mas se eu disser que agora list é um array do tipo string, olha o que vai acontecer, você só pode colocar string lá dentro, não um número.
+
+[03:59] Ou se eu digo que listas é number você não pode colocar string. Em 99% dos casos, quase 100% você quer uma lista que tenha os mesmos tipos lá dentro. E olha que bacana, eu disse que essa aqui é uma lista de string, coloquei 10, list.push('20');, list.push('Flavio');,list.push('Almeida');. Agora vou fazer um for,for (let nome of list) {;`.
+
+[04:42] Estou fazendo um for of. Se eu coloco nome. o TypeScript entende que se você está inteirando uma lista que é o do tipo string ele sabe que esse nome vai ser string e vai te fazer todo o autocomplete desse nome entendendo que ele é uma string.
+
+[05:02] Isso significa que se eu tentar fazer alguma outra coisa que não faz sentido operar com string eu não vou conseguir e vou ter um erro de compilação. Agora se eu coloco aqui para number nenhum desses aqui meu código vai passar. Vou passar aqui 10, vou passar 20 e agora aqui se eu coloco ponto nome., ele mostra todos os métodos de alguém que é número.
+
+[05:28] O que acabamos de ver aqui é que em TypeScript ele tem suporte a generics, algo que linguagens como Java, C# tem. Significa que você diz que negociações é um array, é um array, vai ter um método push, vai ter um método pop e por aí vai.
+
+[05:46] Mas o que você vai gravar lá dentro? Eu preciso saber. Eu preciso saber o tipo porque senão você pode colocar qualquer coisa lá dentro, mas eu só quero que entre nesse array negociação, mas nada me impede de eu colocar any. Estou fazendo explicitamente.
+
+[06:01] Se eu coloquei any eu posso colocar agora qualquer coisa lá dentro, mas não é muito legal, você quer garantir que a lista seja uniforme, uma lista de um determinado tipo é aí que entram generics. Toda vez que você ver array<T>, esse T é que você está pedindo outro tipo para complementar esse tipo que você está trabalhando.
+
+[06:24] Está aqui, criei, meu código está compilando e eu tenho um array de negociação. O que eu preciso fazer agora é criar um método para adicionar uma negociação aí dentro, um método para eu poder listar, ter acesso a essa lista de negociações porque se eu faço isso daqui: const negociacoes = new Negociacoes();, se eu faço isso, se dou negociacoes. eu não vejo nada porque é privado.
+
+[06:59] Eu não quero colocar ele public para ele aparecer aqui porque se ele aparecer qualquer um pode pegar essa lista, pode apagar, pode remover. Eu quero que ela fique privada e através de um método que vamos ver tipo adiciona eu posso passar uma negociação e lá dentro ele vai fazer a adição para mim. Ficou claro?
+
+[07:25] Esse é o nosso primeiro contato com o tipo generics, no caso utilizado pelo array, mas vamos ao longo do treinamento aprender a criar tipos mais sofisticados que nós iremos definir que esses tipos tenham suporte generics. Cada coisa à seu tempo, vamos continuar que precisamos terminar de implementar essa classe.
+
+### Aula 4 - Criando um array com TypeScript - Exercício
+
+Marque apenas as opções que declaram um array corretamente em TypeScript, assumindo que a configuração noImplicitAny está definida com o valor true.
+
+Alternativa correta  
+let nomes: Array<string> = [];
+
+> Apesar de não incializarmos o array com nenhum valor, estamos indicando para o TypeScript que o array nomes deve aceitar apenas valores do tipo string.
+
+Alternativa correta  
+let idades: Array<number> = [1, 2, 3];
+
+> Estamos indicando ao TypeScript que o array idades aceita apenas valores do tipo number.
+
+### Aula 4 - Avançando com nosso modelo - Vídeo 3
+
+Transcrição
+[00:00] Ninguém tem acesso a negociações porque ela é privada. Vou deixar um código de teste enquanto estamos fazendo cons negociacoes = new Negociacoes();, se ela é privada, como vou adicionar uma negociação dentro desse array? Eu preciso criar uma porta de entrada. Vou criar um método, vou criar o método adiciona() {; alguma coisa.
+
+[00:35] Esse método vai adicionar o que? O que eu espero receber como parâmetro? Um abacaxi, Ronaldo? É uma negociação, por isso vou receber um parâmetro que vou chamar de negociação que vai ser do tipo negociação. adiciona(negociacao: Negociacao) {;. Quando eu receber esse parâmetro vou pedir para a minha lista de negociação fazer um push para adicionar essa negociação dentro dela. this.negociacoes.push(negociacao);
+
+[01:05] Se eu olho aqui agora ele reclamou porque escrevi errado na hora de importar, é negociação, é uma lista de negociação. Cuidado porque temos negociação e negociações. Eu podia até dar nomes diferentes, mas faz sentido ser negociação e negociações.
+
+[01:29] Eu tenho negociação que recebe negociação. E foi legal porque eu coloquei esse type errado, o TypeScript já me falou que não é compatível. Isso foi mais uma vez o TypeScript me ajudando até na hora de gravar o curso. Adiciono, isso significa que agora eu posso chamar o adiciona e adicionar uma nova negociação. negociacoes.adiciona(new Negociacao();
+
+[01:56] Agora se eu quiser listar, vamos precisar listar porque em algum momento vamos ter que renderizar uma tabela na nossa aplicação e eu preciso ter acesso à lista de negociações. Eu vou fazer adiciona aqui e vou fazer o método lista, eu vou chamar aqui lista();. Esse método vai me retornar uma lista de negociações, por isso já vou colocar o tipo.
+
+[02:25] Qual você acredita que será o tipo, antes de eu escrever o método? Vai ser array e o generic vai ser negociação, vou retornar a propriedade privada que está lá escondida, negociações. lista(): *array*<Negociacao> { return this.negociacoes; }.
+
+[02:44] Isso significa que agora se eu faço negociações, lista, eu posso até fazer um forEach onde eu sei que n o TypeScript vai inferir corretamente que é do tipo negociação. Posso fazer n. e ele sugere volume, quantidade e valor. negociacoes.lista().forEach(n => { n. }) ;
+
+[03:07] Esses são os dois métodos que precisamos trabalhar para podermos brincar com a nossa negociação. Antes de eu avançar vamos analisar, vamos escrutinar aqui, verificar, passar o pente fino para saber se essa especificação dessa lista realmente está sendo honrada porque eu só posso adicionar e não posso modificar uma negociação. Vamos ver isso no próximo vídeo.
+
+### Aula 4 - Um problema não esperado - Vídeo 4
+
+Transcrição  
+[00:00] Ainda sem nos preocuparmos com a renderização dessa lista vamos integrá-la com o nosso método adiciona do nosso controller para toda negociação que adicionarmos pedir para o negociações guardar na lista de negociações que ela tem.
+
+[00:18] Só para checarmos e ver se está tudo certo, se todas as regras estão sendo materializadas. Vou lá para o meu negociacao-controller, vou criar uma propriedade da minha classe private que vou chamar de negociações, que vai ser do tipo negociações. private negociacoes: Negociacoes;.
+
+[00:43] Criei, o Visual Studio Code importou e dessa vez colocou o js corretamente. Às vezes ele não coloca, por isso por favor, ao acabar de importar verifique se tem o js no final senão isso vai embolar o meio de campo.
+
+[01:01] Só que eu já vou inicializar essa instância logo na definição do atributo para começar vazia, vai ser new Negociacoes; Posso remover essa tipagem Negociações? Posso. Porque já que estou atribuindo o TypeScript infere que negociações são do tipo negociações.
+
+[01:25] Tudo uma beleza, está tudo aí. Vou voltar lá para o nosso método adiciona, não vou fazer mais console.log da negociação e assim que eu criei uma negociação eu vou pedir para this.negociacoes.adiciona(negociacao);.
+
+[01:48] E o meu console.log vai ser: console.log(this.negociacoes.lista());, a chamada do método lista para eu atualmente saber quantas negociações tem lá dentro.
+
+[02:03] Vamos lá. Salvei, não tem nenhum erro de compilação, vou voltar para o navegador, vou digitar 11111111, 21, "incluir". Listou. O primeiro item da minha negociação está lá, 110 21. Vou adicionar mais um, 12, aqui vai ser 13e aqui vai ser 171.10, "incluir". Vamos ver lá. Agora têm duas negociações, a primeira e a segunda.
+
+[02:39] Agora que vem a sacada, é o seguinte, essa lista não pode mudar. Se eu adicionar negociação lá dentro nem com reza forte eu posso remover um item dessa lista. Olha aqui comigo, esse método quando eu chamo lista olha o que eu vou fazer: this.negociacoes.lista().pop();.
+
+[03:08] Se eu passo o mouse ele fala que remove o último elemento do array. Será que vai acontecer, se ele vai remover o último elemento do array isso significa que quando eu for exibir a minha lista vai ser sempre em branco.
+
+[03:19] Vou fazer aqui. Salvei. Vou voltar lá para o meu navegador, digitei qualquer coisa aqui, 0. "Flávio, tem um problema." Claro que tem. Qual o problema? A ideia toda na especificação dessas negociações era fazer com que eu só pudesse adicionar e nunca remover um item dessa lista.
+
+[03:45] Mas o problema que vamos ver no próximo vídeo eu vou mostrar a solução e explicar com clareza o que está acontecendo para vocês para vermos se precisamos usar recursos do JavaScript ou se o TypeScript pode nos ajudar a resolver esse tipo de problema. Vamos lá.
+
+### Aula 4 - Evitando a mutabilidade da lista - Vídeo 5
+
+Transcrição  
+[00:00] Vamos entender o que está acontecendo no nosso código. Qual o motivo do trabalho de criar o modelo de negociações? Que era para blindar, só permitir que fossem adicionados, e não removidos itens de uma lista, o que está acontecendo?
+
+[00:18] O que está acontecendo é uma coisa clássica, o seguinte: quando o nosso método lista é chamado, ele está retornando uma lista de negociações. Uma lista, um array em JavaScript é um objeto, então quando você está retornando no lista você tem uma referência, o lista está retornando uma referência para aquela lista encapsulada dentro de negociação.
+
+[00:46] Se ela está retornando a mesma lista, está apontando para o mesmo local da memória, isso significa que eu posso modificá-la.
+
+[00:54] Todo o nosso trabalho para encapsular a lista de negociação falhou, porque qualquer um listando, pedindo a lista de negociações do nosso modelo vai poder modificar essa lista. Como resolvemos?
+
+[01:10] Uma maneira clássica de resolvemos é o seguinte: é criar uma nova referência para lista ou memória que não aponte para mesma que temos aqui. Eu posso fazer o clássico, o seguinte: vou criar uma nova referência, uma nova lista vazia na memória com os itens desta lista.
+
+[01:30] Como eu faço isso? Eu adiciono aqui dentro de um novo array, só que uso Spread Operator, eu faço o seguinte: olha, pega cada item desse array individualmente e coloca nessa lista. O Spread Operator faz isso. Cuidado, que eu não estou colocando a lista dentro de uma lista, estou dizendo para pegar cada item dessa lista e colocar nessa nova lista.
+
+[01:54] Isso significa que se alguém está listando e quer modificar a listagem, ela pode remover item, adicionar item e fazer o que quiser, mas que não vai afetar a negociação original que está encapsulada aqui. E pode fazer sentido a pessoa querer modificar essa lista, não sei, querer fazer alguma modificação para apresentar na tela. Vamos lá testar.
+
+[02:17] Vou salvar, vou voltar lá no meu navegador, o pop não tem que fazer efeitos se eu listo de novo tem que continuar com os itens lá, porque toda vez que eu chamo a lista ele vai me retornar sempre uma lista nova com os itens atuais da minha lista.
+
+[02:36] Vou voltar lá para o navegador, vou digitar aleatoriamente, adicionarei qualquer coisa aqui, incluo, está lá, uma negociação. Eu não estou mutando a minha lista, tudo funcionou na maravilha.
+
+[02:55] Mas será que conseguimos fazer algo melhor utilizando a linguagem TypeScript"? Porque eu estou retornando a lista, eu tenho que criar uma nova lista com os itens dessa lista. Vamos ver no próximo vídeo se o TypeScript tem algo interessante para resolvermos esse tipo de problema.
+
+### Aula 4 - O modificador readonly - Vídeo 6
+
+Transcrição  
+[00:00] O TypeScript vem com o tipo dele, o ReadonlyArray, idêntico ao Array, mas olha o que vai acontecer.
+
+[00:29] Salvei, vou lá em negociacao-controller, estou tentando chamar o método pop, e o que está acontecendo? Está dizendo que o método pop não existe em uma lista de somente leitura de negociação.
+
+[00:45] Olha que lindo. Se eu dou um ponto em this.negociacoes.lista().;, eu só tenho acesso a métodos do array que não modificam esse array ou, que se modificam, retorna, uma nova lista, uma nova instância do array com os dados modificados.
+
+[01:05] Agora nem com reza forte em tempo de compilação, se eu quiser fazer negocioes.push() não tem, não tem nessa lista, está vendo? Não tem.
+
+[01:29] É esse tipo, é um tipo muito interessante quando você quer retornar uma lista somente leitura. Faz todo sentido para nós, porque para nossa negociacoes se eu estou listando, se está tendo um acesso a essa lista de negociações, eu não quero que você invoque nenhum método que você possa alterar essa lista. Ficou claro?
+
+[01:54] Isso aqui é muito bacana você utilizar principalmente na modelagem de orientação a objeto quando você tem um requerimento como esse. Está bom?
+
+[02:03] No próximo capítulo, agora que já vimos isso tudo, agora que já temos um entendimento, agora eu posso entrar na questão de usar uns truques do TypeScript para escrevermos menos, deixar o nosso código mais sucinto e preparar o terreno para vocês para os próximos cursos porque a coisa vai começar a avançar. Está bom?
+
+[02:22] Vamos lá, vou fazer uma revisão no próximo vídeo e no próximo capítulo vou falar um pouco sobre algumas técnicas e boas práticas para escrevermos menos e deixarmos o nosso código um pouco mais legível, mas vai depender de você se você acha que é legal ou não fazer, vai muito do desenvolvedor, mas eu vou mostrar todas as formas. Vamos lá? Vamos lá para a revisão.
+
+### Aula 4 - Revisão - Vídeo 7
+
+Transcrição  
+[00:00] Vamos fazer uma revisão do que vimos neste capítulo. A primeira coisa que vimos foi a necessidade de fazer a modelagem da classe negociações, no plural, para que eu garanta que durante o ciclo de vida da minha aplicação eu só posso adicionar novas negociações em uma lista e que ninguém pode, após adicionar, alterar essa lista, novas negociações ou remover.
+
+[00:30] Nós implementamos, nós vimos durante toda essa implementação a questão dos generics porque quando tipamos um array em TypeScript por padrão ele adota o tipo any, isso significa que você pode adicionar qualquer coisa dentro dele.
+
+[00:46] Como estamos com a configuração de noimplicitany, precisamos especificar para esse tipo array qual é o tipo de dado que ele carrega. E isso nós fizemos através do generics, se eu passar o mouse aqui em cima do array vemos que na definição do TypeScript esse método é um tipo array onde eu tenho abre e fecha colchetes, sinal de maior e menor, eu chamo isso de diamante e um T, de tipo. Isso indica que para você usar esse tipo você precisa especificar um segundo tipo.
+
+[01:22] O que é esse segundo tipo? É o conteúdo que esse array carrega. Por que isso é importante? Porque primeiro o tipo array permite que sua ideia quando é bem integrada com o TypeScript só faça o autocomplete de métodos e operações que um array tem, mas quando você extrai um dado desse array, quando você usa esse generic aqui, você permite que o TypeScript infira dentro de uma lista que esse array é do tipo negociação e só as operações de negociações podem ser feitas.
+
+[01:52] Inclusive, você só vai poder adicionar dentro dessa lista de objetos do tipo negociação. Isso é muito interessante porque evita uma confusão de você ter um array onde você pode colocar qualquer coisa lá dentro.
+
+[02:08] Nós vimos também que por mais tenhamos tentado blindar a nossa lista de negociações encapsulada dentro de negociações, estamos vendo aqui que isso não foi suficiente porque quando estou pedindo para o método lista de negociações eu estou retornando uma lista de negociações que aponta para a mesma referência de memória para essa lista daqui.
+
+[02:35] Significa que o ato de eu pegar essa lista, qualquer coisa que eu faça com essa lista eu estou modificando a minha lista guardada por negociações.
+
+[02:47] A primeira solução que nós vimos foi recusar o exped operator e retornar uma nova lista com os itens da lista original que temos. Porém, o TypeScript possui o ReadOnlyarray, esse tipo indica que toda vez que você retornar esse tipo os métodos que mudam o array não estarão disponíveis em tempo de compilação.
+
+[03:13] Isso significa que se eu for lá para o meu controller e tentar agora na lista que eu peguei fazer this.negociacoes.lista().pop; não vai aparecer, você está garantindo que o desenvolvedor não vai cometer a gafe.
+
+[03:33] E se o desenvolvedor ver isso e falar: "Ué, por que eu não posso remover?" Ele vai perguntar para o desenvolvedor, vai olhar a documentação e vai ver que por uma questão de especificação ninguém pode adicionar e remover itens dessa lista.
+
+[03:54] Isso é importante para garantirmos que estamos materializando as regras da especificação do nosso modelo e o nosso código. E pelo que podemos ver até agora, parece que o JavaScript tem recursos que tornam mais fácil essa materialização da modelagem de algo do mundo real dentro do nosso código para seguir regras impedindo que o desenvolvedor faça operações que a própria definição da classe não permite que seja feita.
+
+[04:24] Ficou claro? Está aí uma revisão, vimos sobre arrays, tipagem e generics. Uma coisa a notar é o seguinte, essa lista é uma lista de negociações, aqui qual é o tipo negociação, mas eu estou retornando essa mesma lista como Readonly, eu posso fazer isso.
+
+[04:49] O que eu não posso é usar um outro tipo aqui porque não vai ser array, mas o readonly e o array são intercambiáveis, você pode utilizá-los onde tem um você pode usar o outro, não há problema nenhum por mais que eu esteja retornando um array de negociação e o tipo do retorno seja readonlyarray.
+
+[05:12] Você deve pensar: "Flávio, por que você já não definiu essa lista como Readonlyarray?" Eu não senão meu método push do adiciona não vai funcionar. Ficou claro, galera? Vamos para o próximo vídeo com coisas bem legais para deixarmos o nosso código mais enxuto e poder simplificar ainda mais o nosso código tornando-o ainda mais legível. Vamos lá.
+
+### Aula 4 - O que aprendemos?
+
+Nesta aula, aprendemos sobre:
+
+- Modelagem da classe Negociacoes;
+- Utilização de Generics;
+- Revisão sobre encapsulamento;
+- Questões de mutabilidade e como solucioná-la;
+- O tipo ReadonlyArray;
+- Adição de negociações em nossa lista.
+
+## Aula 5 - 
+
+### Aula 5 -  - Vídeo 1
+### Aula 5 -  - Vídeo 2
+### Aula 5 -  - Vídeo 3
+### Aula 5 -  - Vídeo 4
+### Aula 5 -  - Vídeo 5
+### Aula 5 -  - Vídeo 6
+### Aula 5 -  - Vídeo 7
+### Aula 5 -  - Vídeo 8
