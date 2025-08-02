@@ -1062,13 +1062,204 @@ Nesta aula, aprendemos sobre:
 - O tipo ReadonlyArray;
 - Adição de negociações em nossa lista.
 
-## Aula 5 - 
+## Aula 5 - Simplificando nosso código
 
-### Aula 5 -  - Vídeo 1
-### Aula 5 -  - Vídeo 2
-### Aula 5 -  - Vídeo 3
-### Aula 5 -  - Vídeo 4
-### Aula 5 -  - Vídeo 5
-### Aula 5 -  - Vídeo 6
-### Aula 5 -  - Vídeo 7
-### Aula 5 -  - Vídeo 8
+### Aula 5 - Declaração no próprio construtor - Vídeo 1
+
+Transcrição  
+[00:00] Continuando nosso curso de fundamentos, metade concluído, vamos estudar algumas simplificações que podemos fazer no nosso código, utilizando recursos da linguagem TypeScript.
+
+[00:13] A primeira coisa que eu quero mostrar para vocês é o seguinte, vocês já repararam que eu declaro as propriedades da minha classe, no caso da negociação, e o meu construtor recebe para cada declaração dessa os parâmetros? No bloco do construtor, eu atribuo o parâmetro que recebi para cada propriedade.
+
+[00:42] Isso está legal, é o que quem é do mundo Java faz, as pessoas do C Sharp fazem, mas o TypeScript tem um detalhe importante, ele detecta que quando você está recebendo algo no construtor é porque você está criando a sua classe, em 90% das vezes você está querendo que esses valores daqui que são data, quantidade e valor sejam atribuídos diretamente em propriedades com o mesmo nome ou nome parecido.
+
+[01:11] Olha o que eu vou fazer, apaguei as três linhas do private, erro de compilação. “Flávio, o que é isso?”, calma. Olha o que eu fiz, apaguei as três linhas do this. “Flávio, o que é isso?”, apaguei. Vou apagar aqui.
+
+[01:29] Como é o nome do que está faltando? O ._data, não é com underline? Vou adicionar com underline na linha de cima também. Salvei, se eu volto para cá, tenho um erro de compilação.
+
+[01:41] Olha o que eu vou fazer, eles não eram private aqui? Vou colocar no construtor, private _data:, private _quantidade:, private _valor:. E eu ainda vou quebrar aqui para ficar melhor estruturado, para podermos ver. Olha como eu simplifiquei o código. “Flávio, o que você fez? Milagre?”, não, isso é TypeScript na veia.
+
+[02:12] O que está acontecendo? Se no construtor da sua classe você coloca o modificador private, explicita isso, ou public, isso indica para o TypeScript que ele vai por debaixo dos panos criar uma propriedade da sua classe que contenha o mesmo nome do seu com os parâmetros do construtor, e por debaixo dos panos ele vai fazer a atribuição, vai pegar esse valor e vai jogar lá para você.
+
+[02:46] Deixa eu olhar lá no código JavaScript que ele gerou, aqui no menu à esquerda, em “models > negociacao.js”, se eu olho aqui, olha o que ele está fazendo, no JavaScript ele recebeu esses parâmetros, (_data, _quantidade, _valor) e atribuiu direto para this.
+
+[03:01] Porque na versão do JavaScript que estamos utilizando, não existe ainda propriedade de classe, porque lembrando que lá no meu “tsconfig.json” eu estou gerando para ECMAScript 6.
+
+[03:17] Essa sacada do TypeScript é muito bacana, porque me evitar ter que declarar as propriedades aqui em cima, me evita ter que receber os parâmetros e atribuir para as propriedades.
+
+[03:32] Você pode pensar, “Flávio, se eu tiver uma propriedade que não faz parte do construtor?”. Não tem problema, você pode ter agora private calopsitaName = ‘Calo’;, nada te impede. Por “debaixo dos panos” isso que você escreveu é como se estivesse na forma anterior.
+
+[03:57] Isso é muita mão na roda, porque fazemos isso trabalhando com classe de modelo, DTOs, Data Transfer Object, nós conseguimos diminuir bastante a quantidade de código que escrevemos.
+
+[04:12] Fica isso daí, deixa eu dar uma olhada agora em “negociacoes.ts”, negociações não recebe parâmetro nenhum, deixa eu ver minha “negociacao-controller.ts”, meu controller não recebe parâmetro nenhum aqui no construtor, então não preciso mudar. Mas fica isso, é muito comum encontrar pessoas usando essa forma.
+
+[04:33] Agora cuidado, se eu inserir aqui _xdata, ele vai criar a propriedade da classe _xdata, não é isso que queremos, nós queremos que seja underline. Se eu adicionar _xdata eu teria que trocar aqui embaixo para this._xdata;.
+
+[04:50] Vou utilizar esse recurso aqui, porque eu acho interessante, eu escrevo muito menos. Então vamos para o próximo vídeo ver mais um pouco.
+
+### Aula 5 - Simplificando o construtor - Exercício
+
+Você está trabalhando na seguinte classe Fatura:
+
+```JavaScript
+export class Fatura {
+    private criadaEm: Date;
+    private quantidade: number;
+    private valor: number;
+
+    constructor(
+        criadaEm: Date, 
+        quantidade: number, 
+        valor: number
+    ) {
+            this.criadaEm = criadaEm;
+            this.quantidade = quantidade;
+            this.valor = valor;
+    }
+}
+```
+
+Marque a alternativa que declara a mesma classe utilizando o atalho que o TypeScript possui e que vimos na aula.
+
+Alternativa correta:  
+
+```JavaScript
+export class Fatura {
+    constructor(
+        private criadaEm: Date, 
+        private quantidade: number, 
+        private valor: number
+    ) {}
+}
+```
+
+> O atalho é utilizar um modificador de acesso diretamente nos parâmetros do construtor.
+
+### Aula 5 - Arrays e Generics - Vídeo 2
+
+Transcrição  
+[00:00] Outra coisa para simplificar o que o TypeScript faz para nós. Voltando à classe Negociacoes, vamos ver a declaração do nosso array, Array<Negociacao>. Eu disse que o tipo é array e usei o diamante passando Negociacao aqui dentro. Tudo uma maravilha.
+
+[00:19] Mas o TypeScript tem um atalho que você pode utilizar no lugar disso, se você quiser. Que atalho é esse? Você diz que o tipo é Negociacao, mas eu quero que seja um array, está vendo que está tendo erro de compilação? Porque não faz sentido o push se é do tipo Negociacao. O que você faz é, aqui no final, abrir e fechar colchetes.
+
+[00:43] Fazer Negociacao[] é a mesma coisa que Array<Negociacao>, idêntico. É um atalho que o TypeScript oferece para escrevermos menos, não ter que escrever array, ter que escrever o generics, é um açúcar sintático que ele dá.
+
+[01:16] E agora, o que eu faço com o ReadonlyArray<Negociacao>? É um read only, se eu fizer a mesma coisa ele vai me retornar algo que não é read only. Como eu lido com essa situação?
+
+[01:38] Em vez de fazer o array read only, você escreve esse modificador aqui, readonly, vai dar a mesma coisa. Se eu salvo aqui, salvei. Vou lá para o meu código, deixa eu ver se ainda está com aquele teste “maluco”do pop, venho aqui, coloco this.negociacoes.lista().pop();, não vai aparecer, porque está disponível somente como leitura.
+
+[02:16] Essa é uma forma que as pessoas gostam de usar muito. Eu, particularmente, gosto da forma mais verbosa, porque no meu trabalho eu tenho muito desenvolvedor Java que usa os componentes criados pela equipe de front-end que eu trabalho, e a sintaxe fica mais perto do que eles estão acostumados.
+
+[02:36] Então nós optamos por essa maneira verbosa, mas é perfeitamente tranquilo se você quiser utilizar outra. O que nós vamos ver no próximo vídeo é outro uso do readonly que eu vou mostrar um “pulo do gato” para vocês, até para vocês checarem, verem se faz sentido ou não.
+
+### Aula 5 - Mais sobre readonly - Vídeo 3
+
+Transcrição  
+[00:00] Outra coisa que eu quero mostrar diz respeito, ainda, ao readonly. Vamos voltar à na nossa classe Negociacao, o que fizemos aqui? Nós declaramos as propriedades privadas, eu quero que ninguém possa atribuir um novo valor a data, por isso que nós colocamos um getter, ou seja, a propriedade aqui só pode ser atribuída durante a criação de negociação e depois disso eu preciso ter uma maneira de ler, nós criamos getters.
+
+[00:42] O que eu posso fazer? Eu posso fazer uma coisa diferente, olha o que eu vou fazer aqui. Se eu só estou criando getter para pegar o valor e retornar, eu posso chegar e torná-lo private, public.
+
+[01:01] Mas se eu o torno public, significa que qualquer um pode alterar, se eu faço aqui embaixo const n = new Negociacao();, depois faço n., eu consigo acessar a data e fazer o New Date();.
+
+[01:22] Nós não podemos, depois de uma negociação criada, a data, a quantidade e o valor têm que ser somente leitura, como é somente leitura? readonly. E eu não quero acessar através desse underline. Então olha o que nós fazemos.
+
+[01:37] Aqui eu vou dizer que esse _data aqui, tiro o underline, pego esses getters todos que estão aqui, exceto o do volume, boto aqui, olha o que eu vou fazer, public readonly data:, public readonly quantidade:, public readonly valor:.
+
+[02:06] Isso significa que depois de a minha negociação ter sido criada, a propriedade é pública, todo mundo tem acesso, mas ninguém pode atribuir um valor a esta propriedade.
+
+[02:22] Eu vou deixar aqui, o getter fica, porque eu preciso do volume para calcular, porque eu quero que o getter se assemelhe a uma propriedade da classe, mas que por debaixo dos panos ele faça o cálculo aqui para nós.
+
+[02:38] Vou salvar, vou voltar lá no nosso “negociacao-controller.ts”, aqui eu criei uma negociação, olha que legal, criei a negociacao.data, tem acesso à leitura, = new Date();.
+
+[02:57] Olha só o que ele vai falar, não pode, porque data é somente leitura, ela só pode ser definida no construtor da classe, depois disso nem com reza forte você consegue fazer uma nova atribuição à data da minha negociação aqui, ficou claro?
+
+[03:18] Isso é uma forma também de conseguirmos modelar, criar métodos públicos somente leitura. Às vezes você quer colocar alguma lógica no momento em que você está lendo, então fica interessante continuar com a questão do getter.
+
+[03:38] Tem isso e tem mais uma coisa que eu quero mostrar para vocês, muito cuidado quando ao usar o readonly também, ele resolveu o problema dos nossos getters, mas aqui a coisa ainda tem um buraco que nós vamos ver. Mas o mais importante é olhar o nosso código e ver que ele está simplificado. Então vamos lá para o próximo vídeo.
+
+### Aula 5 - Mais surpresas em nossa modelagem - Vídeo 4
+
+Transcrição
+[00:00] Eu mostrei para vocês no vídeo anterior como funciona o readonly, nós deixamos de usar getter. Eu poderia até ter criado um método tipo get data, get quantidade, get valor, mas eu optei no início criando getters, agora eu tornei os atributos públicos, somente leitura.
+
+[00:21] Nós voltamos para aquela questão da especificação da nossa negociação. Com uma negociação após criada, não pode ser modificada. Será que ela ainda está podendo ser? Vamos olhar, vamos lá comigo.
+
+[00:38] Eu criei a negociação, agora vou chegar negociacao.data e vou tentar botar a data de hoje, consigo? new Date();, não, porque ela é somente leitura, eu só posso passar os valores no construtor uma única vez e depois disso ela é somente leitura.
+
+[01:07] Posso chegar na negociacao e dizer que o valor é igual a 10? Não, porque é somente leitura. Posso chegar aqui e dizer que a quantidade é igual a 20? Não, porque é somente leitura. Posso dizer que negociacao.volume é igual a 100? Não, porque é um getter, então o TypeScript é readonly, o getter para ele é readonly também, então eu não posso.
+
+[01:39] Mas, olha só, a data é um objeto, não é um tipo primitivo. Vou fazer negociacao.data, dar um ponto e ele me dará todos os métodos que um date tem.
+
+[01:56] O date tem um método que é setDate();, e se você olhar a documentação desse método, ele me permite mudar a data, fazê-lo adotar o dia do mês, 1, 2, 3, 4, 5, 6, 7, 8, que eu quiser.
+
+[02:14] Esse é um método mutável, ele vai mudar o date, porque o date é um objeto mutável em JavaScript, isso significa que se eu passar agora (12);, por mais que esse negociacao.data seja readonly, ele é readonly para atribuição, quando você usa o igual, atribuição. Mas como eu estou evocando esse método nele, o TypeScript pouco sabe, o TypeScript vai deixar, ele não vai te proteger contra isso.
+
+[02:42] Vou salvar, salvei. Vou voltar lá no navegador, vou criar aqui com o dia 15, quantidade 1, valor tal. Quando eu incluo está lá a minha lista com dia 12.
+
+[03:03] Então tem um buraco na nossa especificação que está nos permitindo alterar a data após modificada. Era parecido com o problema do array, porque o nosso date aqui é uma referência para a data, o readonly só não nos deixa – muito cuidado com isso – fazer data = trabalhar com a atribuição.
+
+[03:31] Você pode pensar “Flávio, quer dizer que se voltarmos com getter vai resolver o problema?”. Não, precisamos fazer mais coisas, porque o getter teria o mesmo tipo de problema, ele está rodando uma referência para o date interno da minha negociação.
+
+[03:46] O que veremos no próximo vídeo? Vamos aplicar o que chamamos de programação defensiva. Vamos fazer algo que evite que a data seja mutável, eu quero que ela seja imutável, isso significa que se alguém setar qualquer a operação sobre essa data, que ela não tenha efeito sobre a data que está dentro da minha negociação.
+
+[04:11] Como nós fazemos isso? Aí não é TypeScript, é apenas um conhecimento de programação defensiva que eu vou mostrar para vocês no próximo vídeo.
+
+### Aula 5 - Programação defensiva - Vídeo 5
+
+Transcrição  
+[00:00] Vou voltar para a minha “negociacao.ts”, para resolver o problema da mutabilidade. A minha data voltará a ser private, não precisa ser readonly aqui, _data.
+
+[00:20] Voltei para a forma anterior e eu vou criar agora um get data():, um getter de novo, onde eu retorno um Date { e eu vou retornar this._data;. Eu estou botando o underline, lembrando, porque o meu getter não pode ter o mesmo nome da minha propriedade, eu quero expor para o mundo externo data, mas internamente ele tem o _data.
+
+[00:47] Se eu fizer isso, “Flávio, você está voltando para a forma anterior?”, estou voltando para a forma anterior e nós vamos ver que não vai funcionar. Deixa eu voltar para cá, “negociacao-controller.ts”, voltei para o código, por que ele está mostrando aqui para mim? Não vai funcionar, vai continuar com o mesmo problema.
+
+[01:06] Nenhum erro de compilação, volto lá para o meu código, boto na data “11/11/1111”, aqui na quantidade “1”, aqui no valor “111”, quando eu olho continua 12. O que eu vou fazer?
+
+[01:21] Como você, que é desenvolvedor, está chamando meu getter e acha que ele é a propriedade data, antes de desenvolver a data eu vou criar uma nova data idêntica à que meu negociação está guardando, mas como vai ser uma nova referência, não vai ser uma referência para a data que está aqui dentro, _data, se você fizer qualquer modificação, você vai fazer modificação na cópia da minha data, não na data que eu estou guardando.
+
+[01:48] Vai ficar mais claro quando escrevermos o código. Agora eu vou fazer assim, const data = new Date, o que eu vou passar como parâmetro? Vou passar o (this._data.getTime());.
+
+[02:03] Esse getTime de uma data retorna a data em milissegundos, num número gigante. E o construtor de date é inteligente o suficiente que se você passar o valor de getTime para ele, ele sabe criar uma data a partir desse time desta data.
+
+[02:24] O construtor de date pode ter vários tipos de construtores, vários tipos de parâmetros que você passa, várias formas de se criar uma data.
+
+[02:31] Essa data que eu estou retornando é idêntica à data que eu tenho encapsulada dentro da minha negociação, porém uma nova referência. Se você fizer o set date ou fizer qualquer coisa, você não vai mudar na data da minha negociação. E eu preciso te retornar uma data de qualquer maneira, porque senão você não tem como ler, saber que data que meu date tem.
+
+[02:57] Vou salvar aqui, salvei. Vou voltar lá no meu “negociacao-controller.ts”, vocês podem perceber que eu estou mudando aqui. Como, negociacao.data.setDate(12);, toda vez que eu acesso é um getter, ele está me retornando uma nova data, ele não vai modificar a minha data que está armazenada dentro da minha modelagem de negociação.
+
+[03:19] Vamos voltar para o navegador, vou criar aqui, ele fez o refresh sozinho, “11/11/1111”. Nós sabemos que tem que aparecer lá 11, não é 12. Cliquei em “Incluir”, está lá, continuou 11.
+
+[03:33] Isso que fizemos nós chamamos de programação defensiva, eu estou evitando que quando você chame um método ou um getter da minha classe você tenha acesso a uma referência de algo que eu guardei para ninguém botar a mão, mas que eu não quero que você modifique.
+
+[03:49] Então eu fiz um clone, eu tipo clonei essa data te retornando a mesma data, mas qualquer modificação que você faça vai ser uma cópia da data e não na data que está aqui dentro.
+
+[04:01] Eu quis mostrar isso para vocês, porque nem sempre o readonly resolve problemas como esse, então um método ou até mesmo um getter, como vimos aqui, pode resolver essa questão da nossa classe.
+
+[04:14] Está tudo bonito, com quantidade e valor, são tipos literais do JavaScript, você só tem como modificar atribuindo, você não tem uma referência para eles, então nós conseguimos aqui blindar a nossa negociação.
+
+[04:33] Estamos chegando numa etapa do nosso projeto em que a modelagem, utilizando TypeScript mais alguns recursos como programação defensiva e bom senso, está tornando o nosso código cada vez mais difícil para o desenvolvedor que está programando, mesmo sem ter que ler documentação nenhuma, cometer alguma gafe.
+
+[04:52] Porque uma coisa que agora deve ficar evidente para vocês é que como eu vou trabalhando com tipos, eu estou cada vez mais bloqueando que o desenvolvedor faça algo de errado com meu código e apenas expondo para ele o que ele pode fazer, o peso cognitivo para ele é menor, porque se ele está programando e viu que não tem um método na minha lista de negociações para fazer um push, ele sabe que esse cara é para ser somente leitura e por aí vai.
+
+### Aula 5 - Projeto final do curso
+
+Você pode [baixar o projeto final.](https://github.com/alura-cursos/typescript-curso-1/archive/2696c7ca452f2eb6468caaccc2699da2332a39a1.zip)
+
+Aproveite para explorá-lo e revisar pontos importantes do curso.
+
+Bons estudos!
+
+### Aula 5 - Conclusão - Vídeo 6
+
+Transcrição  
+[00:00] Parabéns!! Chegamos ao final do curso de fundamentos de TypeScript. Nós estudamos as vantagens da tipagem estática e uma aplicação real que estamos desenvolvendo. Também estudamos toda a parte de modelagem usando TypeScript, evoluindo gradativamente o nosso projeto.
+
+[00:18] Uma coisa para deixarmos bem clara é que no próximo módulo de TypeScript a coisa começa a ficar mais complexa, no sentido que nesse projeto nós ainda não estamos exibindo a tabela com a lista de negociações.
+
+[00:33] Então no próximo curso vamos começar a desenvolver um microframework, utilizando o TypeScript que tenta copiar, de maneira bem grosseira, o key framework como Vue.js, Angular, React fazem, que é: altera o meu modelo e a tela automaticamente é renderizada para exibir os dados mais atuais na minha *view.
+
+[00:58] Trabalhando com esse microframework no próximo curso, teremos que usar outros recursos de TypeScript mais avançados para conseguirmos atingir esse objetivo e irmos completando nossa aplicação aos poucos.
+
+[01:13] Se você sentiu falta de algum outro assunto do TypeScript que ainda não foi abordado nesse curso, já cai direto no segundo, para verificar lá a ementa do curso, porque a ideia é no mínimo três cursos aqui na plataforma, já tem o primeiro, vai ter o segundo e vai ter o terceiro. Verifica também se na data de lançamento desse curso o segundo curso está já disponível.
+
+[01:39] O que eu quero desejar para vocês é muito sucesso, inclusive a linguagem TypeScript já está no coletivo imaginário dos desenvolvedores, ela é utilizada por padrão pelo Angular, a comunidade React está utilizando cada vez mais, a Vue.js e não só em projetos web, mas você também pode usar TypeScript na plataforma Node, desenvolvendo código back-end no lado do servidor. Então muito sucesso para vocês e vamos continuar a nossa jornada, que ainda tem muita coisa para vermos.

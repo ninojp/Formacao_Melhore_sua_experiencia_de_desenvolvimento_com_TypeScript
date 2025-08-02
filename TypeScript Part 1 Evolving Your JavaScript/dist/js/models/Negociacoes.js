@@ -1,18 +1,19 @@
 export default class Negociacoes {
     constructor() {
-        // private negociacoes:Negociacao[] = [];
-        this.negociacoes = [];
+        this.negociacoes = []; //pode ser declarado dessa forma, genericType[].
     }
+    // private negociacoes:Array<Negociacao> = [];
     adiciona(negociacao) {
         this.negociacoes.push(negociacao);
     }
     ;
+    // lista(): ReadonlyArray<Negociacao> {
     lista() {
-        return [...this.negociacoes]; //RETORNA uma cópia do array, para evitar que o array original seja modificado diretamente
+        return this.negociacoes;
+        // return [...this.negociacoes];//RETORNA uma cópia do array, para evitar que o array original seja modificado diretamente
         // return this.negociacoes.slice();//OUTRA FORMA de retornar uma cópia do array
-        // return this.negociacoes;
-        ;
     }
+    ;
 }
 ;
 // const negociacoes = new Negociacoes();

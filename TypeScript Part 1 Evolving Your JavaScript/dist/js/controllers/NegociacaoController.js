@@ -13,7 +13,8 @@ export default class NegociacaoController {
     adiciona() {
         const negociacao = this.criaNegociacao();
         this.negociacoes.adiciona(negociacao);
-        this.negociacoes.lista().pop(); //REGRAS de modelo de negócio:Não deveria ser possivel deletar itens.
+        // this.negociacoes.lista().pop();//REGRAS de modelo de negócio:Não deveria ser possivel deletar itens.
+        negociacao.data.setDate(12); //Brecha! A data original foi modificada, pois Date() é um objeto mutável.
         console.log(this.negociacoes.lista());
         this.limpaFormulario();
     }
