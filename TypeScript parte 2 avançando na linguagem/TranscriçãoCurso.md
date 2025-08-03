@@ -154,7 +154,7 @@ Alternativa correta!
 
 ### Aula 1 - Revisando nossos passos - Vídeo 5
 
-Transcrição
+Transcrição  
 [00:00] Pessoal, vamos fazer uma revisão relâmpago, para ficarmos com esse conhecimento bem sólido, porque vamos levar até o final do treinamento. A questão toda é, voltando para o navegador: o nosso objetivo é pegar os dados do usuário, criar um objeto de negociação, inserir esse objeto de negociação no nosso objeto negociações, o nosso modelo de negociações, e exibir na tela.
 
 [00:24] Para exibirmos na tela, vamos criar uma solução de view caseira, homemade, parecida com o JSX do React. Ou seja, eu vou ter um pedaço da minha view, no qual eu vou dizer para o navegador o seguinte: “Renderize este elemento no meu index.html”.
@@ -179,7 +179,7 @@ Transcrição
 
 ### Aula 1 - Unindo view e modelo - Vídeo 6
 
-Transcrição
+Transcrição  
 [00:00] Vamos continuar. Agora, a nossa view precisa receber os dados do modelo para renderizar, funcionar. Quando eu fizer isso daqui, adicionar uma nova negociação, por um passe de mágica, eu quero que aquela negociação apareça lá na tabela.
 
 [00:15] Então, como vamos fazer isso? Vou voltar lá para o meu negociação-controller. Está vendo aqui? Esse negociação-controller tem o método update. O que eu vou fazer? Toda vez que eu chamar esse método update, eu vou fazer o seguinte: “View, faça o seu update levando em consideração”, olha quem eu vou passar: this.negociacoes.
@@ -231,10 +231,10 @@ Transcrição
 [08:47] E após adicionar cada item na lista, eu peço para a minha view fazer o update, passando como parâmetro modelo que o método update está necessitando. O que falta agora é resolvermos a questão do nosso view da data, e é esse o tema do próximo vídeo.
 
 ### Aula 1 - A arte do template string
- Próxima Atividade
 
 Guga escreveu o seguinte código:
 
+```JavaScript
 let vogais: string[] = ['a', 'e', 'i', 'o', 'u'];
 let template = `
 
@@ -249,10 +249,13 @@ let template = `
     </ul>
 `;
 console.log(template);
-Copiar código
+```
+
 A saída de console.log exibirá:
 
-Alternativa correta
+Alternativa correta:
+
+```JavaScript
 <ul>
     <li>A</li>   
     <li>E</li>     
@@ -260,12 +263,13 @@ Alternativa correta
     <li>O</li>      
     <li>U</li>    
 </ul>
+```
 
-Alternativa correta! Será renderizada uma <li> dinamicamente, de acordo com os valores do array.
+> Será renderizada uma `<li>` dinamicamente, de acordo com os valores do array.
 
 ### Aula 1 - Formatando a data - Vídeo 7
 
-Transcrição
+Transcrição  
 [00:00] Temos que resolver, agora, o problema de formatar a nossa data. Por enquanto, eu estou exibindo uma interrogação. Como vamos fazer isso?
 
 [00:08] Eu vou usar um recurso no browser. Não é muito antigo, também não é muito recente. Vamos usar o próprio formatador do navegador nativo, que vai considerar a localidade do seu navegador para fazer o formato de data.
@@ -298,13 +302,463 @@ Nesta aula vimos muitas coisas importas, como criar elementos do DOM dinamicamen
 I.A:  
 Edenilson, parabéns pela dedicação aos estudos! Você mencionou que aprenderam a criar elementos do DOM dinamicamente e a integrar suas primeiras views com a página, o que é um ponto muito importante na construção de aplicações React. Além disso, você citou o uso do objeto Date(), que é fundamental para manipulação de datas, mas na aula também abordamos a formatação de datas usando o `Intl`, que é uma ferramenta poderosa para apresentar datas de forma adequada, levando em consideração a localização e o formato desejado. Além disso, discutimos a inspiração no React para a criação de templates declarativos e dinâmicos, o que permite que você desenvolva interfaces de usuário mais interativas e responsivas. A manipulação declarativa do DOM através de templates é uma abordagem que facilita a manutenção e a legibilidade do código. Continue estudando e praticando!
 
-## Aula 2 - 
+## Aula 2 - Herança e reaproveitamento de código
 
-### Aula 2 -  - Vídeo 1
-### Aula 2 -  - Vídeo 2
-### Aula 2 -  - Vídeo 3
-### Aula 2 -  - Vídeo 4
-### Aula 2 -  - Vídeo 5
-### Aula 2 -  - Vídeo 6
-### Aula 2 -  - Vídeo 7
-### Aula 2 -  - Vídeo 8
+### Aula 2 - Criando view da mensagem - Vídeo 1
+
+Transcrição  
+[00:00] Voltando para o nosso projeto, nós já conseguimos adicionar negociações, consegue exibir a data, quantidade e o valor. Eu poderia exibir o volume, mas eu não quero exibir o volume. Poderia, mas não me interessa ver o volume agora.
+
+[00:14] Mas, o mais importante é o seguinte. Toda vez que eu adicionar uma negociação, o que você acha de exibir uma mensagem aqui em cima dizendo que a negociação foi adicionada com sucesso? Isso não é muito comum no dia a dia?
+
+[00:30] Vamos lá, vamos tentar fazer isso e ver o que vai acontecer, porque tem muita coisa que vai acontecer. Vamos lá, vamos voltar para o nosso código. Que nós temos que programar em TypeScript, aprender coisas novas.
+
+[00:41] O que eu vou fazer? Eu vou lá dentro de views, e vou criar um arquivo chamado mensagem-view.ts. Na natureza, nada se cria, tudo se copia. Não é isso? Vou chegar lá em negociações-view, copiei tudo, voltei para a mensagem-view.
+
+[01:05] Na verdade, eu não vou copiar. Vamos relembrar, vamos fazer juntos para relembrar. É melhor. Então, o que eu faço quando eu quero criar uma view. A primeira coisa que nós vamos ter que fazer é exportar uma classe. export class mensagemView. Estou exportando esse item.
+
+[01:28] O que eu vou ter aqui no construtor? Eu vou receber um seletor que é do tipo string, vou ter uma propriedade da minha classe, private element: HTMLElement. Vimos no curso anterior que esse tipo já vem com TypeScript padrão para todos os tipos de elementos do DOM do JavaScript.
+
+[01:58] O que vou fazer? Vou dizer que this.element = document.querySeletor, passa o nome do seletor, peguei esse item. Muito bem. Nós precisamos do método template, que vai retornar uma string. Também precisamos do método update, que vai ser void, não vai retornar nada, mas que por debaixo dos panos, vai fazer const template = this.template.
+
+[02:41] Tem que passar o modelo. Vou ter de passar aqui o model. O model vai ser uma string, porque a mensagem que eu vou passar é uma string, não é um objeto. Esse item aqui eu passo para cá. Passei. Vou dizer que this.element.innerHTML = template. Fiz isso.
+
+[03:10] Agora eu vou definir. Vem comigo, porque eu estou trabalhando com vocês aqui em um negócio bem legal, sem forçar uma barra natural, vamos ver o que vai acontecer.
+
+[03:24] Eu tenho esse template, estou recebendo essa string aqui, eu tenho que ver qual template eu vou gerar aqui, é um parágrafo. Eu vou fazer o seguinte. Qual é esse template? Eu vou dar return e vou colocar aqui a template *string*, porque eu vou retornar um parágrafo com a class='alert alert-info, vou interpolar com o meu modelo, que é a minha string. Fecho o meu parágrafo.
+
+[03:56] Então, esse é o template que eu vou retornar. Então, vamos recapitular. Recebo no seletor o ID do elemento que eu vou inserir esse parágrafo. Quando eu chamar o update, ele vai chamar o update do modelo e vai, por debaixo dos panos, chamar o template para gerar um template e eu adicionar no innerHTML.
+
+[04:20] Não é novidade nenhuma. Até aqui, o template dele é muito mais simples do que o template do componente que acabamos de ver. Vou voltar lá no meu controller. Vou criar uma propriedade desse item aqui, que vai ser private mensagemView = new MensagemView.
+
+[04:53] Enter. Abri e fechei. Sei que vai dar erro de compilação. Vamos olhar o import. MensagemView. Importou direito? Importou. Está com o dot js? Está. Tem que passar um ID para esse item. E eu vou passar. O ID vai ser #mensagemView.
+
+[05:15] Agora eu preciso criar um elemento lá no HTML que tenha esse ID para eu poder renderizar esse item. Vou voltar lá no HTML. Eu quero que esse item seja exibido antes do formulário. Já está lá. Nosso template já veio com esse cara, id=‘mensagemView. No projeto inicial, eu deixei esse item aí. Era para ter removido, mas esqueci.
+
+[05:44] Tem esse elemento aqui, vamos voltar lá para o nosso controller. mensagemView está aqui, o que eu tenho que fazer? É a mesma receita de bolo. Eu não vou chamar nenhuma inicialização, eu só vou chamar quando você adicionar.
+
+[05:58] Quando eu acabo de adicionar, eu faço update da lista e peço para this.mensagemView.*update*, e eu vou passar uma mensagem legal, que eu vou falar assim: "Negociação adicionada com sucesso". Ponto e vírgula.
+
+[06:26] Será que vai funcionar? Vou salvar, vou lá no meu navegador. Abri. Meu browse já fez o refresh. Eu vou fazer 30/127. 20. Incluir. Incluí. Ele fez aqui para mim, exibiu a tabela, renderizou a tabela e renderizou a mensagem. Perfeito. Tudo funcionando.
+
+[06:55] Mas tem um problema nesse código. Em tudo o que nós fizemos, tem um mau cheiro. Nós vamos falar de bad smell. Tem um mau cheiro nesse código que está me incomodando, eu não sei se está incomodando vocês, e é isso que nós vamos estudar no próximo vídeo.
+
+### Aula 2 - Resolvendo repetição de código - Vídeo 2
+
+Transcrição  
+[00:00] Bom, vamos refletir um pouco sobre o que nós fizemos. Voltando para o nosso código, se eu abro a mensagem view e um lado, e negociação view do outro, vamos olhar linha por linha, excluindo o import? Vou olhar com você.
+
+[00:17] Temos o Private element:, elemento. Vou chamar de elemento. Coloquei em inglês, element. Olha, elemento, elemento. Construtor, idêntico. Template, muda. Aqui, beleza. Template, muda, o template é diferente.
+
+[00:42] Agora, em método *update*, idêntico. Então, não precisa meditar muito para perceber que estamos repetindo código. Toda view que criarmos, nós precisaremos repetir o construtor, que é o mesmo, o método update, que é o mesmo.
+
+[01:04] Qual é a única coisa diferente, em teoria, olhando rapidamente? É o template do componente, do modelo, da view, que muda.
+
+[01:18] Será que conseguimos de herança para resolver esse problema, tentar criar uma classe chamada view, e tentar herdar esses métodos e evitar replicar código?
+
+[01:32] É aí que eu quero ver se nós temos jogo de cintura para fazer isso utilizando TypeScript. Vamos tentar resolver no próximo vídeo.
+
+### Aula 2 - Herança e pequena surpresa - Vídeo 3
+
+Transcrição  
+[00:00] Vamos lá. Eu vou começar bem “de leve”, e eu vou fazer o seguinte. O que eles têm de idênticos, de iguais aqui, é o construtor e a propriedade elemento. Vou começar por aí. Podemos fazer mais, mas é esse que eu vou começar.
+
+[00:17] Então, o que eu vou fazer? Dentro de views, vou criar um arquivo chamado view.ts. Eu vou fazer export class View. O que ele vai ter? Um atributo private elemento: HTMLElement.
+
+[00:37] O que ele vai ter aqui no construtor? construtor(seletor: string), e vai dizer que this.elemento = document.querySelector(seletor). É exatamente igual. Se eu olhar isso aqui, é exatamente igual aqui, e exatamente igual aqui.
+
+[01:01] Então, o que eu vou fazer? Vou chegar aqui e vou apagar. Flávio, não faz isso. Vou fazer. Vou apagar, e vai dar problema no meu código, não vai compilar. Vou vir aqui em mensagem-view, vou apagar esse item. Salvei. Se eu abro aqui o terminal do TypeScript, está tendo um erro de compilação, porque se volto em mensagem-view, esse item.
+
+[01:34] Por que não está funcionando? Porque eu não herdei. Então, o que eu vou fazer? Vou ir em mensagem-view e negociação-view, que agora não tem o construtor, vou fazer um extends e vou herdar de view. Vamos ver se ele vai fazer o import automático.
+
+[02:05] Ele não está encontrando o meu elemento para importar automaticamente. Mas não tem problema, eu vou importar ele aqui. O VS Code ainda não está 5% para você trabalhar com sistema de módulos do JavaScript dentro dele, padrão. Então, vou ter de importar aqui na minha APP porque ele se recusou.
+
+[02:29] O arquivo está correto, está lá, tinha que ter achado. Então eu vou voltar lá e fazer import { View } from ‘./view.js’;. Vamos importar. Se eu clico aqui neste item, foi encontrado. Está aqui.
+
+[02:59] Agora eu vou fazer a mesma coisa com negociação view. extends view. Agora ele está aparecendo, era uma questão de cache. Enter. Fiz o import? Fez. Está aqui o import, certo, está com js no final. Salvei.
+
+[03:18] Então, o que significa? Significa que eu estou herdando de view o construtor e o atributo private elemento: HTMLElement;. Só que se eu olho o meu código, vocês vão ver aqui que eu começo a ter um erro. Olha o problema.
+
+[03:36] A minha classe mensagem-view está precisando acessar a propriedade elemento lá de view. O item negociação também precisa acessar a propriedade elemento lá de view. Mas qual o problema? O problema é que elemento é privado, e só pode ser acessado pela classe que definiu.
+
+[04:03] "Então, Flávio, isso significa que eu vou ter de colocar public"? Salvei. Meu código passou. Se eu volto no navegador e coloco qualquer coisa, não funciona. Vou fazer isso? Claro que não. Você não vai fazer isso.
+
+[04:21] Você vai voltar para privado, vai dar o erro. Por quê? Porque na nossa definição de view, o desenvolvedor não precisa saber da existência desse item aqui. Esse item está encapsulado dentro da view justamente para remover a complexidade do desenvolvedor ter de lidar com ele e não precisar interagir com esse elemento do DOM.
+
+[04:41] Então, como resolvemos isso? A primeira coisa é o seguinte: em herança, uma classe filha, que é a mensagem aqui, mensagem-view e negociação-view, são filhas de view. Certo? Em herança, as filhas não podem acessar tributos privados do pai. O filho não pode meter a mão na carteira do pai.
+
+[05:05] Mas, se eu troco o modificador de acesso da view para protected, oha que legal. Salvei. O meu código volta a funcionar. Que modificador protected é esse? Quando você está trabalhando com herança e usa o modificador protected, ele diz o seguinte: "Só eu, view, tenho acesso a essa propriedade protected, mas as minhas filhas podem tocar. Todo mundo que herdar de mim vai ter acesso".
+
+[05:39] Tanto isso é verdade que agora eu mexo aqui, olha, e todo mundo que é filho está tendo acesso lá à propriedade elemento da minha view.
+
+[05:49] Você pode questionar: "Flávio, mas alguém que criar a instância tem acesso a essa propriedade?". Não. Se você vier em negociação, onde eu declarei. Vou escrever o código só para vocês verem. this.negociações.View., se eu estou vendo template e update, não estou vendo elemento, porque ele é protected.
+
+[06:10] Então, eu não quero filha de view, então não tem acesso. Diferente se eu tivesse colocado public. Se tivesse colocado public, o meu código ia funcionar, mas olha o que ia acontecer aqui. O elemento está exposto. * This is against the purpose*, isso é contra o propósito.
+
+[06:29] Eu não quero que ninguém acesse esse elemento e possa manipular ou fazer query selector. Eu quero remover essa responsabilidade do desenvolvedor. Então, o modificador protected caiu igual a uma luva. Então, ele resolveu esse problema.
+
+[06:49] Entenderam a diferença entre private, public e protected, e onde entra o contexto? Então, o que precisamos fazer agora, já conseguimos reutilizar bastante coisa, essa construtora, essa propriedade, mas ainda podemos reaproveitar mais código, e é isso o que vamos mais ver no próximo vídeo.
+
+### Aula 2 - Utilizando Herança - Exercício
+
+Mônica decidiu criar um jogo em JavaScript, mas optou por utilizar TypeScript devido aos recursos extras da linguagem. Ela criou três classes:
+
+Humanoide
+Humano
+Alienigena
+
+Em termos de design, tanto Humano quanto Alienigena são humanóides, por isso herdam as características dessa classe. O código utilizado segue abaixo:
+
+```JavaScript
+class Humanoide {
+    private _energia: number = 100;
+    private _nome: string = '';
+        get energia() {
+            return this._energia;
+    }
+        get nome() {
+            return this._nome;
+    }
+        set nome(nome) {
+            this._nome = nome;
+    }
+}
+
+class Humano extends Humanoide {
+        private _idade: number = 0;
+        get idade() {
+            return this._idade;
+    }
+        set idade(idade) {
+            this._idade = idade;
+    }
+}
+
+class Alienigena extends Humanoide {
+        private _energiaExtra: number = 100;
+        get energia() {
+            return this._energia +this._energiaExtra;
+    }
+}
+```
+
+No entanto, ao tentar compilar o código, Mônica encontrou um problema. Qual seria o problema de compilação identificado no código?
+
+Resposta:  
+O problema está na classe Alienigena, pois o método get energia tenta acessar uma propriedade privada da classe Humanoide.
+
+> A propriedade _energia é privada na classe Humanoide, o que impede que a classe Alienigena a acesse diretamente. Para corrigir isso, _energia deve ser protegida (protected) em vez de privada (private).
+
+### Aula 2 - Modificador de acesso - Exercício
+
+Temos o seguinte código:
+
+```JavaScript
+class Pai {
+    private nome = '';
+}
+
+class Filha extends Pai {
+}
+
+const filha = new Filha();
+console.log(filha.nome);
+```
+
+Marque as opções verdadeiras sobre o código.
+
+Alternativa correta  
+> Mudar o modificador de acesso da propriedade nome de private para protected é uma solução garantindo apenas que classes filhas tenham acesso à propriedade.
+> Mudar o modificador de acesso da propriedade nome de private para public é uma solução, porém qualquer parte do sistema poderá acessar essa propriedade.
+
+### Aula 2 - Mais surpresas com Herança - Vídeo 4
+
+Transcrição
+[00:00] No vídeo anterior, nós conseguimos reaproveitar a propriedade elemento e o construtor em negociaçãoView e mensagemView. Mas eu quero dar um passo além. Se nós olharmos em mensagem e negociaçõesView, nós vemos que o método update é bem parecido. O miolo dele é bem parecido, ele é idêntico nos dois lugares.
+
+[00:27] Então, que tal eu tentar reutilizar esse método update lá em view. O que eu vou fazer? Vou chegar aqui eu vou copiar de mensagemView, esse método aqui, vou tirar daqui esse item. Tirei. Salvei. Vai dar um erro de compilação, claro, porque eu tirei esse item, e vou jogar esse método aqui para dentro de view.
+
+[00:56] Temos um segundo problema. O segundo problema é que o template precisa fazer parte de view. Então, vamos lá. O que eu vou fazer aqui? Vou em mensagemView, vou pegar esse template. Vou deixar ele aqui por enquanto. Vou jogar ele para cá. Meu template está aqui, compilando.
+
+[01:21] Mas a pergunta que eu faço para vocês: Esse template que está aqui, faz sentido ele ser usado para negociaçõesView ou para qualquer outro lugar? Não. Quem deve definir o comportamento desse template é a classe filha. A classe filha tem que reescrever esse método.
+
+[01:41] Mas esse método, na hora em que nós reescrevermos, é preciso retornar algo. Então, olha o que eu vou fazer? Quem herdar de template, eu vou fazer throw Error(‘classe filha precisa implementar template o método template’).
+
+[02:09] O que está acontecendo? Quem herdar de view vai ganhar o update, vai ganhar o template, mas se não implementar o método template, o que eu vou herdar vai lançar no erro, vai dar um erro. Então é por isso que em negociaçãoView, eu mantenho o meu template.
+
+[02:29] Por que eu estou fazendo? Eu herdei de view, mas se eu não sobrescrever esse item, eu vou ganhar um template que quando eu chamar, vai lançar um erro. Eu vou olhar no console e vou perceber que não está funcionando.
+
+[02:44] Então, o que eu fiz? Eu estou lançando uma exceção, forçando a filha a sobrescrever em herança, reescrever o comportamento do método. Então está tudo aqui funcionando, deixa eu salvar. Um view está com update e está com template.
+
+[03:07] negociaçõesView está herdando o update e está sobrescrevendo o template. Mas, se eu olho aqui no console, eu vejo vários erros acontecendo aqui. O que está acontecendo? Você em negociaçãoView, o que esse método template e update está esperando como parâmetro? Uma string.
+
+[03:34] Só que isso funciona para mensagemView, porque o template que eu estou sobrescrevendo é model: *string*. E agora, para a negociaçãoView? Para a negociaçãoView, eu vou tirá-lo daqui, olha. Tirei. Estou aqui. Reescrevi o template. Tirei o update porque também herdei o update, mas se nós reparamos, o template está reclamando que esse tipo negociações não é compatível com o tipo string da classe que eu herdei.
+
+[04:11] Não encaixa. Ele tem que ser o mesmo tipo. O mesmo tipo que está em view tem que ser o mesmo tipo que está em negociaçãoView; o mesmo tipo que está em view tem que ser o mesmo tipo do mensagemView. Mas o problema é que isso aqui está em hardcoded, está fixo. Estou dizendo que é sempre uma string.
+
+[04:27] Como eu resolvo isso? Estou com um problema. Quero escrever um código genérico, e tem esse problema. Então, de novo, eu tenho que resolver esse problema de compilação. Eu tenho que arrumar uma maneira desse meu update e template saber que se eu estou herdando de view, aqui, em negociaçõesView, ele tem que ser do tipo negociação.
+
+[04:54] Se eu estou herdando dele em mensagemView, ele tem que ser do tipo string. E é isso o que nós vamos aprender no próximo vídeo. E não é uma novidade. Estudamos no primeiro módulo, mas agora nós vamos levar isso a um próximo nível.
+
+### Aula 2 - Avançando no uso de Generics - Vídeo 5
+
+Transcrição
+[00:00] Vamos lá. Como nós vamos resolver isso? Eu quero que o view e o parâmetro sejam genéricos. Que esses parâmetros funcionem tanto se eu estender minha view na classe negociaçõesView, ou se eu estender dentro de mensagemView. Nós vamos resolver usando o generics.
+
+[00:21] Nós estudamos o generics no primeiro capítulo, no primeiro módulo do curso, e agora vamos utilizar. Na definição da minha classe view, eu vou colocar aquele diamante e vou colocar um T aqui. Esse T é de type. Qual é o tipo que está aqui? Não sei.
+
+[00:42] Mas eu sei que é esse tipo que eu quero considerar no meu update, e esse tipo que eu quero considerar no template. Então, se esse tipo é string, vai funcionar com mensagemView. Se esse tipo é negociações, vai funcionar com negociaçõesView.
+
+[01:05] Vou salvar, e se eu volto lá para a minha classe, mensagemView, você vai ver que vai ter um erro no extend. O que é esse erro? Está dizendo que view é genérico, e eu tenho que dizer qual é o tipo que vai entrar no lugar desse T.
+
+[01:20] O tipo que vai entrar aqui é extend. Salvei. Vamos lá para a negociaçãoView. Qual é o tipo que vai entrar aqui? O tipo que vai entrar aqui é negociações. Salvei. Nenhum erro de compilação. Vou provar para vocês. Vou voltar lá no navegador. Vou colocar aqui 2, 1, 3. Incluir. Tudo funcionando.
+
+[01:56] O que aconteceu? Aconteceu que a nossa view tem um método que eu quero reutilizar. Isso é verdade. Porém, alguns parâmetros desses métodos, eu quero que seja definido o tipo na classe filha. Então, o que eu fiz? Eu disse que essa view tinha um tipo genérico T, de type.
+
+[02:18] Então, onde tem esse T, eu substituo pelo tipo que eu tinha colocado fixo. Então, onde é que é definido esse T? Na hora em que eu estendo a minha negociação view, eu passo aqui em negociações.
+
+[02:31] É esse negociações aqui, que eu passei, que vai entrar aqui. Olha que legal. Se eu coloco string, olha o que acontece. O meu template não funciona. Por quê? Porque está dizendo que se você colocou esse tipo genéricos string, ele está esperando que esse parâmetro model seja string.
+
+[02:50] Se eu coloco string, vai passar, mas não tem nada a ver com o nosso código. Eu não estou passando uma string; eu estou passando negociação. Então é por isso que eu coloco negociação aqui. A mesma coisa em mensagemView.
+
+[03:03] Eu estou dizendo que essa view vai trabalhar o T dela, onde eu estendi a mensagemView, vai ser do tipo string. Então é por isso que agora consigo colocar model e string, perfeitamente funcionando. Ou seja, eu abri uma lacuna na minha classe view, no qual as filhas podem definir.
+
+[03:25] Isso caiu igual a uma luva. Porque, olha, consegui reaproveitar o meu update, que está idêntico. A única coisa que muda é o parâmetro e o método template. E isso que eu fiz é uma medida de precaução, porque se você chegar agora em negociaçãoView, mensagemView, e não definir o template, eu vou herdar o template do pai.
+
+[03:50] Então, olha o que acontece quando eu rodo o código. Não tive erro de compilação. Agora eu vou rodar. Ele está dizendo que como a minha classe filha herdou de view e não sobrescreveu o template, qual é o código que está no template do pai que eu estou rodando? O que lança o throw.
+
+[04:17] E eu estou lembrando o desenvolvedor que ele tem que implementar o método template. Mas, beleza. Não está muito legal, porque eu estou descobrindo o meu erro em runtime, em tempo de execução. Eu não estou descobrindo o problema disso em tempo de compilação, no TypeScript eu quero descobrir esse problema e tempo de compilação.
+
+[04:39] E nós vamos aprender a resolver isso. Mas, o mais importante, agora, é entender essa questão generics, porque até agora, até no modo anterior, utilizamos generics do tipo array.
+
+[04:49] Aqui, não. Estamos criando um tipo genérico. Tudo funcionando? Então, vamos continuar.
+
+### Aula 2 - Dois tipos genéricos - Exercício
+
+Fernando utiliza muito o IndexedDB, um banco de dados que vive no próprio navegador. Com forte influência de padrões de projeto, decidiu criar um GenericDAO:
+
+```JavaScript
+class GenericDAO {
+    adiciona(objeto: Negociacao): number {
+        /* implementação do método omitida */
+    }
+    apaga(objeto: Negociacao): void {
+        /* implementação do método omitida */
+    }
+    buscaPorId(id: number): Negociacao {
+        /* implementação do método omitida */
+    }
+    atualiza(objeto: Negociacao): void {
+        /* implementação do método omitida */
+    }
+    listaTodos(): Negociacao[] {
+        /* implementação do método omitida */
+    }
+}
+// exemplo de uso
+let dao = new GenericDao();
+let negociacao = new Negociacao(new Date(), 1, 200);
+// recebe o ID da negociação gerada
+let id = dao.adiciona(negociacao);
+let negociacaoBuscada = dao.buscaPorId(id);
+```
+
+O código escrito por Fernando não é genérico, pois está amarrado ao tipo Negociacao. Além disso, o ID do elemento no IndexedDB pode ser um número ou uma string, e esse tipo está fixo na definição da classe.
+
+Marque a opção que torna a classe realmente genérica, permitindo persistir outros tipos, inclusive a definir um outro tipo de ID.
+
+Resposta:  
+
+```JavaScript
+class GenericDAO<T, K> {
+    adiciona(objeto: T): K {
+        /* implementação do método omitida */
+    }
+    apaga(objeto: T): void {
+        /* implementação do método omitida */
+    }
+    buscaPorId(id: K): T {
+        /* implementação do método omitida */
+    }
+    atualiza(objeto: T): void {
+        /* implementação do método omitida */
+    }
+    listaTodos(): T[] {
+        /* implementação do método omitida */
+    }
+}
+```
+
+> Alternativa correta! Pode indicar mais de um tipo genérico. No caso T, será o tipo da classe e K, o tipo do ID.
+
+### Aula 2 - Implementando uma classe abstrata - Vídeo 6
+
+Transcrição  
+[00:00] Vamos resolver esse problema aqui, porque o negócio está estranho. Olha só. View define o template, e se você herda na filha a view e não sobrescreve o template, em tempo de runtime, eu vou lançar essa exceção para lembrar o desenvolvedor que ele tem que implementar o método template.
+
+[00:27] Só que vimos, no vídeo anterior, que esse vai acontecer em runtime. Eu queria, em tempo de desenvolvimento, que o desenvolvedor, quando chegasse aqui em view, se ele esquecer de implementar o método template, eu quero ele eu saiba agora, nesse exato momento, que eu sou obrigado a sobrescrever esse item.
+
+[00:52] Outra coisa. Faz sentido eu fazer isso aqui? Não faça, só me acompanha, só entre nós dois. Eu vou fazer const view = new View. Vamos ver se ele importou automaticamente. Importou, colocou certo.
+
+[01:10] A view, eu tenho de passar um seletor. Vou passar um seletor qualquer. A primeira coisa que eu pergunto para vocês: faz sentido eu criar uma instância de view? O que uma instância de view faz?
+
+[01:32] Uma instância de view tem método update, tem um método template, e ele não vai fazer nada, porque ele não tem o template. A view é incompleta sem ter uma filha que implemente o método template.
+
+[01:48] Então, se eu chegar aqui nesse código, eu vou chamar o método view.update, vou colocar Xuxa. O que vai acontecer? Não faz sentido nenhum. A view nem poderia ser instanciada, porque ela é incompleta.
+
+[02:11] Ela tem que ser herdada por uma filha, e a lacuna do template tem que ser coberta. Não faz sentido eu fazer isso. E isso pode até complicar o desenvolvedor, que ele pode achar que ele pode trabalhar com a view diretamente. Mas não vai funcionar como esperado.
+
+[02:25] Então, como fazer isso? Vou deixar aqui. Não precisa fazer, me acompanha. Isso aqui você precisa fazer. Vamos lá para a view. O que eu vou dizer? Vou dizer que view é uma abstract class, uma classe abstrata. O que é isso?
+
+[02:48] Vou salvar. Salvei. Vou voltar em app. A primeira coisa boa que acontece é o seguinte: em uma classe abstrata, você não pode criar uma instância diretamente dela. Você só pode se o filho herda essa classe e você cria uma instância do filho.
+
+[03:08] O negócio está ficando bom, porque eu não deixo o desenvolvedor criar a minha view porque ele vai saber que é uma classe abstrata. Ótimo, Flávio. Vamos fazer comigo. Salvei.
+
+[03:22] Agora, olha que interessante. Toda classe abstrata, ela pode ter nenhum, ter zero ou mais métodos abstratos. O que é um método abstrato? É um método que a classe pai não sabe como vai ser implementado. Vai ser responsabilidade da classe filha. Olha que lindo.
+
+[03:48] Não preciso dessa gambiarra do throw, não preciso definir o método. Eu só vou dizer que esse método é um abstract template, que recebe Model T. você vê que não tem nem o bloco do método, porque não faz sentido eu colocar esse item.
+
+[04:09] Agora, olha que lindo. Eu fico até arrepiado. Salvei. Vou em app. Antes, vamos ver se está tudo compilando. Está tudo compilando. Vou lá em mensagem-view.
+
+[04:22] Sou um estagiário na empresa, que chegou na empresa, criei uma view e não defini o template. Salvei. Olha o que o TypeScript vai acusar. "Caro estagiário, em mensagem-view, o método abstrato, template, tem que implementado. Você não pode esquecer de implementá-lo, senão o seu código não vai nem compilar".
+
+[04:50] E faz sentido. Agora eu vou voltar ele para cá. Voltei. Acabou o erro de compilação. Agora, se eu tenho um código, escrevo um código, e esqueço de definir o template em runt, em tempo desenvolvimento, eu não preciso esperar em runtime para saber que o meu código está faltando.
+
+[05:10] Então, o que o TypeScript está fazendo aqui é aplicar o paradigma da orientação objetos, aplicar o conceito de herança, classes abstratas, métodos abstratos, para que você consiga escrever um código menos sujeito a erros, forçando o desenvolvedor a seguir um único path, um único caminho na hora de escrever o seu código.
+
+[05:28] Está ficando bom ou não está? Olha, fica até chique. Eu chego em view e falo que view é uma classe abstrata e genérica. Por que é abstrata? Porque não faz sentido criar uma instância de view, e eu quero forçar todo mundo que herdar dessa classe, forçar que eles implementem o método abstract template.
+
+[05:51] Porque esse método, a classe pai não é capaz de definir. A filha que tem que definir. A classe pai é responsável por cuidar da chamada do método update, do construtor, do protected. Mas o template, meu amigo, sem ela eu não vivo.
+
+[06:04] Então, filha, você vai herdar de mim, mas você tem que fazer o trabalho que eu não fiz na minha geração, que é implementar o método template.
+
+[06:13] Então você vê que agora, olhando para cá, olha como aproveitamos o código. Se eu olho agora a mensagem-view, qual é a minha única responsabilidade de mensagem-view? Definir o template.
+
+[06:25] Qual é a minha única responsabilidade de negociações-view? Definir o template. E não tem mais nenhuma responsabilidade. O restante está encapsulado na minha classe abstrata view, genérica.
+
+[06:39] Ficou claro? O TypeScript é poderoso, porque você não consegue fazer isso em JavaScript, padrão. Então ele é muito poderoso, porque ele traz esses recursos da orientação objeto, do paradigma da DAO, e mais essas questões flexíveis como generics, para tornar o seu código flexível, é um código flexível, e, ao mesmo tempo, estaticamente, é tipado, onde o desenvolvedor não tem como fugir de seguir uma determinada regra.
+
+[07:02] Ficou claro? Então, podemos continuar? Deixa eu diminuir aqui, para vocês verem a implementação total de view, caso vocês ainda estejam digitando. E é isso. Então vamos partir para o próximo capítulo.
+
+### Aula 2 - Utilizando Herança - Exercício 2
+
+Eduardo tem que lidar com a geração de boleto bancário para diversos bancos. Contudo, apesar dos boletos serem muito parecidos, cada banco possui um cabeçalho diferente.
+
+Ele decidiu então escrever o seguinte código:
+
+```JavaScript
+class Boleto {
+    geraLinhaDigitavel(): string {
+        /* lógica comum dos bancos */
+    }
+    geraCabecalho(): string {
+        throw new Error('Você precisa implementar a cabeçalho');
+    }
+}
+
+class BoletoBancoA extends Boleto {
+    geraCabecalho(): string {
+        /* lógica de geração do cabeçalho do banco A */
+    }
+
+}
+
+class BoletoBancoB extends Boleto {
+    geraCabecalho(): string {
+        /* lógica de geração do cabeçalho do banco B */
+    }
+
+}
+```
+
+Marque a afirmativa verdadeira a respeito do código de Eduardo.
+
+Resposta:  
+> Não faz sentido haver instâncias de Boleto, pois a classe não define a implementação de geraCabecalho(). Essa responsabilidade é das classes filhas, mas nada obriga o desenvolvedor a implementá-las em tempo de desenvolvimento e só será avisado caso tenha esquecido de implementá-lo em tempo de execução, no runtime da aplicação.
+
+### Aula 2 - Analisando uma classe abstrata - Exercício
+
+Fernanda, assim como Eduardo do exercício anterior, tem que lidar com a geração de boleto bancário para diversos bancos. Porém ela adotou uma abordagem diferente:
+
+```JavaScript
+abstract class Boleto {
+    geraLinhaDigitavel(): string {
+        /* lógica comum dos bancos */
+    }
+    abstract geraCabecalho(): string;
+}
+
+class BoletoBancoA extends Boleto {
+    geraCabecalho(): string {
+        /* lógica de geração do cabeçalho do banco A */
+    }
+}
+
+class BoletoBancoB extends Boleto {
+    geraCabecalho(): string {
+        /* lógica de geração do cabeçalho do banco B */
+    }
+}
+```
+
+Marque a afirmativa verdadeira a respeito do código de Fernanda.
+
+Resposta:  
+> Como Boleto agora é uma classe abstrata, não é possível criar instâncias desta classe. Isso faz sentido, porque a classe não sabe como o método geraCabecalho deve ser implementado. É responsabilidade das classes filhas a implementação do método.
+
+### Aula 2 - Revisão - Vídeo 7
+
+Transcrição  
+[00:00] Vamos fazer uma revisão. Nesse capítulo, nós aprendemos que mensagem-view e negociações-view, são duas classes que compartilham bastante código duplicado. E nós tentamos isolar em uma única classe chamada view, a maior quantidade de código que pudéssemos extrair.
+
+[00:22] Primeiro, começamos colocando a propriedade elemento e o construtor, só que nós percebemos que em uma propriedade privada de uma classe pai, não pode ser acessada por classe filhas. Então foi por isso que nós utilizamos o modificador protected.
+
+[00:38] O modificador protected diz que só a própria classe, ou as filhas que herdarem desta classe, podem ter acesso à propriedade protected. Só que isso não foi o suficiente. Quando nós movemos o método update e o template, nós caímos no problema que por mais que o método *update* seja idêntico, o miolo deles seja idêntico, o parâmetro recebido pelo update era diferente em mensagem- view e negociação-view. Um recebia uma string, e outro recebia um modelo de negociações.
+
+[01:13] Quando nós resolvemos isso? Nós tornamos a nossa classe view genérica, passando esse item T aqui. Esse item T vem de type, mas poderia ser D. Contanto que eu coloque D em tudo quanto é lugar, isso aqui vai funcionar também.
+
+[01:33] Aliás, um apelido para você poder acessar. Você pode colocar K também, mas tem que trocar para K. Mas deixa T, porque lembra, remete type, por isso que a galera gosta de usar muito o T e não outra letra.
+
+[01:52] Fizemos isso. Então, agora, o nosso método *update* e template, o parâmetro, que é o model que eles recebem, é do tipo T. Que tipo é esse? Não faço ideia. Quem vai saber é minha filha. Então, se eu olho em mensagem-view, e estendo minha classe view, eu defino qual vai ser o valor de T.
+
+[02:11] Nesse caso, vai ser string; em negociações-view, vai ser negociações. E se eu tentar, na hora em que eu defino esse tipo, se por acaso eu coloco qualquer outra coisa aqui, ele vai me dar um erro de compilação. Porque o template, esse tipo que está aqui, como ele é o tipo T daqui, ele tem que bater, ele tem que ser igual.
+
+[02:33] Então nós conseguimos flexibilizar o nosso seu código. Flávio, por que tanto trabalho de fazer isso?. Porque nós vamos fazer type safety, queremos pegar erro em problema de tempo de compilação, mas, ao mesmo tempo, nós vamos ter que usar desses artifícios para termos um código dinâmico.
+
+[02:48] Porque se fosse em JavaScript puro, é oba-oba; você faz qualquer coisa que você quiser que vai funcionar dinamicamente. E você só vai saber do erro durante o runtime.
+
+[02:57] Em mensagem-view, aprendemos que não faz sentido ter instâncias de view, porque essa view era incompleta, ela tinha um buraco. Que buraco é esse? É o tipo do model.
+
+[03:16] Se você tentar criar uma instância de view, esse item aqui tentar usar um método update, o template, o compilador do TypeScript vai dizer que é do tipo unknown, que ele não sabe o que é. Qual é o tipo? É unknown, que ele não sabe qual é. Qual é o tipo? É Unknown, desconhecido.
+
+[03:31] Tornamos classe view abstrata. Com isso, ninguém pode dar new nessa classe; ela só pode ser usada para ser estendida, eu não posso criar uma instância direto dentro dela. E para forçar com que as filhas implementem um método que ela não sabe antecipadamente como implementar, também tornamos o método em método abstrato.
+
+[04:01] Isso significa que se eu chegar lá em qualquer classe que está se estendendo de view, e eu não implementar o método template, eu vou ter um erro de compilação, me avisando, em tempo de compilação, que eu devo, i must, implementar o método template, e não verificar esse erro durante a runtime.
+
+[04:22] Tudo bem? Então vamos lá para o próximo vídeo, que nós vamos dar uma lapidada no nosso projeto para ele ficar maravilhoso. Vamos lá.
+
+### Aula 2 - Faça como eu fiz
+
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com a próxima aula.
+
+### Aula 2 - O que aprendemos?
+
+Nesta aula, aprendemos:
+
+- Herança com TypeScript
+- Classes com tipo genérico
+- Classes abstratas
+- O modificador protected
+
+## Aula 3 - 
+
+### Aula 3 -  - Vídeo 1
+### Aula 3 -  - Vídeo 2
+### Aula 3 -  - Vídeo 3
+### Aula 3 -  - Vídeo 4
+### Aula 3 -  - Vídeo 5
+### Aula 3 -  - Vídeo 6
+### Aula 3 -  - Vídeo 7
+### Aula 3 -  - Vídeo 8
+### Aula 3 -  - Vídeo 9
+### Aula 3 -  - Vídeo 10
