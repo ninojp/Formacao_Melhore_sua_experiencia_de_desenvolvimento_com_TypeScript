@@ -1,5 +1,5 @@
 export default class Negociacao {
-    constructor(_data, // Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
+    constructor(_data, //Colocamos o modificador 'private' para que a propriedade seja acessível apenas dentro da classe.
     quantidade, valor) {
         this._data = _data;
         this.quantidade = quantidade;
@@ -20,8 +20,8 @@ export default class Negociacao {
 //===========================================================================================================
 //Exemplo de como pode ser feito, com o modificador READONLY
 class Negociacao2 {
-    constructor(data, //Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
-    quantidade, valor) {
+    //Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
+    constructor(data, quantidade, valor) {
         this.data = data;
         this.quantidade = quantidade;
         this.valor = valor;

@@ -8,7 +8,7 @@ export default class NegociacoesView extends View<Negociacoes> {
     //     this.elemento = document.querySelector(seletor) as HTMLElement;
     // };
     //===================================================================
-    template(model:Negociacoes):string {
+    protected template(model:Negociacoes):string {
         return `
             <table class="table table-hover table-bordered">
                 <thead>
@@ -22,16 +22,19 @@ export default class NegociacoesView extends View<Negociacoes> {
                     ${model.lista().map(negociacao => {
                         return `
                             <tr>
-                                <td>${new Intl.DateTimeFormat().format(negociacao.data)}</td>
+                                <td>${this.formatar(negociacao.data)}</td>
                                 <td>${negociacao.quantidade}</td>
                                 <td>${negociacao.valor}</td>
                             </tr>`;
-                    }).join('') /* join('') para remover as vírgulas entre os itens do array */
-                    }
+                    }).join('')}
                 </tbody>
             </table>`;
     };
-    //---------------------------------------
+    //------------------------------------------------
+    private formatar(data:Date):string {
+        return new Intl.DateTimeFormat().format(data);
+    };
+    //------------------------------------------------
     // update(model:string): void {
     //     const template = this.template(model);
     //     this.elemento.innerHTML = template;

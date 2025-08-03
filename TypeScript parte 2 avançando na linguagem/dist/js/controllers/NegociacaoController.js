@@ -1,3 +1,4 @@
+import { DiasDaSemana } from "../enums/DiasDaSemana.js";
 import Negociacao from "../models/Negociacao.js";
 import Negociacoes from "../models/Negociacoes.js";
 import MensagemView from "../views/MensagemView.js";
@@ -15,18 +16,24 @@ export default class NegociacaoController {
         this.negociacoesView.update(this.negociacoes);
     }
     ;
-    //==============================================
+    //======================================================================
     adiciona() {
         const negociacao = this.criaNegociacao();
+        if (!this.ehDiaUtil(negociacao.data)) {
+            this.MensagemView.update('Apenas negociações em dias úteis são aceitas!');
+            return;
+        }
+        ;
         this.negociacoes.adiciona(negociacao);
-        // this.negociacoes.lista().pop();//REGRAS de modelo de negócio:Não deveria ser possivel deletar itens.
-        // negociacao.data.setDate(12);//Brecha! A data original foi modificada, pois Date() é um objeto mutável.
-        this.negociacoesView.update(this.negociacoes);
-        this.MensagemView.update('Negociação adicionada com sucesso!');
         this.limpaFormulario();
+        this.atualizaView();
     }
     ;
     //-------------------------------------------------
+    ehDiaUtil(date) {
+        return date.getDay() > DiasDaSemana.DOMINGO && date.getDay() < DiasDaSemana.SABADO;
+    }
+    //----------------------------------------------------------------
     criaNegociacao() {
         const exp = /-/g;
         const date = new Date(this.inputData.value.replace(exp, ','));
@@ -45,5 +52,10 @@ export default class NegociacaoController {
         this.inputData.focus();
     }
     ;
+    //-------------------------------------------------
+    atualizaView() {
+        this.negociacoesView.update(this.negociacoes);
+        this.MensagemView.update('Negociação adicionada com sucesso!');
+    }
 }
 ;

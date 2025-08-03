@@ -7,7 +7,7 @@ export default class MensagemView extends View<string> {
     //     this.elemento = document.querySelector(seletor) as HTMLElement;
     // };
     //===================================================================
-    template(model:string): string {
+    protected template(model:string): string {
         return `
             <p class="alert alert-info">${model}</p>
         `;

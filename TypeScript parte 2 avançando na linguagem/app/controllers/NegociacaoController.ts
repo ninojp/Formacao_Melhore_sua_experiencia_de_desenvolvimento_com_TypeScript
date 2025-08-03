@@ -1,3 +1,4 @@
+import { DiasDaSemana } from "../enums/DiasDaSemana.js";
 import Negociacao from "../models/Negociacao.js";
 import Negociacoes from "../models/Negociacoes.js";
 import MensagemView from "../views/MensagemView.js";
@@ -18,18 +19,23 @@ export default class NegociacaoController {
         // this.inputQuantidade = document.getElementById('quantidade');//ERRO! O getElementById retorna uma REFERÊNCIA ao primeiro OBJETO com o id
         this.negociacoesView.update(this.negociacoes);
     };
-    //==============================================
-    adiciona():void {
+    //======================================================================
+    public adiciona():void {
         const negociacao = this.criaNegociacao();
+        if (!this.ehDiaUtil(negociacao.data)) {
+            this.MensagemView.update('Apenas negociações em dias úteis são aceitas!');
+            return;
+        };
         this.negociacoes.adiciona(negociacao);
-        // this.negociacoes.lista().pop();//REGRAS de modelo de negócio:Não deveria ser possivel deletar itens.
-        // negociacao.data.setDate(12);//Brecha! A data original foi modificada, pois Date() é um objeto mutável.
-        this.negociacoesView.update(this.negociacoes);
-        this.MensagemView.update('Negociação adicionada com sucesso!');
         this.limpaFormulario();
+        this.atualizaView();
     };
     //-------------------------------------------------
-    criaNegociacao():Negociacao {
+    private ehDiaUtil(date: Date):boolean {
+        return date.getDay() > DiasDaSemana.DOMINGO && date.getDay() < DiasDaSemana.SABADO;
+    }
+    //----------------------------------------------------------------
+    private criaNegociacao():Negociacao {
         const exp = /-/g;
         const date = new Date(this.inputData.value.replace(exp, ','));
         const quantidade = parseInt(this.inputQuantidade.value);
@@ -37,7 +43,7 @@ export default class NegociacaoController {
         return new Negociacao(date, quantidade, valor);
     };
     //-------------------------------------------------
-    limpaFormulario():void {
+    private limpaFormulario():void {
         // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null
         // form?.reset();//ERRO! O reset() não funciona com o querySelector
         this.inputData.value = '';
@@ -45,4 +51,9 @@ export default class NegociacaoController {
         this.inputValor.value = '';
         this.inputData.focus();
     };
+    //-------------------------------------------------
+    private atualizaView():void {
+        this.negociacoesView.update(this.negociacoes);
+        this.MensagemView.update('Negociação adicionada com sucesso!');
+    }
 };

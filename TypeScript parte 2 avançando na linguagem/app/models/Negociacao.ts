@@ -1,6 +1,6 @@
 export default class Negociacao {
     constructor(
-        private _data: Date, // Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
+        private _data: Date,//Colocamos o modificador 'private' para que a propriedade seja acessível apenas dentro da classe.
         public readonly quantidade: number,
         public readonly valor: number) { };
     //Para resolver a Brecha, vamos clonar, Date() e expor apenas a cópia.
@@ -15,11 +15,9 @@ export default class Negociacao {
 
 //Exemplo de como pode ser feito, com o modificador READONLY
 class Negociacao2 {
-    constructor(
-        readonly data: Date,//Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
-        readonly quantidade: number,
-        readonly valor: number) { };
-
+    //Como vimos temos uma brecha de segurança, pois Date() é um objeto mutável. 
+    constructor(readonly data: Date, readonly quantidade: number, readonly valor: number) 
+        {};
         get volume(): number {
             return this.quantidade * this.valor;
         };
@@ -38,7 +36,6 @@ class Negociacao1 {
     // };
     //Faz a MESMA coisa q o código acima, mas simplificado.
     constructor(private _data: Date, private _quantidade: number, private _valor: number) { };
-
     get data(): Date {
         return this._data;
     };

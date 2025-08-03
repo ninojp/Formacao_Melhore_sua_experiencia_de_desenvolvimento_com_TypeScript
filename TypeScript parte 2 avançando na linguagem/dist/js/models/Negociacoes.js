@@ -16,6 +16,7 @@ export default class Negociacoes {
     ;
 }
 ;
+//============================================================
 // const negociacoes = new Negociacoes();
 // negociacoes.lista().forEach(n => {
 //     console.log(n.data, n.quantidade, n.valor, n.volume);
