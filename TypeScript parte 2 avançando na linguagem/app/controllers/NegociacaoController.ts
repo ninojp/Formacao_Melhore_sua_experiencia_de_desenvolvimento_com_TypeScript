@@ -9,8 +9,8 @@ export default class NegociacaoController {
     private inputQuantidade: HTMLInputElement;
     private inputValor: HTMLInputElement;
     private negociacoes = new Negociacoes();
-    private negociacoesView = new NegociacoesView('#negociacoesView');
-    private MensagemView = new MensagemView('#mensagemView');
+    private negociacoesView = new NegociacoesView('#negociacoesView', true);
+    private MensagemView = new MensagemView('#mensagemView', false);
     //-----------------------------------------------------------------
     constructor() {
         this.inputData = document.querySelector('#data');
@@ -21,7 +21,7 @@ export default class NegociacaoController {
     };
     //======================================================================
     public adiciona():void {
-        const negociacao = this.criaNegociacao();
+        const negociacao = Negociacao.criaDe(this.inputData.value, this.inputQuantidade.value, this.inputValor.value);
         if (!this.ehDiaUtil(negociacao.data)) {
             this.MensagemView.update('Apenas negociações em dias úteis são aceitas!');
             return;
@@ -35,13 +35,13 @@ export default class NegociacaoController {
         return date.getDay() > DiasDaSemana.DOMINGO && date.getDay() < DiasDaSemana.SABADO;
     }
     //----------------------------------------------------------------
-    private criaNegociacao():Negociacao {
-        const exp = /-/g;
-        const date = new Date(this.inputData.value.replace(exp, ','));
-        const quantidade = parseInt(this.inputQuantidade.value);
-        const valor = parseFloat(this.inputValor.value);
-        return new Negociacao(date, quantidade, valor);
-    };
+    // private criaNegociacao():Negociacao {
+    //     const exp = /-/g;
+    //     const date = new Date(this.inputData.value.replace(exp, ','));
+    //     const quantidade = parseInt(this.inputQuantidade.value);
+    //     const valor = parseFloat(this.inputValor.value);
+    //     return new Negociacao(date, quantidade, valor);
+    // };
     //-------------------------------------------------
     private limpaFormulario():void {
         // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null

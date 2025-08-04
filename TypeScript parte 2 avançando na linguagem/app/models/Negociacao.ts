@@ -3,12 +3,22 @@ export default class Negociacao {
         private _data: Date,//Colocamos o modificador 'private' para que a propriedade seja acessível apenas dentro da classe.
         public readonly quantidade: number,
         public readonly valor: number) { };
+    //-------------------------------------------
     //Para resolver a Brecha, vamos clonar, Date() e expor apenas a cópia.
     get data(): Date {
         return new Date(this._data.getTime());//Retorna uma cópia da data, para evitar que a data original seja modificada.
     };
+    //------------------------------------------
     get volume(): number {
         return this.quantidade * this.valor;
+    };
+    //----------------------------------------------------------------------------------------------
+    public static criaDe(dataString: string, quantidadeString: string, valorString: string): Negociacao {
+        const exp = /-/g;
+        const date = new Date(dataString.replace(exp, ','));
+        const quantidade = parseInt(quantidadeString);
+        const valor = parseFloat(valorString);
+        return new Negociacao(date, quantidade, valor);
     };
 };
 //===========================================================================================================

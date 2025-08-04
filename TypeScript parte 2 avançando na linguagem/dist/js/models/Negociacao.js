@@ -6,13 +6,24 @@ export default class Negociacao {
         this.valor = valor;
     }
     ;
+    //-------------------------------------------
     //Para resolver a Brecha, vamos clonar, Date() e expor apenas a cópia.
     get data() {
         return new Date(this._data.getTime()); //Retorna uma cópia da data, para evitar que a data original seja modificada.
     }
     ;
+    //------------------------------------------
     get volume() {
         return this.quantidade * this.valor;
+    }
+    ;
+    //----------------------------------------------------------------------------------------------
+    static criaDe(dataString, quantidadeString, valorString) {
+        const exp = /-/g;
+        const date = new Date(dataString.replace(exp, ','));
+        const quantidade = parseInt(quantidadeString);
+        const valor = parseFloat(valorString);
+        return new Negociacao(date, quantidade, valor);
     }
     ;
 }
