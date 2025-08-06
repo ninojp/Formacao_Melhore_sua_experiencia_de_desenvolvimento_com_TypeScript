@@ -4,7 +4,6 @@ import Negociacoes from "../models/Negociacoes.js";
 import MensagemView from "../views/MensagemView.js";
 import NegociacoesView from "../views/NegociacoesView.js";
 export default class NegociacaoController {
-    //-----------------------------------------------------------------
     constructor() {
         this.negociacoes = new Negociacoes();
         this.negociacoesView = new NegociacoesView('#negociacoesView', true);
@@ -12,11 +11,9 @@ export default class NegociacaoController {
         this.inputData = document.querySelector('#data');
         this.inputQuantidade = document.querySelector('#quantidade');
         this.inputValor = document.querySelector('#valor');
-        // this.inputQuantidade = document.getElementById('quantidade');//ERRO! O getElementById retorna uma REFERÊNCIA ao primeiro OBJETO com o id
         this.negociacoesView.update(this.negociacoes);
     }
     ;
-    //======================================================================
     adiciona() {
         const negociacao = Negociacao.criaDe(this.inputData.value, this.inputQuantidade.value, this.inputValor.value);
         if (!this.ehDiaUtil(negociacao.data)) {
@@ -29,29 +26,16 @@ export default class NegociacaoController {
         this.atualizaView();
     }
     ;
-    //-------------------------------------------------
     ehDiaUtil(date) {
         return date.getDay() > DiasDaSemana.DOMINGO && date.getDay() < DiasDaSemana.SABADO;
     }
-    //----------------------------------------------------------------
-    // private criaNegociacao():Negociacao {
-    //     const exp = /-/g;
-    //     const date = new Date(this.inputData.value.replace(exp, ','));
-    //     const quantidade = parseInt(this.inputQuantidade.value);
-    //     const valor = parseFloat(this.inputValor.value);
-    //     return new Negociacao(date, quantidade, valor);
-    // };
-    //-------------------------------------------------
     limpaFormulario() {
-        // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null
-        // form?.reset();//ERRO! O reset() não funciona com o querySelector
         this.inputData.value = '';
         this.inputQuantidade.value = '';
         this.inputValor.value = '';
         this.inputData.focus();
     }
     ;
-    //-------------------------------------------------
     atualizaView() {
         this.negociacoesView.update(this.negociacoes);
         this.MensagemView.update('Negociação adicionada com sucesso!');

@@ -1,11 +1,5 @@
 import View from "./View.js";
 export default class NegociacoesView extends View {
-    // private elemento: HTMLElement;
-    // //-------------------------------------------------------------------
-    // constructor(seletor:string) {
-    //     this.elemento = document.querySelector(seletor) as HTMLElement;
-    // };
-    //===================================================================
     template(model) {
         return `
             <table class="table table-hover table-bordered">
@@ -29,7 +23,6 @@ export default class NegociacoesView extends View {
             </table>`;
     }
     ;
-    //------------------------------------------------
     formatar(data) {
         return new Intl.DateTimeFormat().format(data);
     }

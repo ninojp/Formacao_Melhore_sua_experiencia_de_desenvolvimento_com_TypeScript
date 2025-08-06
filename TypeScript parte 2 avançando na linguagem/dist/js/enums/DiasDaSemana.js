@@ -9,6 +9,3 @@ export var DiasDaSemana;
     DiasDaSemana[DiasDaSemana["SABADO"] = 6] = "SABADO";
 })(DiasDaSemana || (DiasDaSemana = {}));
 ;
-//Os enums são uma forma de agrupar constantes relacionadas, facilitando a manutenção e a legibilidade do código.
-//O TypeScript permite que você defina enums, que são uma maneira de dar nomes significativos a conjuntos de valores numéricos ou string.
-//Enums são úteis para representar estados, categorias ou qualquer conjunto de valores fixos.

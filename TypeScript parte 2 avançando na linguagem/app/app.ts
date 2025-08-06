@@ -1,15 +1,19 @@
 'use strict';
 import NegociacaoController from "./controllers/NegociacaoController.js";
-import NegociacoesView from "./views/NegociacoesView.js";
+// import NegociacoesView from "./views/NegociacoesView.js";
 // import Negociacao from "./models/Negociacao.js";
 
 const controller = new NegociacaoController();
+// const form: HTMLFormElement | null = document.querySelector('.form');
 const form = document.querySelector('.form');
-// controller.adiciona();
-form?.addEventListener('submit', event => {
-    event.preventDefault();
-    controller.adiciona();
-});
+if (form) {
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        controller.adiciona();
+    });
+} else {
+    throw new Error('Não foi possível inicializar a aplicação. Verifique se o form existe.');
+};
 //============================================================
 
 // const negociacoesView = new NegociacoesView;

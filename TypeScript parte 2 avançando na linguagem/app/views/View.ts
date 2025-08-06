@@ -8,7 +8,15 @@ export default abstract class View<T> {
     //O as HTMLElement é uma type assertion que informa ao TypeScript que o elemento não é nulo e é do tipo HTMLElement.
     //O TypeScript não sabe que o querySelector retornará um HTMLElement, então usamos a type assertion para garantir isso.
     constructor(seletor:string, escapar?: boolean) {
-        this.elemento = document.querySelector(seletor) as HTMLElement;
+        const elemento = document.querySelector(seletor);
+        if (elemento) {
+            this.elemento = elemento as HTMLElement;
+        }else{
+            throw new Error(`O seletor ${seletor} não foi encontrado no DOM.`);
+        };
+        if (escapar) {
+            this.escapar = escapar;
+        };
     };
     //===================================================================
     public update(model:T): void {

@@ -5,6 +5,8 @@ import MensagemView from "../views/MensagemView.js";
 import NegociacoesView from "../views/NegociacoesView.js";
 
 export default class NegociacaoController {
+    // Podemos declarar o inputData com | null para indicar que ele pode ser nulo. 
+    // private inputData: HTMLInputElement | null;
     private inputData: HTMLInputElement;
     private inputQuantidade: HTMLInputElement;
     private inputValor: HTMLInputElement;
@@ -13,9 +15,11 @@ export default class NegociacaoController {
     private MensagemView = new MensagemView('#mensagemView', false);
     //-----------------------------------------------------------------
     constructor() {
-        this.inputData = document.querySelector('#data');
-        this.inputQuantidade = document.querySelector('#quantidade');
-        this.inputValor = document.querySelector('#valor');
+        this.inputData = document.querySelector('#data') as HTMLInputElement;
+        //Ou usar "as HTMLInputElement" é uma type assertion que informa ao TypeScript que o input é do tipo HTMLInputElement e não é nulo.
+        this.inputQuantidade = document.querySelector('#quantidade') as HTMLInputElement;
+        //Ou usar <HTMLInputElement> é uma type assertion, usado em JSX, que informa ao TypeScript que o input é do tipo HTMLInputElement e não é nulo.
+        this.inputValor = <HTMLInputElement>document.querySelector('#valor');
         // this.inputQuantidade = document.getElementById('quantidade');//ERRO! O getElementById retorna uma REFERÊNCIA ao primeiro OBJETO com o id
         this.negociacoesView.update(this.negociacoes);
     };
@@ -44,12 +48,13 @@ export default class NegociacaoController {
     // };
     //-------------------------------------------------
     private limpaFormulario():void {
-        // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null
-        // form?.reset();//ERRO! O reset() não funciona com o querySelector
+        //O as HTMLFormElement é uma type assertion que informa ao TypeScript que o form não é nulo e é do tipo HTMLFormElement.
         this.inputData.value = '';
         this.inputQuantidade.value = '';
         this.inputValor.value = '';
         this.inputData.focus();
+        // const form = document.querySelector('.form') as HTMLFormElement | null;//FUNCIONA, Type assertion para garantir que form não é null
+        // form?.reset();//ERRO! O reset() não funciona com o querySelector
     };
     //-------------------------------------------------
     private atualizaView():void {

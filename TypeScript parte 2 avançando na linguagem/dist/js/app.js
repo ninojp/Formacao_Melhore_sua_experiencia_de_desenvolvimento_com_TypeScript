@@ -1,10 +1,14 @@
 'use strict';
 import NegociacaoController from "./controllers/NegociacaoController.js";
-// import Negociacao from "./models/Negociacao.js";
 const controller = new NegociacaoController();
 const form = document.querySelector('.form');
-// controller.adiciona();
-form === null || form === void 0 ? void 0 : form.addEventListener('submit', event => {
-    event.preventDefault();
-    controller.adiciona();
-});
+if (form) {
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        controller.adiciona();
+    });
+}
+else {
+    throw new Error('Não foi possível inicializar a aplicação. Verifique se o form existe.');
+}
+;
