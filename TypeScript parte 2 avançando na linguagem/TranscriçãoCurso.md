@@ -31,7 +31,7 @@ Bons estudos!
 
 ### Aula 1 - Modelo para o usuário - Vídeo 2
 
-Transcrição
+Transcrição  
 [00:00] Precisamos continuar a nossa aplicação. Nossa aplicação, no primeiro módulo, nós só chegamos até a parte que captura os dados do usuário, da negociação que o usuário imputa. Clico em incluir. Eu consigo ver no console.log, vou adicionar mais uma negociação.
 
 [00:20] É possível notar que há uma lista de negociações sendo exibidas no console. Se eu volto para o nosso código, no ato de adicionar uma negociação, o nosso Controller cria uma negociação baseada no input do usuário, nos elementos de UI, e temos esse modelo de negociações.
