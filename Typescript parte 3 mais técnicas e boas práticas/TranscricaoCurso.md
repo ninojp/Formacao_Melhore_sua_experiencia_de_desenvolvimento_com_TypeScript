@@ -525,7 +525,875 @@ Faltou aplicar getterTest à propriedade definida por propertyKey através de Ob
 
 > Muito bem. Sem essa aplicação, o getter não será registrado, e a propriedade não funcionará como esperado:
 
-### Aula 3 -  - Vídeo 5
-### Aula 3 -  - Vídeo 6
-### Aula 3 -  - Vídeo 7
-### Aula 3 -  - Vídeo 8
+### Aula 3 - Um problema não esperado - Vídeo 5
+
+Transcrição
+[00:00] Então vamos lá, galera. Revisão rápida antes de eu mostrar uma coisa para vocês. Seguinte, criamos um domInjector, que é um decorator de propriedade, que recebe como parâmetro o ID do elemento do DOM, que eu quero que ele busque e atribua a propriedade inputData, inputQuantidade, imputValor.
+
+[00:17] Só que isso é completamente genérico, eu posso injetar qualquer elemento do DOM aqui. Por quê? Porque se eu tiver um formulário com quinze campos na minha tela, eu não quero ficar buscando esses caras aqui e deixar meu construtor grande, ficar tendo que programar isso.
+
+[00:32] Eu quero isolar isso em um único lugar. Aí para fazer isso nós criamos um decorator que é o domInjector. Esse domInjector recebe como parâmetro o ID do elemento que eu quero e me retorna o decorator de propriedade, que é um pouco diferente do decorator de método.
+
+[00:57] O decorator do método tem o descriptor, aqui eu não tenho esse descriptor. Qual é a ideia? Em que momento esse decorator é aplicado? Ele é aplicado assim que a sua classe é declarada. No momento de declaração da sua classe o TypeScript, gerando um código JavaScript, modifica sua classe para adicionar esse decorator.
+
+[01:19] Então é por isso que quando carregamos nossa página pela primeira vez eu enxergo logo de cara, sem interagir com os input do formulário, esse console.log dizendo que o prototype do meu alvo da classe no qual minha propriedade pertence vai ser modificado para adicionar um getter na propriedade que eu quero modificar.
+
+[01:49] Por que eu vou criar um getter? Porque a atribuição do elemento, o retorno do elemento lá para aquele input tem que ser em tempo de execução. Então, no final das contas, eu não estou atribuindo nada naquele input. Se você olhar aqui na lógica do nosso getter o que eu estou fazendo, é que toda vez que você acessar, eu retorno. Eu faço o document.querySelector e retorno o elemento do dom.
+
+[02:15] Sempre que você acessar essa propriedade. Depois de criar esse getter, como que eu faço para substituir lá no prototype da classe, na definição da classe, a propriedade original por um getter? Eu uso Object.defineProperty passando o target, o propertyKey, que é a propriedade que eu quero modificar e digo aqui para criar um getter, aí eu escrevo get: getter.
+
+[02:46] E ele pediu para você passar aqui getter ou qualquer nome, podia ter colocado aqui calopsita e aqui trocaria. Aí nós vimos, voltando lá para o navegador, vou recarregar, porque quando eu carrego a minha página eu vejo que e o prototype está sendo modificado.
+
+[03:07] Nesse momento eu tenho certeza de que minhas propriedades são getter e na hora que eu acesso esse cara, dou incluir, ele vai e buscando o elemento do dom com o selector e por aí vai. Só que isso está lindo, mas tem um detalhe. Vou limpar o console.log e não fiz o refresh na página.
+
+[03:27] Vou adicionar mais uma negociação aqui. Você viu que funcionou tudo uma maravilha, mas, olha só, toda vez que alguém acessar a propriedade inputQuantidade, inputValor e inputData, eu estou indo a cada momento lá no DOM e buscando esse cara toda hora.
+
+[04:00] No nosso código anterior nós só buscávamos uma única vez no construtor e não importa se eu adicionasse novas negociações, ele sempre acessava aquele elemento do dom. Aqui está uma maravilha, mas eu quero evitar isso. Não faz sentido eu ficar buscando esse cara toda hora, eu quero buscar esse cara só uma vez.
+
+[04:21] Então o problema é que nosso decorator não está levando em consideração o cache desse elemento do DOM. Então o que eu quero mostrar para vocês aqui é que em uma situação como essa é interessante nós implementarmos uma solução de cache, para quando o meu getter for chamado de novo, se ele já buscou aquele elemento, para ele não buscar de novo, ele usar o elemento cacheado.
+
+[04:43] Beleza, galera? Então é isso que vamos ver no próximo vídeo. É esse o problema que vamos resolver.
+
+### Aula 3 - Aplicando cache decorator copy - Vídeo 6
+
+Transcrição
+[00:00] Nós precisamos implementar um cache aqui. Como nós vamos implementar? Nós vamos utilizar Java Script puro aqui, reconhecimento de escopo. Qual é a ideia? Quando o meu decorator é chamado, ele vai criar essa função decorator e vai adicionar o getter.
+
+[00:21] A questão toda é o seguinte, o que eu vou fazer, fora do getter eu vou criar uma variável let elemento: HTMLElement | null = null; e dentro do meu getter eu vou fazer if (!elemento). Um HTMLElement porque eu tenho strict no checks ligado, mas aqui eu quero que ele aceite null. Eu quero que ele comece vazio.
+
+[01:16] Quero que ele aceite o tipo nulo ou eu posso deixar aqui esse cara, que o valor dele vai ser undefinded. Posso fazer um ou outro, vou deixar undefinded porque não tem problema nenhum. A questão toda é o seguinte, esse is (!elemento) eu testo e se ele tem um valor diferente de undefinded, diferente de null, diferente de zero, diferente de string em branco, esse cara vai ser verdadeiro.
+
+[01:44] Mas eu estou testando se esse cara é falso, por isso que eu usei exclamação. Se esse cara é falso, aí eu vou dizer que o elemento vai receber querySelector. Nós sabemos que esse cara pode ser nulo em algum momento, porque o querySelector pode retornar HTML ou null.
+
+[02:13] Aí no caso aqui eu vou fazer o caching, vou dizer que esse cara daqui é HTMLElement. Fazendo o casting do retorno de querySelector, eu digo que esse cara não vai mais retornar HTML e null, vai me retornar HTML. Eu desenvolvedor estou assumindo que esse cara nunca vai ser nulo, não quero me preocupar com isso.
+
+[02:37] Então peguei o elemento e olha que legal, se esse cara é diferente de elemento, eu busco ele. Senão, olha o que eu continuo, executo aqui o meu código e retorno. Faz sentido? Vamos olhar aqui comigo. Nós precisamos lembrar um pouco de escopo de Java Script.
+
+[02:58] Olha a sacada, vamos entender isso daqui. A função function é ela que vai criar o getter e vai aplicar o getter em Object.defineProperty, vai fazer isso uma única vez para cada propriedade. Como eu declarei essa variável no escopo da minha função do decorator, por uma questão de [ININTELIGÍVEL], de escopo de Java Script, meu getter que vai ser atribuído para o meu defineProperty vai sempre lembrar qual é o valor dessa variável que foi defina no escopo da função anterior.
+
+[03:52] Então eu estou utilizando o decorator, o momento de aplicação do decorator para fazer o cache de elemento. Para que toda vez quando o meu getter for chamado, ele vai testar, ele vai dizer que está acessando a propriedade pela primeira vez, tem elemento? Não, então busca para mim e retorna esse elemento.
+
+[04:16] Se eu acesso de novo o meu getter, como eu fiz essa atribuição para essa variável, quem vai estar mudando é essa daqui. Agora se eu chamo o meu getter de novo pela segunda vez, ele vai perguntar se tem elemento, tem, então retorna direto esse cara, você não precisa buscá-lo.
+
+[04:33] Então você vê que aqui para resolver essa questão de cache nós estamos usando o escopo de funções para garantir isso. Então será que funciona? Salvei. Deixa eu olhar aqui meu terminal, nenhum erro de compilação. Vou voltar no meu navegador. Executei.
+
+[05:05] Aplicou o prototype, agora eu vou apertar em incluir e buscou os elementos do dom. Certo, vou fazer um clear aqui no console, vou fazer de novo e ele não pode buscar o elemento do dom de novo, ele tem que usar o que está cacheado. Beleza, funcionou.
+
+[05:29] Então o que nós conseguimos agora, é com um pouco de músculo, de conhecimento de Java Script é entender que o meu decorator define o getter para aplicar na definição do prototype e esse decorator vai ser único para cada propriedade no qual eu coloquei o meu decorator.
+
+[05:55] Então o que eu fiz? Defini uma variável elemento no escopo da minha função do decorator e fiz o getter sempre consultar para ver se ele valor aqui já existe ou não. Ele sempre vai lembrar, é a questão da closure. Essa função vai lembrar o escopo da função pai.
+
+[06:14] Só que quando eu estou chamando o getter pela primeira vez, é claro, esse valor vai estar em branco, então eu vou lá buscar o elemento no dom, atribuo para essa minha variável e retorno esse cara. Se eu chamo por uma segunda vez, vai cair aqui no if.
+
+[06:30] Esse cara já foi definido? Já. Se foi definido, nem executa esse código, retorna o elemento que está cacheado aqui na propriedade elemento. Fechou, galera? Então, com isso, nós conseguimos criar um decorator versátil, performático e que vai esperar até o último momento para quando você acessar aquela propriedade para buscar o elemento do dom para saber se ele existe ou não e vai cachear esse cara.
+
+[06:55] Então, galera, era isso que eu queria mostrar para vocês em relação ao decorator de propriedade, como ele é bem poderoso, mas grandes poderes trazem grandes responsabilidades e nós precisamos combinar recursos da linguagem Java Script com Type Script para conseguir elaborar esse cara, que é o nosso domInjector.
+
+[07:15] Se você já viu angular.js, ela usa decorator para tudo que é lado, então eles devem usar artifícios parecidos.
+
+### Aula 3 - O que aprendemos?
+
+Nesta aula, aprendemos:
+
+Como evitar código duplicado
+Decorator de propriedade
+Criação dinâmica de getters
+O uso de Object.defineProperty
+Cache de decorators
+
+## Aula 4 - 
+
+### Aula 4 - Projeto da aula anterior
+
+Você pode ir acompanhando o passo a passo do desenvolvimento do nosso projeto e, caso deseje, você pode [baixar o projeto](https://github.com/alura-cursos/typescript-curso-3/archive/772f5a419db4b1bc03c225a2ecd8da0c9c832b7b.zip) do curso.
+
+Bons estudos!
+
+### Aula 4 - Rodando uma API externa - Vídeo 1
+
+Transcrição
+[00:00] Bom, pessoal, nós precisamos evoluir no entendimento de Type Script e para isso eu vou trazer uma outra coisa do mundo real do mundo comum, que é, seguinte, a nossa aplicação vai se integrar com uma API rest, vai trazer os dados dessa API para que nós possamos exibir aqui na tela.
+
+[00:18] Essa API já está disponível nesse projeto, eu só vou mostrar para vocês como nós subimos essa API, mas o mais interessante é nós entendermos primeiro como vamos consumir essa API e como o Type Script pode nos ajudar nesse processo de consumir uma API e evitar que nós cometemos erros. Ficou claro?
+
+[00:36] Então vamos lá no nosso projeto. Eu tenho aqui em uma aba do meu terminal do VS Code o meu npm, aquele comando que eu rodo, npm run start. Ele vai rodar o servidor, vai abrir aqui o meu navegador e vai mostrar aqui a minha aplicação.
+
+[00:58] Beleza, só que eu preciso abrir um segundo terminal. Vou clicar em mais, dentro desse terminal nós vamos entrar dentro da pasta servidor-api. Agora você deve estar se perguntar se é por isso que temos essa pasta, é. Nós vamos fazer cd servidor-api/ e vamos fazer npm install.
+
+[01:28] Você precisa fazer o npm install para baixar as dependências desse servidor, porque ele tem a pasta node model deles. Esse cara é um projeto em separado e o que vamos fazer para rodá-lo? Dentro dessa pasta vamos dar npm start.
+
+[01:50] Quando você fizer npm start, esse servidor vai estar rodando na porta 8080. Ou seja, eu tenho o meu servidor que simula um servidor web mais próximo da realidade, um servidor web no qual eu sirvo os meus arquivos de distribuição dentro deles, meus arquivos js.
+
+[02:15] Do outro terminal eu tenho o meu de uma API. Se você trabalha com angular, com view, react, nós sabemos que o angular roda um servidor, o react roda um servidor e as API vão rodar em outro servidor, não ficam no mesmo servidor. Ficam em separados.
+
+[02:32] Então, beleza, esse cara está aí. Como é que nós acessamos ela para mostrar para vocês que essa API tem dados? Eu vou abrir o meu navegador, vou digitar localhost:8080/dados. Quando eu faço isso, eu vou ver que ele retornou aqui um montante e um número de vezes que essa negociação foi realizada.
+
+[03:01] Então o nosso objetivo agora na nossa aplicação é consumir essa API por dentro nessa aplicação, para que eu consigo renderizar dados, atualizar minhas views com dados de negociação e para, então, depois que estiver tudo amarrado, nós pegarmos os dados e ver o quanto o Type Script pode nos ajudar nessa questão. E ele ajuda muito. Vamos lá?
+
+### Aula 4 - Alterando nossa página - Vídeo 2
+
+Transcrição
+[00:00] Bom, galera, a primeira coisa eu vou colocar um botão que eu vou chamar de importar na nossa página. Então eu vou lá, fecha essa pasta do servidor, você não precisa olhar. Vai lá dentro de “dist > index.html”. Tem o botão incluir e agora nós vamos adicionar um novo botão, um button id=”botão-importa” class=”bin btn=primary”importar.
+
+[01:10] Vou esquecer minha API aqui, vou voltar para o Type Script, que é isso que nos interessa para saber se tem erro de compilação. Botei aqui importar, vou quebrar para ficar bonito. Botei o meu botão importar, vou salvar. Vou voltar lá no navegador e estou vendo lá o meu botão importar aqui.
+
+[01:32] O próximo passo é o seguinte, eu vou criar um método lá no meu controller, cuidado para não abrir arquivo js. Vou fechar a pasta dist, fechar o index que eu já salvei e vou lá para src, vou no meu controller e vou criar, depois do adiciona, um método que vou chamar de importarDados(): void.
+
+[02:08] Por enquanto foi colocar só alert(‘oi’), só isso. Salvando e nenhum erro de compilação. O que eu preciso fazer agora? Em app eu preciso criar e adicionar o click do botão, porque o click do novo botão tem que disparar aquela lógica do meu método. Então, vamos lá.
+
+[02:28] Nós precisamos fazer o seguinte, vou ter fazer o const botaoImporta = document.querySelector(‘#botao-importa’) if (botaoImporta), se esse cara existe eu vou associar o renner. Senão, eu vou fazer throw Error(‘Botão importa não foi encontrado’).
+
+[03:16] Agora vou adicionar o listener para ele, botaoImporta.addEventListener(‘click’, () => { controller.importaDados());. Então essa é a novidade. Salvei aqui e vou voltar lá no navegador, clico em importar e está exibindo o meu alert. Beleza, esse aqui é o mínimo.
+
+[04:06] Agora o que nós precisamos fazer é voltar lá para o nosso botão importa e implementar a lógica da aplicação que vai buscar esses dados. Então vamos lá que no próximo vídeo vamos fazer isso e eu vou usar API fetch que é disponível no navegador para realizar isso.
+
+### Aula 4 - Consumindo uma API - Vídeo 3
+
+Transcrição
+[00:00] Bom, galera, nós já estamos com tudo no lugar, nós sabemos qual é o endereço da nossa API, agora vamos programar o nosso código. Eu estou partindo do pressuposto que você já tenha alguma familiaridade com fetch API, com o uso de promise.
+
+[00:14] Aliás, há cursos na Alura que explicam como que promises funcionam, a fetch API nos cursos de Java Script avançado, mas eu vou aqui bem devagar se você não tem esse conhecimento, justamente para não te prejudicar aqui nesse treinamento.
+
+[00:28] Então a primeira coisa é o seguinte, quando eu vou buscar dados, antigamente nós usávamos aquele XMLHTTP request, nós vamos usar API fetch. Essa API fetch está globalmente disponível no navegador. O que ela recebe como parâmetro? Ela vai receber como parâmetro o endereço da minha API.
+
+[00:51] Se você olhar aqui esse endereço que está aqui, é o mesmo que está aqui. Vou até copiar, mas você tem que botar o HTTP na frente, então fetch( ‘http://localhost:8080/dados’). Se você um servidor HTTPS, você colocaria HTTPS.
+
+[01:06] Aí o que acontece, vou simplificar aqui, quando essa fetch vai buscar, é uma operação assíncrona. Então, o que acontece, quando esse resultado chega, eu pego através de uma chamada encadeada a then. Esse cara vai me retornar uma resposta do Back End.
+
+[01:32] Se eu passo o mouse aqui, você vai ver que o Type Script está botando esse cara como o tipo response. Como eu sei que ele está retornando um JSON, o que eu vou fazer é dar return res.json(); para ele converter essa resposta que eu estou recebendo como um texto gigante no formato JSON para um objeto Java Script JSON.
+
+[01:55] Isso aqui também retorna uma promise, isso aqui é um processamento assíncrono, mas eu posso simplificar e colocar isso tudo aqui em uma linha, porque quando eu chamar then, ele vai pegar a resposta, vai converter o que eu estou recebendo para JSON, porque eu tenho certeza de que o retorno desse cara é JSON, e o resultado disso vai me deixar disponível na próxima chamada encadeada ao then.
+
+[02:24] Nesse cara eu vou ter uma lista de dados. Eu ainda não sei o tipo, que dado é esse que está vindo do Back End? Não sei, então vou dizer que é um array do tipo any. Para você botar o tipo desse cara, você tem que botar .then((dados: any [ ] =>).
+
+[02:48] Então, o que eu estou fazendo? Estou pegando um array. Eu sei que é um array, o mínimo que eu sei é que é um array, eu posso declarar assim ou botar .then((dados: Array<any>) para você ver o que você se identifica mais aí. Eu vou pegar esse array de dados, que é do tipo any, e o que eu tenho que fazer?
+
+[03:10] A negociação é sempre a NegociacaoDoDiaDeHoje, então não vem com a data. Os dados que vem lá se olharmos na nossa API, retorna montante e vezes. Então a data vai ser a data atual da minha aplicação. A primeira coisa que eu preciso fazer, é pegar dados.map(dadoDeHoje => return new Negociacao(medite(), dado.vezes, dado.montante).
+
+[04:16] Vocês já devem estar percebendo que o negócio não está muito bom porque está com o tipo any, eu estou tendo que fazer isso daqui. Então aqui eu vou retornar uma nova negociação. Só que nós vimos que esses caras são valores numéricos, eu posso criar aqui uma nova negociação.
+
+[04:52] Tem que lembrar, galera, que esse cara é um JSON, esse valor já vai vir como número, como number. Então não preciso criar aquele createDe da minha classe negociação, que isso daqui seria se eu recebesse valores em string. Então eu criei minha negociação.
+
+[05:12] Isso significa que quando eu retornar esse map, esses dados vão ser convertidos para uma instância de negociação pro dia de hoje. E o que eu preciso fazer agora? Dentro desses dados que eu acabei de fazer um map, eu preciso agora fazer um for it deles.
+
+[05:32] Então olha o que eu vou fazer. Vou dar return dados.map(dadoDeHoje, vou retornar esse cara daqui, que é o map. Vou encadear mais uma chamada then e nesse then aqui eu tenho certeza de que esse cara é um array de negociações, then(negociacoesDeHoje.
+
+[06:08] Se eu passo o mouse aqui em cima, olha que legal, esse dadoDeHoje é any, eu não sei o que é, mas eu estou dizendo para o Java Script converter esse cara para cada interação dessa lista criar uma nova lista onde cada dadoDeHoje é convertido para uma negociação. Me retorna um array.
+
+[06:30] O Type Script é interessante para agora nessa etapa que eu estou dentro do then entender que esse cara é um array de negociação. Aí eu vou ter o auto complete, vou ter tudo aquilo de bom que nós podemos usufruir do Java Script. Agora que eu tenho esse cara que é um array de negociação convertido. O que eu vou fazer?
+
+[06:47] Eu vou chegar nele e fazer for(let negociacao of negociacoesDeHoje), o que vou fazer para cada um desses? Vou dizer this.negociacoes.adiciona(negociacao);. Então vamos recapitular aqui, fiz uma requisição fetch para o endereço localhost:8080/dados.
+
+[07:32] Recebi os dados, converti para JSON. Qual é o tipo que vem do Back End? Sei lá qual é o tipo, então é o tipo any, é qualquer coisa, então eu estou recebendo o array do tipo any. Pelo menos, já que eu sei que é um array, o Type Script vai me mostrar os métodos de array. O que eu faço?
+
+[07:47] Eu pego cada negociação de hoje, converto esse array em um novo array onde cada dadoDeHoje será convertido para uma negociação, onde eu passo a negociação, a data atual, número de vezes e o montante. Aí como eu retornei esse cara, na próxima chamada de then eu tenho uma lista de negociações já no formato negociação, porque o Type Script é inteligente e sabe que se você tem um array e está fazendo map para esse tipo, ele só pode ser do tipo negociação.
+
+[08:17] Lindo. Obrigado, Type Script. Aqui eu fiz um for of onde eu pego cada negociação e adiciono. Quando esse cara acaba, o que eu tenho que fazer? Tenho que fazer this.negociacaoView.update(this.negociacoes); para atualizar view com o dado que veio.
+
+[08:42] Será que vai funcionar? Vou salvar, abrir o meu terminal e nenhum erro de compilação, também se tivesse eu teria visto no Visual Studio Code. Volto para o navegador. Vou clicar em importar. Quando eu clico em importar, foi, chegou lá, importou. Uma maravilha.
+
+[09:18] Se eu olho para cá, eu tenho um montante, aqui é 10, 50, 70. Depois vem 2, 5, 1, 2 e a data de hoje. Beleza, galera? Então nós conseguimos se integrar. Eu posso apertar aqui e vai importar de novo, mas isso aí nós vemos depois se queremos tratar ou não, porque não é muito o foco agora.
+
+[09:48] Mas está aí. Agora a questão toda é o seguinte, isso aqui que está quebrando, esse dadoDeHoje. Olha o que acontece se eu botar veze, o Type Script está me avisando? Não. vou salvar, voltar para o navegador, ciclo em importar e undefinded.
+
+[10:08] Então é esse o problema que eu quero resolver com vocês agora. Será que o Type Script tem um jeito que me permite tratar esses dados que vem do Back End para que eu posso ter Type Safety e por aí vai? É isso que vamos ver no próximo vídeo.
+
+### Aula 4 - Definindo uma interface para a API - Vídeo 4
+
+Transcrição
+[00:00] Vamos lá, galera. Se eu tenho uma equipe com trinta desenvolvedores, toda vez que eles tiverem que acessar esses dados de negociação, eu não quero que eles cometam esse erro que eu cometi agora. Posso escrever montate e eu não sei o erro em tempo de desenvolvimento o que está acontecendo aí.
+
+[00:19] Eu quero que aconteça durante a compilação. Ou seja, acho que vocês já pegaram o meu recado. Como que fazemos? O Type Script tem um recurso muito poderoso que nós vamos começar a arranhar ele, começar pela superfície, chamado interface.
+
+[00:35] O que é uma interface? Se você vem do mundo Java, do mundo C Sharp, a interface do Type Script é um pouco parecida, lembra muito a interface que você já está acostumado no mundo Java, mas no Type Script ela tem outras funcionalidade.
+
+[00:51] A funcionalidade aqui eu quero definir um shape, uma forma para esse dado que está vindo do Back End. Eu quero tipar esse dado com um tipo que eu vou definir, um tipo que eu vou criar. Então a interface pode ser utilizada para definir esse shape, essa forma de dado que você está esperando.
+
+[01:15] Como nós vamos fazer isso? Vamos chegar lá dentro do nosso projeto, dentro de src, vou criar uma pasta nova que vou chamar de interfaces. Aqui eu vou criar uma interface que representa essa NegociacaoDoDia, que eu vou chamar de negociacao-do-dia.ts. Criei esse cara.
+
+[01:46] Como é que eu crio uma interface? Eu boto interface NegociacoesDoDia {}, vou exportar a minha interface, porque eu quero poder importá-la. Quando você criar interface, a primeira coisa que você tem que ter em mente é que uma interface nunca pode ser instanciada igual uma classe.
+
+[02:17] Ela não é uma classe, você não cria instâncias a partir dela. Então se eu tentar fazer const x =new NegociacoesDoDia();, esse cara nem construtor tem, vai dizer que está se referindo a um tipo, mas está tentando ser usado como um valor aqui. Então a interface não serve para isso.
+
+[02:37] Agora olha que bacana, qual é o tipo de dado que estamos esperando de lá? O tipo de dado que estamos esperando é o nome "montante" e "vezes" que number. Olha o que eu vou fazer, montante: number; vezes: number, o que eu criei? Eu estou dizendo que esse tipo, essa interface tem duas propriedades, montante e vezes.
+
+[03:14] Essas duas propriedades são valores, são do tipo number. Uma interface não posso definir nenhuma implementação e nem valor para ela, se eu tentar fazer montante: number = 10, isso aqui não é uma classe, não vai rolar nem com reza forte.
+
+[03:30] Então, olha só, pra que serve isso então? Você só está definindo o que é montante e vezes? Agora olha a beleza do negócio. Salvei, venho para NegociacoesDoDia, vou no meu controller, onde está o tipo any eu vou substituir com NegociacoesDoDia. Vou importar, vou lá em cima verificar se esse cara colocou o .js no import. Colocou.
+
+[04:05] Beleza, fiz isso, tipei. Esse cara não é mais any, esse cara é NegociacoesDoDia. Agora olha que lindo, se eu passo o mouse aqui, está dizendo que esse cara é uma rede de NegociacoesDoDia. Agora, olha só, se eu dou dadoDeHoje., olha o auto complete aí.
+
+[04:36] Vou tirar o E e fica montant, erro de compilação, não tem como passar, porque você definiu uma interface para essa API que você está recebendo do Back End. Agora, olha só, vamos supor que o Back End trocou. Todo mundo me pergunta isso, até o pessoal da minha equipe de vez enquanto vem com essa pergunta.
+
+[05:01] Se eu volto para cá, vamos supor que agora alguém trocou no Back End dizendo que esse cara não é mais montante, é valor. O Type Script vai ter como saber? O que o Type Script vai fazer é que ele vai dizer que esse cara tem o shape, mas quando eu tento acessar montante, na verdade o montante não vai existir, porque alguém trocou o nome na API.
+
+[02:51] Minha aplicação quebrou e eu só vou saber em runtime. Mas olha a vantagem da interface, se alguém mudou a API, ele vai comunicar a equipe de Front End e olha o que a equipe pode fazer. Eu vou clicar aqui com o “botão selecionar > rename simbol” e em valor vou dar enter.
+
+[05:40] Fiz isso. Como eu tenho esse cara tipado, se ele alterou vários arquivos, se eu volto em negociacao-controller olha o que ele trocou, o montante virou valor. Se eu tenho esse NegociacaoDoDia espalhado na minha aplicação em um monte de lugar e alguém agora troca o parâmetro no Back End, basta eu fazer o refactory aqui da minha classe.
+
+[06:11] Eu fiz o refactory da minha classe e mudou em todos os lugares, então essa tipagem estática do retorno de uma API, por mais que a API possa mudar, ela é ideal. Primeiro que torna o auto complete, você não deixa o desenvolvedor escrever algo que você não está esperando. Segundo que se você precisar fazer um refactory, eu dou dois cliques, rename simbol e escrevo montante.
+
+[04:42] O Visual Studio Code e outras ideias como IntelliJ, Eclipse, ele vai alterar em todos os lugares. Você vem em “File > Save all”. Então esse é o nosso primeiro contato com interface e você vai ver que quando eu executo esse código, ele vai estar funcionando. Não tem problema nenhum. Clico em importar e tudo continua funcionando.
+
+[07:09] Então esse tipar os retornos do Back End para um tipo conhecido isso é importante, até porque você documenta no Front End o que você está esperando do Back End, senão fica muito qualquer coisa. O tipo any nós vimos que não é legal. Beleza, galera?
+
+[07:25] Isso pode ficar ainda melhor, eu vou mostrar isso no próximo vídeo.
+
+### Aula 4 - Tipando retorno de uma API - Exercício
+
+Clarice precisava buscar os dados de uma API que retorna os dados dos alunos matriculados em sua turma.
+
+Vejamos um exemplo:
+
+fetch('http://endereco-da-api.com.br/alunos/1')
+.then(res => res.json())
+.then((aluno: any) => {
+    console.log(aluno.nome);
+    console.log(aluno.matricula);
+
+    // faz algo com o aluno
+});     
+Copiar código
+5 meses depois, a API que ela utilizava mudou a propriedade matricula para inscricao. Com certeza a aplicação de Clarice se comportou erradamente. Então, ela foi e alterou seu código para:
+
+fetch('http://endereco-da-api.com.br/alunos/1')
+.then(res => res.json())
+.then((aluno: any) => {
+    console.log(aluno.nome);
+
+    // modificou aqui! Veja que ela escreveu errado!
+    console.log(aluno.inscrica);
+
+    // faz algo com o aluno
+});     
+Copiar código
+No entanto, ao realizar a correção, ela escreveu errado o nome da propriedade inscricao. Novamente, ela só descobriu o problema em runtime para então realizar o ajuste final:
+
+fetch('http://endereco-da-api.com.br/alunos/1')
+.then(res => res.json())
+.then((aluno: any) => {
+    console.log(aluno.nome);
+
+    // modificou aqui! Veja que ela escreveu corretamente.
+    console.log(aluno.inscricao);
+
+    // faz algo com o aluno
+});    
+Copiar código
+Se Clarice tivesse definido uma interface (um formato) para os dados recebidos do servidor, além das alterações serem mais fáceis de realizar, ela não teria como cometer o erro que cometeu escrevendo inscrica em vez de inscricao.
+
+Marque a alternativa que cria a interface Aluno que define as propriedades mais recentes da API e que tipa corretamente o retorno:
+
+Alternativa correta!
+
+export interface Aluno {
+    nome: string;
+    inscricao: string
+}
+
+fetch('http://endereco-da-api.com.br/alunos/1')
+.then(res => res.json())
+.then((aluno: Aluno) => {
+
+    console.log(aluno.nome);
+    console.log(aluno.inscricao);
+
+    // faz algo com o aluno
+});      
+
+### Aula 4 - Camada de serviços - Vídeo 5
+
+Transcrição
+[00:00] Vamos lá, galera, seguinte, nós usamos a interface aqui para tipar o tipo de dado que está vindo do back end, tudo uma maravilha. Mas deixa eu te fazer uma pergunta, se eu preciso acessar esses dados em outro lugar da minha aplicação, olha o que eu vou ter que repetir.
+
+[00:16] Eu vou ter que repetir esse fetch, que faz a conversão, que faz todo esse trabalho aqui pra mim. Então é uma boa prática quando você tem acesso a uma API de dados, você isolar ela em uma camada que chamamos de uma camada de serviço.
+
+[00:31] Essa camada de serviço vai nos dar um método de alto nível, tipo, obter negociações do dia, que vai retornar essas negociações do dia para nós. Então isso vai tornar o nosso código mais legível e mais fácil de manter. Vocês vão ver a grande diferença que vai acontecer.
+
+[00:48] Então eu vou criar aqui dentro de src uma pasta chamada services, eu utilizo essa estrutura by filtre separando controllers, decorators e enums por uma questão didática, para ficar mais fácil o aluno ir lá e ver o que está acontecendo. Mas também tem uma outra pasta que você pode criar, por exemplo, negociação. O folder aqui está estruturado by structure, mas existe uma outra forma que é by filtre.
+
+[01:16] Você cria a pasta chamada negociação e aí dentro de negociação você tem services, você tem controllers, você tem decorators e por aí vai. Eu decidi dessa forma porque eu acho que é mais fácil didaticamente para explicar e controlar ao longo do projeto.
+
+[01:30] Então dentro de services eu vou criar um arquivo chamado negociacoes-service.ts. Esse cara vai ser uma classe NegociacoesService, que vai ter um método public obterNegociacoesDoDia, esse método vai me retornar uma promise, porque vou usar a fetch API e no final vou retornar uma promise. E o TypeScript possui esse tipo esse tipo Promise<NegociacoesDoDia, só que esse cara vai ser um array de NegociacoesDoDia.
+
+[02:38] Importei aqui. Eu já tipei, então esse cara vai me retornar uma promise que no final quando eu fizer o then nela, ela vai me retornar NegociacoesDoDia. Está aqui, mas eu ainda não estou retornando nada, o que eu vou fazer? Vou voltar lá para o meu controller.ts, vou pegar esse fetch que está aqui, vou copiar.
+
+[03:13] Importei a negociação, ele adicionou a negociação, botou o .js no final. Agora como esse fetch retorna uma promise, é ele que eu vou retornar. Ele vai me retornar uma promise de negociação, porque eu quero converter as NegociacaoDoDia para uma rede negociação.
+
+[03:59] Isolei o meu código aqui dentro. Então está aí, meu then retorna uma promise, então retornando uma promise com negociação. Salvei. Vou voltar lá em negociacao-controller.ts, vou apagar esse cara daqui, vou comentar esse outro. O que eu vou fazer? Vou declarar private NegociacoesService = new NegociacoesService();.
+
+[05:20] Criei uma instância. Se eu olho para os imports, eu não preciso mais de NegociacoesDoDia, porque ficou escondido do desenvolvedor, o desenvolvedor não precisa saber que NegociacoesDoDia, só o meu serviço. Removo essa interface daqui e NegociacoesService está aqui.
+
+[05:38] Agora volto aqui para o meu import e vou dizer this.negociacoesService.obterNegociacoes(), aí eu vou encadear aquele then que já esteva aqui. Eu peço para NegociacoesService obter NegociacoesDoDia, não importa onde esteja pegando esse cara, mas eu quero minha lista de NegociacoesDoDia.
+
+[07:05] Sempre que nós olharmos aqui eu vou receber uma lista de auto nível, uma lista de negociação. Agora se eu vou lá no código de NegociacoesDoDia e olho esse cara, você vai ver que esse cara está encapsulando, está criando para mim. Eu utilizei o tipo NegociacoesDoDia interface para me ajudar no auto complete e por aí vai.
+
+[07:28] Então nós começamos a ver que essa questão de organizar o projeto também depende de TypeScript, mas os recursos que ele tem na linguagem permite que nós consigamos trabalhar e garantir um código type safety. Então para ver se está tudo bonito, vou salvar, voltar lá na minha página.
+
+[07:44] Recarreguei, vou clicar em importar e continua importando. Deixa eu fazer o refresh para ver se está incluindo ainda. Beleza, está incluindo e está importando. Beleza, galera? Mais um plus aqui para nós organizarmos o nosso código de uma maneira mais interessante.
+
+### Aula 4 - O que aprendemos?
+ Próxima Atividade
+
+Nesta aula, aprendemos sobre:
+
+API externa
+Consumindo API externa
+Definindo uma interface para a API
+Isolando o acesso à API em um serviço
+
+## Aula 5 - Mais Sobre Interface
+
+### Aula 5 - Projeto da aula anterior
+ Próxima Atividade
+
+Você pode ir acompanhando o passo a passo do desenvolvimento do nosso projeto e, caso deseje, você pode [baixar o projeto](https://github.com/alura-cursos/typescript-curso-3/archive/736825b09942c549393e0fef2475e63a9c49f5d3.zip) do curso.
+
+Bons estudos!
+
+### Aula 5 - Chega de múltiplos console.log - Vídeo 1
+
+Transcrição
+[00:00] Vamos lá, galera, quero mostrar outra coisa aqui para vocês. Se nós vamos no nosso negociacao-controller.ts, nós estamos criando aqui negociação e o tempo todo estamos querendo exibir no console uma negociação como, por exemplo, console.log(negociacao).
+
+[00:21] Vou salvar e vou voltar lá no navegador. Quando eu olho lá no navegador, vou adicionar aqui uma negociação, peço para incluir e nós vemos essa negociacao que, na verdade, foi o print no console padrão no navegador. Mas eu quero dar um print melhor, eu quero ver bonito o dia, a data, o mês, o ano e por aí vai.
+
+[00:47] Então o que eu vou fazer, vou voltar lá no meu código, vou chegar agora e vou fazer o seguinte, ao invés de fazer esse console.log, eu vou pegar uma template string e vou pedir para imprimir Data: $(negociacao.data), Quantidade: $(negociacao.quantidade), valor: $(negociacao.valor).
+
+[01:39] Eu vou imprimir isso aqui no console que fica mais fácil de eu ler. Fiz isso e vou voltar lá para o navegador. Vou cadastrar aqui uma nova negociação e vamos ver a saída. Está aí a saída da minha negociação, data tal, quantidade e valor. Fica mais legível do que a forma anterior.
+
+[02:06] Pode ser que eu queira fazer a mesma coisa agora com minha lista de negociações. Depois de atualizar, depois de incluir, eu posso querer fazer console.log(JSON.stringify(this.negociacoes));. Posso querer imprimir para ver esse cara, ver uma representação textual desse objeto que está na memória.
+
+[03:02] E está lá, eu vi aqui a minha negociação e aqui eu vi o JSON stringify da minha lista de negociações onde só tem uma negociação. Se eu clico em importar aqui e adiciono uma outra negociação, nós vamos ver que vai aparecer mais lá. Fiz isso e está mostrando para mim a negociação.
+
+[03:26] Ainda posso inventar o JSON stringify passando null e eu vou pedir dois de espaçamento, eu posso fazer isso com o JSON stringify. Salvei e vou voltar lá no navegador. Clico para incluir e nós vemos ele formatado. Então, galera, não é raro se você trabalha com Java Script e TypeScript, as vezes você tem um objeto que está memória e você quer imprimir ele no console.
+
+[03:59] Só que você quer imprimir de uma maneira legível. Em Java ou em outras linguagens, dependendo do que você faz, ele vai imprimir o endereço da memória, não vai imprimir os valores daquele objeto. Então, o que vamos fazer? Parece que para resolver esse negócio, seria interessante que cada classe minha tivesse um método chamado paratexto.
+
+[04:22] Que toda vez que eu quisesse pegar aquele objeto e converter para um texto, eu chamo aquele paratexto em qualquer lugar da minha aplicação. Então o que eu faço? Vou chegar aqui, pegar essa implementação que você está vendo do negociação, vou lá para o meu modelo e vou adicionar aqui um método public paraTexto(): void.
+
+[04:54] E eu vou fazer o console.log disso aqui, então vai ser this.data, this.quantidade e this.valor. Esse método estático aqui eu botei no final, mas eu gosto e botar os métodos estáticos como primeiro método para eu ver da minha classe. Eu gosto de ver os métodos estáticos primeiro. Esqueci de fazer isso e fiz agora.
+
+[05:37] Mas está aí o paratexto de negociação. Vou fazer a mesma coisa com negociacoesView. Vou lá no controle e vou copiar a linha console.log(JSON.stringify(this.negociacoes, null, 2)). Vou colocar public paraTexto(): void e colo a linha.
+
+[06:06] Para ficar melhor, ao invés de eu fazer o paratexto retornar void, eu vou fazer ele retornar a string, negociação vai retornar uma string. Flavio, onde você quer chegar? Vem comigo que você vai ver. Salvei. vou lá para o controller.ts, vou tirar isso daqui e agora para imprimir, o que eu faço? Console.log(negocicao.paraTexto) e console.log(this.negociacoes.paraTexto).
+
+[07:11] Vou salvar, vou voltar lá no navegador e vamos ver aqui o resultado. Está lá, perfeito, imprimiu os dois. Ou seja, todo lugar que eu quiser imprimir esses elementos paratexto, eu chamo o método paratexto. Mas, olha só, se eu tiver cinco elementos aqui que eu quiser imprimir de uma vez só?
+
+[07:38] Eu quero criar uma função que eu passe quantos objetos eu quiser para ela e essa imprimir, por debaixo dos panos, vai chamar para nós o método paratexto. Eu quero algo assim imprimir(o, b, b) e por debaixo dos panos essa função imprimir vai chamar o paratexto.
+
+[08:04] Vamos tentar fazer isso? Acho que nós conseguimos. Vamos lá para o próximo vídeo.
+
+### Aula 5 - A função utilitária imprimir - Vídeo 2
+
+Transcrição
+[00:00] Vamos lá, galera. Então qual é o nosso objetivo? O nosso objetivo é que eu não quero chamar console.log múltiplas vezes, eu quero criar uma função que eu chamo imprimir e quando eu chamo imprimir, eu passo todos os meus objetos que tem no método paratexto e o meu imprimir vai chamar esse paratexto por debaixo dos panos e chamar o console.log para mim.
+
+[00:20] Então eu vou criar esse cara dentro de uma pasta chamada utils, vou criar dentro desse cara a função imprimir.ts. Essa função eu vou fazer export function imprimir. O que eu vou receber? Lembra que eu falei que quero passar como parâmetro um número desconhecido de objetos?
+
+[00:49] Então vou dizer que recebo um número infinito de parâmetros que eu vou chamar de objetos. Esses objetos vão ser um array do tipo negociacao. Então export function imprimir(... objetos: Array<negociacao>). Fiz isso e o que vou fazer? Vou pegar for (let objeto of objetos) e vou chamar console.log(objeto.paraTexto());.
+
+[01:51] Fiz isso, então eu posso passar uma quantidade de parâmetros aqui que eu vou chamar o paratexto. Flavio, estou sentido que tem alguma coisa estranha aí. Eu também, mas finge que não tem nada de estranho ainda. Vou salvar, voltar lá para o meu negociacao-controller.
+
+[02:08] Vou apagar essas duas linhas e vou fazer imprimir, ele vai fazer o import, enter. Vai lá para cima e vê se no imprimir ele está importando de utils.js. Está. Então vamos voltar lá. Aqui eu vou passar imprimir(negociacao) e vamos testar. Vou salvar e voltar no navegador.
+
+[02:36] Vou adicionar aqui a negociação e está lá, imprimiu, chamou o paratexto da minha negociação. Agora eu quero passar a minha imprimir(negociacao, this.negociacoes), mas aí nós caímos no problema. Deu um crash aqui. O que está acontecendo?
+
+[03:02] Está dizendo que negociações não é compatível com o parâmetro negociação. Poxa vida, isso é verdade, porque o meu imprimir só aceita receber objetos do tipo Array<Negociacao>. Como eu resolvo isso? A primeira coisa que passa na sua cabeça é que eu vou transformar esse cara em um array do tipo any, certo?
+
+[03:36] Salvei, vou lá para o meu navegador e salvo. Beleza, está compilando, tudo uma maravilha, porque eu disse que o meu imprimível recebe qualquer coisa para que eu possa chamar o paratexto. Volto lá para o meu navegador, recarregado, clico em incluir e olha lá, imprimiu o negociação e imprimiu as negociações também.
+
+[04:07] Perfeito, chamou o paratexto dos dois. Agora olha só o que eu vou fazer aqui para vocês verem, const calopsita = ‘miau’;. Qual é o terceiro parâmetro? Imprimir(negociacao, this.negociacoes, calopsita). A primeira coisa, calopsita tem paratexto? Não tem.
+
+[04:38] Por que calopsita está entrando no imprimir? Porque eu estou dizendo que o imprimível aceita um cara do tipo any. Se eu volto lá para o navegador e boto aqui o meu código, vou ter um erro em tempo de execução, porque a calopsita não tem paratexto.
+
+[05:05] Então não tem nada blindando o desenvolvedor. Esse any está deixando eu colocar um monte de coisa. Outra coisa, se eu passo o any chama pa, por quê? Por quê any é qualquer coisa, então o TypeScript não consegue entender que esse cara tem um método paratexto.
+
+[05:22] Então nós não podemos adotar o any aqui, primeiro porque vou poder passar qualquer coisa como calopsita. Segundo que eu não tenho o auto complete aqui, eu não tenho referência para saber quais são os métodos que estão aqui.
+
+[05:36] Então parece que a implementação do nosso imprimível vai ter que ficar com essa limitação. Não, nós podemos garantir essa flexibilidade com Type Safety e é isso que eu vou te mostrar no próximo vídeo.
+
+### Aula 5 - Polimorfismo - Vídeo 3
+
+Transcrição
+[00:00] Bom, galera, pensem aqui comigo, negociação e negociações, dois modelos materializados usando classe do ECMAScript eu quero que eles sejam imprimíveis. Então o que um objeto imprimível tem em comum? Método paratexto.
+
+[00:33] Então olha o que eu vou fazer. Aqui dentro de “src > controllers > utils” eu vou criar um arquivo que vou chamar imprimível.ts, esse imprimível vai ser uma classe abstrata, então export abstract class Imprimivel. Nós já vimos abstract class aqui, não vimos? Segundo, uma classe abstrata significa que eu não posso fazer new Imprimivel, porque eu não posso criar instâncias dessa classe.
+
+[01:24] Toda classe abstrata pode te dar um método que você é obrigado a implementar, que se você não implementar, o teu código não vai funcionar. Então olha o que eu vou botar aqui public abstract paraTexto(): string;. Isso aqui não é novidade, nós vimos isso no curso, no primeiro ou no segundo capítulo.
+
+[01:53] Essa imprimível vou salvar, vou lá no meu modelo de negociação, vou dizer extends Imprimivel. Verifica se esse cara botou o .js aqui e botou. Eu estou tendo um erro de compilação, porque quando você herda de uma classe você está sobrescrevendo com o construtor dela, eu preciso garantir que o construtor de imprimível seja chamado.
+
+[02:33] Não tem construtor nenhum aqui, mas fica implícito que ele tem um constructor() {} assim. Então como eu herdei a minha filha está sobrescrevendo o construtor, eu tenho que garantir a chamada do construtor pai chamando super();. Nem com super poderes você pode deixar de chamar esse super(), porque o seu código não vai funcionar.
+
+[02:59] O TypeScript está te falando que você herdou de imprimível, você é um construtor novo, então você tem que garantir a chamada do construtor de imprimível chamando super()). Estou tendo erro de compilação aqui? Não, porque eu já tenho o paratexto.
+
+[03:14] Mas vocês lembram que como o método é abstrato, se eu removo esse cara daqui, negociacao vai começar a reclamar dizendo que ele não implementa o método abstrato paratexto, então o desenvolvedor não tem como esquecer de fazer isso.
+
+[03:27] Salvei. Vou lá agora para negociações. E vou fazer export classe Negociacoes extends Imprimivel, dei enter. Importou aqui automático com .js e vou salvar. As duas classes implementando. O meu imprimível ainda está aceitando calopsita, olha o que eu vou fazer.
+
+[04:04] Vou voltar para imprimível, o tipo que eu vou dizer que é esse cara, adivinha qual é? Eu quero aceitar qualquer objeto, contanto que ele seja imprimível, então export function imprimir(...objetos: Imprimivel[]). Fiz isso, estou recebendo um array de imprimível, não tenho mais aqui a referência de negociação. Por favor, não esquece de botar o .js, não quero vocês indo no fórum dizendo que o código não está importando por causa do .js.
+
+[04:34] Salvei. Se esse objeto é imprimível, eu sei que todo objeto tem qual método? paraTexto. Salvei. Vou em negociacao-controller e olha que lindo. Negociação é imprimível? É, pode entrar. Negociações é imprimível? É, pode entrar. Calopsita é imprimível? Não, sai fora.
+
+[05:16] Eu tive um erro de compilação, então você só pode passar agora para o imprimir todo mundo que é imprimível. Ou seja, todo mundo que estende imprimível, porque você sabe que quem é imprimível, você tem certeza absoluta que esse cara vai ter o método paraTexto.
+
+[05:38] Então, olha que interessante, a classe negociacao e negociacoes, que são classes completamente diferentes, eu estou referenciando aqui no meu método como um outro tipo, um tipo imprimível. O que nós acabamos de ver é polimorfismo.
+
+[05:57] A capacidade que um objeto tem de ser referenciado de múltiplas formas. Olha que interessante, eu vou chegar aqui em negociacao-controller, vou salvar. Deixa eu primeiro rodar para saber se está bonito. Vou voltar no meu navegador e tudo bonito, tudo funcionando.
+
+[06:20] Agora, qual é a sacada? A sacada é o seguinte, se eu crio uma variável cons o:Imprimivel = new Negociacao(new Date(), 1, 100);, eu estou tendo erro de compilação? Não, porque negociação é imprimível, então eu posso referenciar uma instância de negociação para um tipo que restringe mais um pouco.
+
+[07:28] Se eu tentar fazer agora o. eu só vou ver o paraTexto, mas faz todo sentido isso para o meu método imprimir. Então o polimorfismo é a capacidade que um objeto tem de ser referenciado de múltiplas formas. Agora se eu crio aqui um new date direto, esse date não implementou imprimível direto, vou ter um erro de compilação, porque ele não implementou imprimível.
+
+[07:56] Então estou garantindo através do polimorfismo que eu posso ter trinta mil objetos no meu sistema, se todos herdarem, estenderem imprimível, implementarem o método abstrato imprimível, o meu método imprimir vai aceitar e vai rodar.
+
+[08:10] Em tempo de compilação esse cara é o imprimível, mas por de baixo dos panos eu sei que esse cara ou é uma negociação, ou esse cara é negociações e por aí vai. Só que isso pode ficar ainda melhor e é isso que eu vou mostrar para vocês no próximo vídeo.
+
+### Aula 5 - Interface e métodos - Vídeo 4
+
+Transcrição
+[00:00] Vamos continuar. O que nós fizemos? A minha classe negociações e negociação, elas estenderam imprimível e através polimorfismo eu posso referenciá-las através do tipo imprimível, porque eles são imprimíveis. Mas tem uma coisa aqui que não está muito legal.
+
+[00:22] Olha só, nós lançamos mão da classe abstrata porque a classe abstrata me obriga a implementar um método e também me fornece polimorfismo. Só que a pergunta que eu faço, compara essa classe aqui abstrata imprimível com a linda e apaixonante classe view.
+
+[00:45] Inclusive, aqui tem uns decorators que eu removi da outra aula, agora que eu vi que o import está aqui desnecessário. Vou até remover. Era só import, não fazia nada no nosso código. Se nós olharmos essa classe, essa classe tem o método abstrato, mas eu herdo métodos concretos, entenderam?
+
+[01:08] Eu estou herdando o código pronto mais uma lacuna que eu tenho que preencher. No caso do imprimível, eu estou herdando algum código pronto? Não, eu só quero herdar a obrigação de implementar um método paratexto. E, mais, em herança em Java Script, você não pode ter herança múltipla, dizer que esse cara é imprimível ou object.
+
+[01:37] Se eu passar para cá, eu não posso fazer isso. Olha aqui comigo class X, só isso. export class Negociacao extends Imprimivel, X. Você não tem herança múltipla aqui, o Type Script está dizendo classes can Only extends a single class, só pode estender uma única classe.
+
+[02:03] Então eu já queimei com essa imprimível a herança aqui, eu não posso usar nenhuma outra herança. Então o que eu quero dizer para vocês é o seguinte, sempre que você tem um comportamento e que você quer garantir esse comportamento em diversos lugares ou diversas classes e você não quer herdar código nenhum, vamos transformar esse cara em uma interface.
+
+[02:34] Eu removo o abstrato daqui e removo daqui. Não preciso colocar public, porque padrão toda interface é pública e todo método de uma interface é abstrato. Você pode pensar assim sem eu precisar escrever, sem nada. Então ele parece muito com uma classe, mas não é.
+
+[02:56] Vou salvar. Vou lá em negociacao, estou dizendo que esse cara não posso estender uma interface, você quer dizer implements? Olha o que eu vou fazer, extends é quando eu quero herdar de uma classe. Se eu quiser herdar ou garantir que a minha classe assine o contrato de imprimível para que ela seja obrigada a implementar o método paratexto, nós usamos o implements.
+
+[03:27] Vou agora aqui em negociação e aplico o implements. Nosso código nem preciso chamar, porque não estou estendendo uma classe. Vou provar para vocês. Eu implementei aqui imprimível e minha classe vai reclamar dizendo que negociação implementa incorretamente a interface imprimível.
+
+[03:54] Porque ele tem que ter o paratexto. Então esse cara, quando eu implemento uma interface, eu sou obrigado a implementar aquele métodos daquela interface. O melhor de tudo, se eu volto lá para o meu imprimir, esse imprimir também aceita objetos que implementam interface imprimível.
+
+[04:36] Eu também consigo polimorfismo, então veja que agora ficou mais suave. Qualquer classe no meu sistema, se ela já herda de uma outra classe eu não poderia usar o imprimível, mas agora com o interface uma classe pode implementar quantas interfaces quisermos, não há limite.
+
+[04:58] A única coisa é que isso vai me dar o poder de tratar essa classe de acordo com o tipo da interface que eu quiser no momento mais adequado. Então está aqui. Nós usamos a interface até agora só para definir os shapes dos dados da API que vem do back end para o front end.
+
+[05:14] Mas a interface também tem o mesmo papel de um método abstrato. Toda interface os métodos são públicos e abstratos, se nós compararmos com uma classe abstrata, porque força o desenvolver a implementá-lo. A vantagem da interface é que se eu tiver uma interface, só para vocês verem, interface Latido { auau(): void;.
+
+[05:58] Quando eu implemento ele está reclamando. Eu posso até clicar e pedir para adicionar o método latido para mim, ele botou o método auau para eu implementar. Então eu posso implementar quantas interfaces eu quiser, não há problema nenhum.
+
+[06:16] Ficou claro, galera? Nós começamos bem devagar para demonstrar como interfaces são poderosas e como elas permitem que nós tenhamos um código flexível e utilize o polimorfismo garantido o Type Safety e por aí vai. Tá bom, galera? É o mesmo comportamento que você tem uma linguagem como Java e por aí vai.
+
+### Aula 5 - Interface em ação
+ Próxima Atividade
+
+Olga estudou Java durante um bom tempo, inclusive C#. Ela decidiu replicar um código que havia escrito nessas linguagem em TypeScript.
+
+Ela criou duas classes que representam formas geométricas:
+
+class Retangulo {
+    
+    constructor(private altura: number, private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.altura * this.lado;
+    }
+}
+
+class Quadrado {
+    
+    constructor(private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.lado * this.lado;
+    }
+}
+Copiar código
+Em seguida, criou a classe CalculadorDeArea. Ela é a responsável em receber N formas geométricas e no final retornar o total da àrea de todas elas. Assim como no ECMASCRIPT 2016, é possível criar métodos estáticos em TypeScript:
+
+class CalculadorDeArea {
+    
+    static calcula(area1: Quadrado, area2: Retangulo): number {
+
+        return area1.calculaArea() + area2.calculaArea();
+    }
+}
+Copiar código
+Para testar seu código ela fez:
+
+const quadrado = new Quadrado(30);
+const retangulo = new Retangulo(50, 30);
+
+const total = CalculadorDeArea.calcula(quadrado, retangulo);
+console.log(total);
+Copiar código
+Excelente! Funcionou como esperado. Contudo, ela precisou criar mais uma área calculável:
+
+class Circulo {
+    
+    constructor(private raio: number) {}
+
+    calculaArea() {
+
+        return Math.PI * this.raio * this.raio;
+    }
+}
+Copiar código
+O problema agora é que ela precisará alterar o método CalculadorDeArea.calcula para receber agora um objeto do tipo Circulo, inclusive alterar sua lógica para que seja capaz de levar em consideração a nova area. É uma situação na qual herança não ajudaria, pois não faria sentido ela herdar um código já pronto, pois o cálculo da área é sempre diferente para as formas geométricas. Foi então que ela lembrou que o uso de interfaces pode ajudá-la.
+
+Ela criou a interface AreaCalculavel:
+
+interface AreaCalculavel {
+    
+    calculaArea(): number;
+}
+Copiar código
+Em seguida, fez com que as três classes Quadrado, Retangulo e Circulo a implementassem:
+
+class Retangulo implements AreaCalculavel {
+    
+    constructor(private altura: number, private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.altura * this.lado;
+    }
+}
+
+class Quadrado implements AreaCalculavel  {
+    
+    constructor(private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.lado * this.lado;
+    }
+}
+
+class Circulo implements AreaCalculavel {
+    
+    constructor(private raio: number) {}
+
+    calculaArea() {
+
+        return Math.PI * this.raio * this.raio;
+    }
+}
+Copiar código
+Ao implementar a interface AreaCalculavel, todas as classes ganham a obrigação de definir o método definido pela interface. Como elas já definiam esse métodos antes mesmo de implementá-la, o código compilou sem problema algum.
+
+Marque a opção que altera corretamente a classe CalculadorDeArea para que possa lidar com objetos que implementem a interface AreaCalculavel:
+
+Selecione uma alternativa
+
+Interface em ação
+ Próxima Atividade
+
+Olga estudou Java durante um bom tempo, inclusive C#. Ela decidiu replicar um código que havia escrito nessas linguagem em TypeScript.
+
+Ela criou duas classes que representam formas geométricas:
+
+class Retangulo {
+    
+    constructor(private altura: number, private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.altura * this.lado;
+    }
+}
+
+class Quadrado {
+    
+    constructor(private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.lado * this.lado;
+    }
+}
+Copiar código
+Em seguida, criou a classe CalculadorDeArea. Ela é a responsável em receber N formas geométricas e no final retornar o total da àrea de todas elas. Assim como no ECMASCRIPT 2016, é possível criar métodos estáticos em TypeScript:
+
+class CalculadorDeArea {
+    
+    static calcula(area1: Quadrado, area2: Retangulo): number {
+
+        return area1.calculaArea() + area2.calculaArea();
+    }
+}
+Copiar código
+Para testar seu código ela fez:
+
+const quadrado = new Quadrado(30);
+const retangulo = new Retangulo(50, 30);
+
+const total = CalculadorDeArea.calcula(quadrado, retangulo);
+console.log(total);
+Copiar código
+Excelente! Funcionou como esperado. Contudo, ela precisou criar mais uma área calculável:
+
+class Circulo {
+    
+    constructor(private raio: number) {}
+
+    calculaArea() {
+
+        return Math.PI * this.raio * this.raio;
+    }
+}
+Copiar código
+O problema agora é que ela precisará alterar o método CalculadorDeArea.calcula para receber agora um objeto do tipo Circulo, inclusive alterar sua lógica para que seja capaz de levar em consideração a nova area. É uma situação na qual herança não ajudaria, pois não faria sentido ela herdar um código já pronto, pois o cálculo da área é sempre diferente para as formas geométricas. Foi então que ela lembrou que o uso de interfaces pode ajudá-la.
+
+Ela criou a interface AreaCalculavel:
+
+interface AreaCalculavel {
+    
+    calculaArea(): number;
+}
+Copiar código
+Em seguida, fez com que as três classes Quadrado, Retangulo e Circulo a implementassem:
+
+class Retangulo implements AreaCalculavel {
+    
+    constructor(private altura: number, private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.altura * this.lado;
+    }
+}
+
+class Quadrado implements AreaCalculavel  {
+    
+    constructor(private lado: number) {}
+
+    calculaArea(): number {
+
+        return this.lado * this.lado;
+    }
+}
+
+class Circulo implements AreaCalculavel {
+    
+    constructor(private raio: number) {}
+
+    calculaArea() {
+
+        return Math.PI * this.raio * this.raio;
+    }
+}
+Copiar código
+Ao implementar a interface AreaCalculavel, todas as classes ganham a obrigação de definir o método definido pela interface. Como elas já definiam esse métodos antes mesmo de implementá-la, o código compilou sem problema algum.
+
+Marque a opção que altera corretamente a classe CalculadorDeArea para que possa lidar com objetos que implementem a interface AreaCalculavel:
+
+Alternativa correta!
+
+class CalculadorDeArea {
+    static calcula(...areas: AreaCalculavel[]): number {
+        return areas.reduce((total, area) => total + area.calculaArea(), 0);
+    }
+}
+
+const quadrado = new Quadrado(30);
+const retangulo = new Retangulo(50, 30);
+const circulo = new Circulo(20);
+
+const total = CalculadorDeArea.calcula(quadrado, retangulo, circulo);
+console.log(total);
+
+### Aula 5 - Evitando importar negociações duplicadas - Vídeo 5
+
+Transcrição
+[00:00] Vamos continuar, vamos lá que esse aqui é bem legal. Olha só, estou lá no meu navegador, vou clicar em importar. Importei. Vou clicar de novo e continuar clicando. O que está acontecendo? Eu estou importando as mesmas negociações que já foram importadas.
+
+[00:25] O que eu preciso fazer aqui no meu código? Eu preciso, na hora que eu estou importando, verificar se a negociação que eu estou importando já foi incluída na minha lista. Se não foi, eu não importo. Para nós sabermos se uma negociação foi incluída ou não, eu vou ter que realizar alguma comparação entre elas.
+
+[00:48] Que comparação vai ser essa? Eu preciso testar se a data, o mês e o ano são iguais, então eu vou fazer o seguinte, eu não vou escrever a lógica de comparação se uma negociação é igual a outra dentro do meu controller. Isso aqui eu já motivei esse tipo de problema em vários lugares e eu não vou fazer isso de novo.
+
+[01:24] Eu não vou deixar esse código aí. Em qualquer lugar que você crie uma negociação, eu quero que o método que realize essa comparação vá junto com a instância de negociação. Se eu tenho a negociação A, eu quero perguntar para negociação A se ela é igual a negociação B.
+
+[01:40] Então qualquer lugar do meu sistema essa lógica de comparação vai estar compartilhada. Como eu vou fazer isso? Vamos voltar lá para negociação, vou criar o método public ehIgual. Esse método vai comparar a própria negociação com outra.
+
+[02:00] Então vai receber como parâmetro public ehIgual(negociacao: Negociacao). Como eu sei se uma negociação é igual a outra? Eu vou dar return this.data e vou testar só a data, se data da negociação é igual, é porque eu já importei. Poderia ter uma lógica mais complexa, mas é essa que eu vou criar.
+
+[02:29] Então eu vou testar se return this.data.getDate() === negociacao.data.getDate() && this.data.getMonth() === negociacao.data.getMonth() && this.data.getFullYear() === negociacao.data.getFullYear(). Então, olha só, eu estou retornando se o date de um é igual ao date de outro, se o month é igual month de outro, se o full year é igual ao full year de outro e esse cara vai me retornar o que?
+
+[03:54] Boolean. Então vou dizer que esse cara é boolean. Salvei. Vou lá no meu controller e vou precisar aplicar aqui uma lógica. Antes de eu fazer esse for aqui, eu tenho que filtrar essas negociações, então o que eu vou fazer aqui? Vou botar then(negociacoesDeHoje e eu tenho que retornar ele filtrado.
+
+[04:45] Como eu vou fazer? Vou fazer um filter nele para poder garantir que esse cara não foi inserido. Então, vamos lá, eu vou fazer return negociacoesDeHoje.filter(negociacaoDeHoje) e vou retornar. No filter, se eu retorno true, o item vai entrar, se eu retorno false ele não vai entrar.
+
+[05:29] Então, o que acontece, eu tenho que ver se essa negociação de hoje já existe lá na minha lista de negociações. Aí eu vou pedir ajuda ao nosso some do Java Script. Eu vou fazer return this.negociacoes.lista(), ela que vai me dizer se essa negociação já existe ou não existe. Como? Eu vou perguntar .some(negociacao => negociacao.ehIgual(negociacaoDeHoje)).
+
+[06:14] Para cada item da sua lista eu vou perguntar se essa negociação que eu estou varrendo é igual a minha negociação de hoje. O que o some faz? Se ele encontra a primeira coisa que é verdadeira, ele para e me retorna true. Se ele não encontra nada, ele me retorna verdadeira.
+
+[06:44] Mas eu quero que se ele estiver aqui dentro, eu não quero adicionar a minha lista, então eu tenho que mudar o retorno true para false. Então vê se faz sentido. Vamos lá ver a lógica. Recebi minha NegociacoesDoDia, peguei os dados, eu tenho uma lista de negociações já convertidas.
+
+[07:15] O que eu faço? Essa lista eu preciso filtrar, não pode ter negociações que já existem lá na minha lista de negociações. Para cada interação do filter eu tenho que retornar verdadeiro ou falso. Se eu retorno verdadeiro, o item vai para a lista. Se eu retorno falso, o item não vai.
+
+[07:30] Aí eu pergunto para a lista de negociações se ela tem algum some, se tem alguma negociação que seja igual a essa negociação que eu estou querendo filtrar. Ela vai falar que sim. Se eu retornar true, ele vai entrar. Não pode. Quando a lista falar sim é porque eu não quero, então eu estou invertendo o sinal aqui com exclamação.
+
+[07:56] Será que vai funcionar? Vou salvar. Vou voltar lá no navegador, vou clicar em importar várias vezes e não vai importar, porque a lógica é ela estar funcionando aqui perfeitamente. Então no lugar de eu ficar escrevendo esse código de igual espalhado nos meus controles, eu escrevi e botei essa lógica na própria classe negociação.
+
+[08:25] Agora eu te pergunto uma coisa, comparar se um objeto é igual ao outro é algo que fazemos todo tempo, e se eu quiser comparar que uma lista de negociações é igual a outra? Se eu quiser comparar se o objeto A é igual ao objeto B? Será que tem como eu conseguir uma maneira genérica para garantir que todos os objetos que sejam comparáveis tenham a obrigatoriedade de imprimir o método ehIgual? É isso que vamos ver no próximo vídeo.
+
+### Aula 5 - Interface com Generics - Vídeo 6
+
+Transcrição
+[00:00] Eu quero saber se esse ehIgual pra mim faz sentido ter um objeto que é comparável ou igualável. Um objeto que é comparável. Vamos chamar de comparável. Eu quero saber se esse objeto pode ser comparado com outro, se esse objeto pode ser comparado com outro, eu tenho certeza que eu vou ter o método ehIgual?
+
+[00:27] Só que para eu ter vários objetos que sejam comparáveis ou comparável, eu vou ter que forçar eles a implementar o que para eles terem só esse método? Uma interface. Então, olha aqui comigo, eu vou criar a interface comparavel.ts. Vou dar export interface Comparavel.
+
+[01:06] Qual é o método que eu vou ter? ehIgual. Esse ehIgual recebe o que como parâmetro? Recebe um (objeto: any): boolean;. Vamos deixar assim por enquanto. Comparável tem obrigação de implementar o método ehIgual, eu recebo um objeto e eu sei que eu tenho que retornar true ou false. Salvei.
+
+[01:46] Vou lá em negociação, vou implementar imprimível e comparável. Fiz isso, dei enter aqui, ele importou o comparável para mim. Verifica se importou direito, se tem o .js no final. Importou. Eu já tenho o ehIgual? Tenho. Se eu mover o ehIgual vai dar um erro dizendo que eu sou obrigado a implementar esse método.
+
+[02:14] Salvei aqui. Beleza, agora eu vou lá em negociacao-controller, estou testando se esse cara aqui é igual a uma negociação. Beleza, tudo uma maravilha, mas deixa eu te fazer uma pergunta, nós sabemos que o tipo any tem que evitar, não é um tipo muito legal.
+
+[02:36] Ainda mais se eu for implementar o comparável em negociações, por exemplo, posso chegar em negociações, vou implementar o comparável. Implementei lá. Ele importou o comparável, colocou .js no final. O Type Script já faz isso daqui, o Visual Studio Code adiciona o método para mim, mas ele bota um lugar completamente zoado, não é aqui que eu quero.
+
+[03:11] Vou jogar esse cara para cá. Joguei. Vou colocar um public aqui, porque eu sei que toda interface é public. Só para ficar bonito. Qual vai ser a implementação desse comparável? A implementação dele eu vou dizer que ele é Negociacoes e vai dar return JSON.stringify(this.negociacoes) === JSON.stringify(objeto);.
+
+[04:29] Eu estou serializando essa lista e estou vendo se o dado dessa lista é igual ao objeto. Esse cara é o que está encapsulado, que é o retornado pelo o meu método da lista. Esse cara daqui é a outra lista que eu estou comparando. Estou serializando os dois strings para saber se são iguais.
+
+[05:01] Uma força de barra aqui só para nós implementarmos esse método aqui também. Olha só, se eu estou comparando essa classe, eu só quero comparar ela com outra classe, não é? Agora, olha só, alguém me impede de botar ehIgual(negociações: string): boolean?
+
+[05:21] Eu vou ter um erro de compilação aqui, mas aqui alguém está me impedindo de eu botar string? Não, mas a comparável da instância da minha classe com a outra espera que o tipo seja negociações. Então eu quero que esse cara aqui do ehIgual, na hora que eu implementar o meu comparável, eu diga que esse cara vai ser o tipo genérico que eu vou passar para o comparável.
+
+[05:54] Nós já vimos genérico aqui no curso. Então olha o que eu vou fazer, vou voltar lá para comparavel.ts e vou dizer que esse é um comparável de T, que compara o ehIgual com tipo T. Esse T que está aqui vai entrar em ehIgual (Objeto: T). Então eu vou salvar aqui, vou lá em negociação e vai ter um erro de compilação, porque esse cara não define o tipo comparável
+
+[06:19] Vou dizer que o comparável vai comparar com a própria negociação, então é esse parâmetro do meu ehIgual. Então se eu volto para cá, negociação está aqui. Agora se eu boto aqui que eu estou comparando string, o ehIgual vai reclamar dizendo que string não condiz com o tipo negociação que você passou no type lá em cima.
+
+[07:07] A mesma coisa eu vou fazer para negociações. Aqui se eu estou comparando uma negociação com outra, o parâmetro do negociação vai ser do tipo negociações. Salvei. Então esse método ehIgual, obrigatoriamente, esse parâmetro tem que ser igual a esse.
+
+[07:27] Então, olha que legal, nós estamos utilizando uma interface para obrigar o desenvolvedor a implementar um método de comparação e ao mesmo tempo estamos utilizando generic para dizer qual vai ser o tipo do objeto recebido como parâmetro na comparação.
+
+[07:44] Então a combinação de interface com generics deixa o nosso código bem flexível. Se eu vou lá em negociacao-controller, continua tudo funcionando. Beleza, galera? Então eu fiz questão de mostrar isso aqui para mostrar que eu posso combinar, ter polimorfismos, combinar interfaces, combinar generic para criar um código bem genérico.
+
+[08:07] Agora na minha aplicação pode ser que seja interessante todos os objetos que eu criar que eles implementem comparável e imprimível. Se você vem do mundo Java, você tem comparable e você tem o two string. Então vamos ver o que vai acontecer agora no próximo vídeo, porque no próximo vídeo eu quero mostrar mais um pulo do gato para você para entendermos isso aqui melhor.
+
+### Aula 5 - Estendendo interfaces - Vídeo 7
+
+Transcrição
+[00:00] Bom, galera, vamos lá continuar, tem mais uma coisa que eu quero mostrar para vocês. É o seguinte, nós temos a interface imprimível, a interface comparável e toda vez que queremos criar uma classe, faz muito sentido nós implementarmos imprimível, porque queremos.
+
+[00:21] Toda vez que fizer o console.log temos uma representação bacana desse cara no console. E comparável porque se em algum momento precisar comparar esse objeto com outro, eu garanto uma uniformidade em todos os lugares para realizar essa comparação.
+
+[00:37] Nós podemos parar para pensar que o meu objeto dá minha aplicação faz sentido todos terem imprimível e comparável, agora imagina se depois eu tenho imprimível, comparável, calopsita, papagaio. Eu ficar tendo que implementar todas essas interfaces em todas as classes que representam o domínio dessa aplicação fica algo meio repetitivo.
+
+[01:07] Então olha o que eu vou fazer, olha uma coisa legal que eu vou fazer. Vou lá em interfaces, vou criar uma interface chamada objeto.ts. Olha o que eu vou fazer, eu vou fazer export interface Objeto. Aí olha que bacana, uma classe só pode estender uma outra classe, não existe herança múltipla em TypeScript.
+
+[01:49] Mas uma interface pode estender quantas outras interfaces ela quiser na aplicação. Olha o que eu estou fazendo aqui, primeiro eu imporei o imprimível e comparável, vou botar aqui .js, porque ele não trouxe dessa vez. Comparável está dando erro porque ele precisa de um tipo T.
+
+[02:14] Então olha o que eu vou fazer, a minha interface objeto vai receber como parâmetro T e o comparável vai receber o T passado pela interface objeto. Então isso que eu acabei de criar, galera, é uma interface que estende uma ou mais interfaces, que eu posso criar um atalho.
+
+[02:38] Ou seja, se eu for criar qualquer classe ou modelo. Melhor eu chamar o objeto.ts de modelo. Vou renomear para modelo.ts, ou seja, todo mundo que implementar a interface modelo, vai automaticamente ter a obrigação de implementar o método imprimível e o método comparável.
+
+[03:09] Então, olha que bacana, se eu vou lá em negociação agora, removo isso daqui, vou tirar os dois imports daqui e aqui vou botar implements Modelo<Negociacao>, porque esse generics vai ser passado para o comparável. Deixa eu importar aqui. Fiz o auto import, vou botar o .js, porque ele não trouxe, está aqui o meu código, continua funcionando.
+
+[03:51] Vou lá em negociações, também vou remover esses dois caras daqui e vou dizer implements Modelo<Negociacoes>. Aqui passei, agora vou importar o modelo. Importei aqui e o danado botou o .js, antes não tinha colocado. Implementou. Então eu tenho negociações aqui implementando modelo.
+
+[04:22] Ambos tem obrigatoriedade de implementar o paratexto e é igual. Então se eu volto agora lá para o meu código não tem nenhum erro aqui. Volto lá no navegador, deixa eu abrir aqui o console e vou executar agora aqui 14/11/1111 e foi. Está tudo continuando funcionando.
+
+[04:53] Então fica mais essa dica para você se criou interfaces que fazem sentido na tua aplicação todo modelo implementar, cria uma interface modelo que estende uma ou mais interface. Lembrando que você pode utilizar o extends para quantas interfaces você quiser.
+
+[05:14] Você só não pode uma classe fazer extends para mais de uma. Tá bom, galera? Fica aí essa dica, isso é bem legal para podermos trabalhar, porque estamos trabalhando com interfaces, trabalhando com generics e trabalhando com extends ao mesmo tempo.
+
+### Aula 5 - Sabatina - Exercício
+ Próxima Atividade
+
+Marque apenas as opções verdadeiras à respeito do que aprendemos ao longo do curso:
+
+Alternativas corretas!
+
+> Uma interface pode estender outras interfaces.
+> Uma classe em TypeScript pode implementar quantas interfaces for necessário.
+
+### Aula 5 - Sintaxe inválida
+ Próxima Atividade
+
+Marque as opções que apresentam sintaxes válidas no uso de herança e interfaces:
+
+Selecione 2 alternativas
+
+Alternativa correta!  
+class a extends b implements c {
+}
+
+> A classe a está herdando da classe b e implementando a interface c.
+
+Alternativa correta!  
+class a extends b implements c, d, e, f {
+}
+
+> A classe a está herdando da classe b e implementando as interfaces c, d, e e f.
+
+### Aula 5 - Debugando sua aplicações - Vídeo 8
+
+Transcrição
+[00:00] Bom, galera, nós chegamos o final do treinamento, mas tem mais uma coisa que eu quero mostrar para vocês. Uma coisa bem legal que depende muito do seu ambiente, mas que vale a pena nós mostrarmos. Como é que se debuga um código em TypeScript?
+
+[00:14] Vamos olhar a nossa aplicação do jeito que está aqui rodando. Se eu volto lá no meu navegador, eu estou na aba console, eu quero “Ctrl + P”, eu quero debugar, eu quero botar um break point no meu código. Nós sabemos que o código que vai rodar aqui é um código em Java Script, mas se eu coloco break points e debugo um código em Java Script, como é que você vai saber qual é a linha correspondente lá no arquivo ts JSON, entenderam?
+
+[00:48] Então qual é a ideia? A ideia é o seguinte, com uma única configuração no compilador e um ambiente devidamente configurado, olha o que eu vou fazer, nós vamos chegar lá no tsconfig.json, vou colocar uma propriedade chamada sourceMap e vou colocar true.
+
+[01:10] Quero que você olhe o seguinte, olha dentro da pasta “dist > js > controllers”, qual é o único arquivo compilado do TypeScript que tem lá? Js, não é? Salvei o gerar sourceMap, o arquivo foi mudado e detectou. Quando você olha, ele gera na mesma pasta do arquivo um arquivo .map.
+
+[01:37] Se você olhar esse arquivo .map, ele é grande, ele inline, mas se eu der “Ctrl + Shift + F”, ele alinha para mim aqui, mas o mais importante é você entender que ele diz que esse arquivo aponta como source o arquivo negociação-controller.ts.
+
+[02:00] Esses arquivos que são chamados de sourceMap, são eles que te permitem em tempo de desenvolvimento, não faz sentido você botar em produção esses arquivos, você colocar break point no seu arquivo TypeScript e debugar em um navegador como se o seu código estive rodando em TypeScript.
+
+[02:19] Então como é que isso aqui funciona? O primeiro pré requisito para isso aqui funcionar, você setou a propriedade sourceMap, a primeira coisa que precisa ter é que sua infraestrutura precisa em ambiente de desenvolvimento compartilhar tanto a pasta do código compilado quanto a pasta do source em ambiente de desenvolvimento.
+
+[02:42] Senão o Chrome não vai conseguir ir lá e baixar o arquivo ts para ele fazer funcionar. É por isso que nesse projeto eu mudei a estrutura, eu criei a pasta app, botei dist e src dentro para que o lite-server compartilhe as duas pastas. Beleza, Flavio, entendi que é só botar sourceMap lá no tsconfig e eu tenho um ambiente que eu compartilho os arquivos originais também em ambiente de desenvolvimento.
+
+[03:10] Nunca em produção, você não vai mandar seu código fonte. Mas como é que funciona essa depuração? Olha que legal, vou voltar no navegador, vou dar uma recarregada aqui. Olha o que eu vou fazer, com o console aberto do Chrome você dá “Ctrl + P” e vou procurar negociação.
+
+[03:27] Você vai ver que ele vai te mostrar negociacao.js e negociacao-controller.ts, é esse cara que eu quero. Abri ele aqui no meu Chrome, vou colocar um break point no método adiciona. Vou clicar, botei o break point. Olha o que vai acontecer. Muita calma nessa hora.
+
+[03:50] Vou digitar aqui qualquer coisa, vou clicar 111, vou clicar para incluir e quando executo a minha aplicação, olha que lindo, o que meu browser carrega é Java Script, mas ele está me dando a opção de na hora que eu estou debugando, depurando minha aplicação, de depurar no arquivo ts.
+
+[04:04] É isso que me interessa como desenvolvedor. Olha, eu vou mandar pular mais uma vez, step next function call. Eu não vou entrar em detalhes de como se debuga uma aplicação, que isso aqui é padrão no Java Script. A única coisa diferente é a geração do sourceMap para nós.
+
+[04:21] Mas o mais importante aqui que eu posso clicar para executar tudo, eu posso ir passo a passo, eu posso passar o mouse em cima e ver quais são os valores das variáveis. Então é isso aqui que é interesse, porque quem trabalha com Java Script fica se imaginando como debugar isso no navegador.
+
+[04:39] Primeiro pré requisito é ter o sourceMap. Segundo é ter um ambiente na sua infraestrutura, seja PHP, Java etc., que dê acesso para o Chrome onde estão os arquivos ts e na hora de você abrir o seu console, você vai dar “Ctrl + P” para abrir a tela de procura de qualquer classe.
+
+[04:56] Eu posso botar negociação que eu vou encontrar e por aí vai. Tá bom, galera? Então deixa eu mandar aqui continuar, vai para o final. Tira aqui o resumo. Então essa é uma maneira, se você for trabalhar com angular que usa o TypeScript por padrão, é assim que você vai trabalhar. Só que o angular já te dá isso tudo de mão beijada, você não precisa setar configuração nenhuma.
+
+[05:20]Tá bom, galera? Então vamos lá que eu quero me despedir de vocês.
+
+### Aula 5 - Faça como eu fiz
+ Próxima Atividade
+
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com os próximos cursos que tenham este como pré-requisito.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+Continue com os seus estudos, e se houver dúvidas, não hesite em recorrer ao nosso fórum!
+
+### Aula 5 - Projeto final do curso
+ Próxima Atividade
+
+Você pode [baixar o projeto final](https://github.com/alura-cursos/typescript-curso-3/archive/27c8802ada97ae1cc140c20f6cc7e79b2b5d988e.zip).
+
+Aproveite para explorá-lo e revisar pontos importantes do curso.
+
+Bons estudos!
+
+### Aula 5 - O que aprendemos?
+ Próxima Atividade
+
+Nesta aula, aprendemos:
+
+Chega de múltiplos console.log
+Aplicação prática do Polimorfismo
+Interface de método
+Evitando importar negociações duplicadas
+Estendendo interfaces
+Geração de sourcemaps e debug da aplicação no navegador
+
+### Aula 5 -  - Vídeo 9
