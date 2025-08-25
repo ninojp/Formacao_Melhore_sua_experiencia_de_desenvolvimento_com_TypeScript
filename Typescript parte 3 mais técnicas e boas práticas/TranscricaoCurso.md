@@ -208,9 +208,9 @@ Nesta aula, aprendemos:
 
 ## Aula 2 - Decorators de Métodos
 
-### Aula 2 -  - Vídeo 1
+### Aula 2 - Decorator com parâmetro - Vídeo 1
 
-Transcrição
+Transcrição  
 [00:00] Vamos voltar aqui para o nosso decorator. Tem o seguinte problema, não é um problema no nosso código, mas é um requerimento, tem desenvolvedor que quer ver o TempoDeExecucao em segundos, igual a nós fizemos, e tem desenvolvedor que quer ver o TempoDeExecucao em milissegundos. Eu não vou criar um logarTempoDeExecucao em segundos e logarTempoDeExecucao em milissegundos.
 
 [00:30] Vou passar o parâmetro para esse decorator que vai indicar para o desenvolvedor se ele quer ver milissegundos ou segundos. O padrão que vamos adotar é em milissegundos, que é o padrão. Eu vou dizer aqui que ele vai receber um parâmetro (emSegundos: boolean), só que eu quero que ele tenha um valor padrão, se você não passar esse parâmetro, volta aqui para o código, vou lá para o meu decorator.
@@ -231,14 +231,26 @@ Transcrição
 
 [04:51] Isso mostra que um decorator pode receber parâmetros quantos parâmetros você quiser. Pode querer passar um objeto de configuração, se for o caso, não há limites aqui para o que você pode fazer. Agora para fixarmos isso, vamos para o próximo vídeo que vamos fazer um decorator que eu acho bem útil, ele vai analisar, vai escrutinar, verificar os dados do seu método. Vamos lá?
 
-### Aula 2 - Esboço de um Decorator de método
- Próxima Atividade
+### Aula 2 - Esboço de um Decorator de método - Exercício
 
 Rafaela deseja criar um decorator que, ao ser aplicado em um método, exibe no console a data na qual o método foi chamado. Contudo, se o decorator receber como parâmetro dd/MM/yyyy, deve exibir a data neste formato.
 
 Marque a opção que declara o esqueleto do decorator que Rafaela deseja criar:
 
 Selecione uma alternativa
+
+Resposta: Alternativa correta!
+
+```JavaScript
+function logData(formato: string = '') {
+
+    return function(target: any, key: string, descriptor: PropertyDescriptor) {
+         const metodoOriginal = descriptor.value;
+                 // aqui vem a lógica do decorator
+         return descriptor;
+    }
+}
+```
 
 ### Aula 2 - Criando um Decorator de inspeção - Vídeo 2
 
@@ -265,7 +277,7 @@ Transcrição
 
 ### Aula 2 - Ordem de execução dos Decorators - Vídeo 3
 
-Transcrição
+Transcrição  
 [00:00] Vamos analisar com calma a ordem de execuções do decorator. Eu vou voltar lá no meu navegador e quando eu executo o meu navegador, quem eu vejo imprimindo console, foi o meu inspect. Quando o meu inspect acabou, antes do meu inspect fazer o retorno, porque o retorno está aqui, o Método Update não retorna nada e olha aqui os parâmetros que ele está recebendo.
 
 [00:29] Antes dele retornar o retorno do meu inspect ele delegou para o outro decorator que executou o código e viu quantos milissegundos terminou e quando acabou, voltou para o decorator anterior. Então o que está acontecendo é o seguinte, se eu volto lá para o meu decorator, a resposta é simple, vem o @inspect() primeiro e o @logarTempoDeExecução(true) como segundo, mas eu quero explicar um pouco mais para vocês.
@@ -285,10 +297,10 @@ Transcrição
 [04:10] Então, é isso, galera. Então vai cair lá no exercício e vai perguntar qual é a ordem de execução dos tempos do decorator, é primeiro de cima para baixo e eu posso combinar decorators aqui como vocês puderam ver. Então vamos continuar porque tem mais coisa de decorator para vermos.
 
 ### Aula 2 - Qual a ordem? - Exercício
- Próxima Atividade
 
 Você está trabalhando em uma biblioteca de processamento de dados em JavaScript, e seu objetivo é aplicar múltiplos decorators a um método que manipula grandes volumes de informações. Os decorators utilizados são @validarDados e @registrarExecucao. O primeiro valida se os dados de entrada estão corretos, enquanto o segundo grava o tempo de execução do método em um log:
 
+```JavaScript
 function validarDados(target, propertyKey, descriptor) {
   const metodoOriginal = descriptor.value;
 
@@ -328,7 +340,8 @@ class ProcessadorDados {
 
 const processador = new ProcessadorDados();
 processador.processar([1, 2, 3]);
-Copiar código
+```
+
 Ao revisar seu código, você observa que a aplicação dos decorators segue uma ordem diferente daquela em que foram declarados, afetando o comportamento da sua validação e registro.
 
 Com base nesse contexto, explique qual é a ordem de execução dos decorators?
@@ -340,7 +353,7 @@ Serão executados do topo para baixo e aplicados de baixo para o topo.
 
 ### Aula 2 - Simplificando o Decorator - Vídeo 4
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera. Olha só, eu vendi o peixe para vocês que ao construir o decorator, primeiro nós criamos essa função e retorna uma outra função que tenha a declaração do meu decorator. Só que, seguinte, eu gosto de fazer assim porque eu nunca sei se o meu decorator no futuro vai receber parâmetro ou não, mas se você tem um decorator que não recebe parâmetro, olha o que eu posso fazer.
 
 [00:35] Tirei o bloco, vou retornar e fazer o export function inspect, vou aumentar o espaço para vocês poderem ver, eu agora estou exportando direto a função que é o meu decorator, eu não tenho aquela função de fora. Aquela função externa é para que você possa passar parâmetros para o seu decorator, porque se nós olhamos no logarTempoDeExecucao através do closer do Java Script.
@@ -395,7 +408,6 @@ Transcrição
 ## Aula 3 - Decorator de propriedade
 
 ### Aula 3 - Projeto da aula anterior
- Próxima Atividade
 
 Você pode ir acompanhando o passo a passo do desenvolvimento do nosso projeto e, caso deseje, você pode [baixar o projeto do curso](https://github.com/alura-cursos/typescript-curso-3/archive/e5edcbb8bcc8f042683aab30821bdcfd8dbf65aa.zip).
 
