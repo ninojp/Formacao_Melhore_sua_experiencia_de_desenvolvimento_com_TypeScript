@@ -160,8 +160,6 @@ O descriptor nos permite acessar e modificar o método original através de desc
 
 > O descriptor é um objeto que contém propriedades, incluindo value, que representa a função decorada. Podemos acessar, modificar ou até substituir o comportamento da função usando essa propriedade.
 
-## MEU CODIGO PAROU AQUI...
-
 ### Aula 1 - Recorrendo ao JavaScript - Vídeo 6
 
 Transcrição  

@@ -20,11 +20,10 @@ export class NegociacaoController {
         this.negociacoesView.update(this.negociacoes);
     }
 
-    // @logarTempoDeExecucao();
+    @logarTempoDeExecucao()
     public adiciona(): void {
         // Medindo o tempo de execução do método adiciona
         // const t1 = performance.now();
-        /*  Zé, você já viu isso? */
         const negociacao = Negociacao.criaDe(
             this.inputData.value, 
             this.inputQuantidade.value,
