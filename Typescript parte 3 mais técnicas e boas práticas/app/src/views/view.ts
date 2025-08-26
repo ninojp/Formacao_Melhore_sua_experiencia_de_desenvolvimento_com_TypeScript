@@ -16,8 +16,8 @@ export abstract class View<T> {
         //     this.escapar = escapar;
         // };
     };
-    @logarTempoDeExecucao(true)
-    @inspect
+    // @logarTempoDeExecucao(true)
+    // @inspect
     public update(model: T): void {
         // Medindo o tempo de execução do método update
         // const t1 = performance.now();
