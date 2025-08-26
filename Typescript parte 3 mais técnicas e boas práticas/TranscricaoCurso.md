@@ -622,7 +622,7 @@ Bons estudos!
 
 ### Aula 4 - Rodando uma API externa - Vídeo 1
 
-Transcrição
+Transcrição  
 [00:00] Bom, pessoal, nós precisamos evoluir no entendimento de Type Script e para isso eu vou trazer uma outra coisa do mundo real do mundo comum, que é, seguinte, a nossa aplicação vai se integrar com uma API rest, vai trazer os dados dessa API para que nós possamos exibir aqui na tela.
 
 [00:18] Essa API já está disponível nesse projeto, eu só vou mostrar para vocês como nós subimos essa API, mas o mais interessante é nós entendermos primeiro como vamos consumir essa API e como o Type Script pode nos ajudar nesse processo de consumir uma API e evitar que nós cometemos erros. Ficou claro?
@@ -643,7 +643,7 @@ Transcrição
 
 ### Aula 4 - Alterando nossa página - Vídeo 2
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera, a primeira coisa eu vou colocar um botão que eu vou chamar de importar na nossa página. Então eu vou lá, fecha essa pasta do servidor, você não precisa olhar. Vai lá dentro de “dist > index.html”. Tem o botão incluir e agora nós vamos adicionar um novo botão, um button id=”botão-importa” class=”bin btn=primary”importar.
 
 [01:10] Vou esquecer minha API aqui, vou voltar para o Type Script, que é isso que nos interessa para saber se tem erro de compilação. Botei aqui importar, vou quebrar para ficar bonito. Botei o meu botão importar, vou salvar. Vou voltar lá no navegador e estou vendo lá o meu botão importar aqui.
@@ -660,7 +660,7 @@ Transcrição
 
 ### Aula 4 - Consumindo uma API - Vídeo 3
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera, nós já estamos com tudo no lugar, nós sabemos qual é o endereço da nossa API, agora vamos programar o nosso código. Eu estou partindo do pressuposto que você já tenha alguma familiaridade com fetch API, com o uso de promise.
 
 [00:14] Aliás, há cursos na Alura que explicam como que promises funcionam, a fetch API nos cursos de Java Script avançado, mas eu vou aqui bem devagar se você não tem esse conhecimento, justamente para não te prejudicar aqui nesse treinamento.
@@ -711,7 +711,7 @@ Transcrição
 
 ### Aula 4 - Definindo uma interface para a API - Vídeo 4
 
-Transcrição
+Transcrição  
 [00:00] Vamos lá, galera. Se eu tenho uma equipe com trinta desenvolvedores, toda vez que eles tiverem que acessar esses dados de negociação, eu não quero que eles cometam esse erro que eu cometi agora. Posso escrever montate e eu não sei o erro em tempo de desenvolvimento o que está acontecendo aí.
 
 [00:19] Eu quero que aconteça durante a compilação. Ou seja, acho que vocês já pegaram o meu recado. Como que fazemos? O Type Script tem um recurso muito poderoso que nós vamos começar a arranhar ele, começar pela superfície, chamado interface.
@@ -756,6 +756,7 @@ Clarice precisava buscar os dados de uma API que retorna os dados dos alunos mat
 
 Vejamos um exemplo:
 
+```JavaScript
 fetch('http://endereco-da-api.com.br/alunos/1')
 .then(res => res.json())
 .then((aluno: any) => {
@@ -764,9 +765,11 @@ fetch('http://endereco-da-api.com.br/alunos/1')
 
     // faz algo com o aluno
 });     
-Copiar código
+```
+
 5 meses depois, a API que ela utilizava mudou a propriedade matricula para inscricao. Com certeza a aplicação de Clarice se comportou erradamente. Então, ela foi e alterou seu código para:
 
+```JavaScript
 fetch('http://endereco-da-api.com.br/alunos/1')
 .then(res => res.json())
 .then((aluno: any) => {
@@ -777,9 +780,11 @@ fetch('http://endereco-da-api.com.br/alunos/1')
 
     // faz algo com o aluno
 });     
-Copiar código
+```
+
 No entanto, ao realizar a correção, ela escreveu errado o nome da propriedade inscricao. Novamente, ela só descobriu o problema em runtime para então realizar o ajuste final:
 
+```JavaScript
 fetch('http://endereco-da-api.com.br/alunos/1')
 .then(res => res.json())
 .then((aluno: any) => {
@@ -790,31 +795,31 @@ fetch('http://endereco-da-api.com.br/alunos/1')
 
     // faz algo com o aluno
 });    
-Copiar código
+```
+
 Se Clarice tivesse definido uma interface (um formato) para os dados recebidos do servidor, além das alterações serem mais fáceis de realizar, ela não teria como cometer o erro que cometeu escrevendo inscrica em vez de inscricao.
 
 Marque a alternativa que cria a interface Aluno que define as propriedades mais recentes da API e que tipa corretamente o retorno:
 
 Alternativa correta!
 
+```JavaScript
 export interface Aluno {
     nome: string;
     inscricao: string
 }
-
 fetch('http://endereco-da-api.com.br/alunos/1')
 .then(res => res.json())
 .then((aluno: Aluno) => {
-
     console.log(aluno.nome);
     console.log(aluno.inscricao);
-
     // faz algo com o aluno
 });      
+```
 
 ### Aula 4 - Camada de serviços - Vídeo 5
 
-Transcrição
+Transcrição  
 [00:00] Vamos lá, galera, seguinte, nós usamos a interface aqui para tipar o tipo de dado que está vindo do back end, tudo uma maravilha. Mas deixa eu te fazer uma pergunta, se eu preciso acessar esses dados em outro lugar da minha aplicação, olha o que eu vou ter que repetir.
 
 [00:16] Eu vou ter que repetir esse fetch, que faz a conversão, que faz todo esse trabalho aqui pra mim. Então é uma boa prática quando você tem acesso a uma API de dados, você isolar ela em uma camada que chamamos de uma camada de serviço.
@@ -825,7 +830,7 @@ Transcrição
 
 [01:16] Você cria a pasta chamada negociação e aí dentro de negociação você tem services, você tem controllers, você tem decorators e por aí vai. Eu decidi dessa forma porque eu acho que é mais fácil didaticamente para explicar e controlar ao longo do projeto.
 
-[01:30] Então dentro de services eu vou criar um arquivo chamado negociacoes-service.ts. Esse cara vai ser uma classe NegociacoesService, que vai ter um método public obterNegociacoesDoDia, esse método vai me retornar uma promise, porque vou usar a fetch API e no final vou retornar uma promise. E o TypeScript possui esse tipo esse tipo Promise<NegociacoesDoDia, só que esse cara vai ser um array de NegociacoesDoDia.
+[01:30] Então dentro de services eu vou criar um arquivo chamado negociacoes-service.ts. Esse cara vai ser uma classe NegociacoesService, que vai ter um método public obterNegociacoesDoDia, esse método vai me retornar uma promise, porque vou usar a fetch API e no final vou retornar uma promise. E o TypeScript possui esse tipo esse tipo Promise`<NegociacoesDoDia>`, só que esse cara vai ser um array de NegociacoesDoDia.
 
 [02:38] Importei aqui. Eu já tipei, então esse cara vai me retornar uma promise que no final quando eu fizer o then nela, ela vai me retornar NegociacoesDoDia. Está aqui, mas eu ainda não estou retornando nada, o que eu vou fazer? Vou voltar lá para o meu controller.ts, vou pegar esse fetch que está aqui, vou copiar.
 
@@ -844,19 +849,17 @@ Transcrição
 [07:44] Recarreguei, vou clicar em importar e continua importando. Deixa eu fazer o refresh para ver se está incluindo ainda. Beleza, está incluindo e está importando. Beleza, galera? Mais um plus aqui para nós organizarmos o nosso código de uma maneira mais interessante.
 
 ### Aula 4 - O que aprendemos?
- Próxima Atividade
 
 Nesta aula, aprendemos sobre:
 
-API externa
-Consumindo API externa
-Definindo uma interface para a API
-Isolando o acesso à API em um serviço
+- API externa
+- Consumindo API externa
+- Definindo uma interface para a API
+- Isolando o acesso à API em um serviço
 
 ## Aula 5 - Mais Sobre Interface
 
 ### Aula 5 - Projeto da aula anterior
- Próxima Atividade
 
 Você pode ir acompanhando o passo a passo do desenvolvimento do nosso projeto e, caso deseje, você pode [baixar o projeto](https://github.com/alura-cursos/typescript-curso-3/archive/736825b09942c549393e0fef2475e63a9c49f5d3.zip) do curso.
 
