@@ -1,6 +1,5 @@
 export function domInjector(seletor) {
     return function (target, propertyKey) {
-        console.log(`Modificando o prototype ${target.constructor.name} e adicionando getter para a propriedade ${propertyKey}`);
         let elemento;
         const getter = function () {
             if (!elemento) {
@@ -13,3 +12,4 @@ export function domInjector(seletor) {
     };
 }
 ;
+//# sourceMappingURL=dom-injector.js.map

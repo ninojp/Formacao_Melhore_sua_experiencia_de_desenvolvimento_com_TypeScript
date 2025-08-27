@@ -867,7 +867,7 @@ Bons estudos!
 
 ### Aula 5 - Chega de múltiplos console.log - Vídeo 1
 
-Transcrição
+Transcrição  
 [00:00] Vamos lá, galera, quero mostrar outra coisa aqui para vocês. Se nós vamos no nosso negociacao-controller.ts, nós estamos criando aqui negociação e o tempo todo estamos querendo exibir no console uma negociação como, por exemplo, console.log(negociacao).
 
 [00:21] Vou salvar e vou voltar lá no navegador. Quando eu olho lá no navegador, vou adicionar aqui uma negociação, peço para incluir e nós vemos essa negociacao que, na verdade, foi o print no console padrão no navegador. Mas eu quero dar um print melhor, eu quero ver bonito o dia, a data, o mês, o ano e por aí vai.
@@ -900,12 +900,12 @@ Transcrição
 
 ### Aula 5 - A função utilitária imprimir - Vídeo 2
 
-Transcrição
+Transcrição  
 [00:00] Vamos lá, galera. Então qual é o nosso objetivo? O nosso objetivo é que eu não quero chamar console.log múltiplas vezes, eu quero criar uma função que eu chamo imprimir e quando eu chamo imprimir, eu passo todos os meus objetos que tem no método paratexto e o meu imprimir vai chamar esse paratexto por debaixo dos panos e chamar o console.log para mim.
 
 [00:20] Então eu vou criar esse cara dentro de uma pasta chamada utils, vou criar dentro desse cara a função imprimir.ts. Essa função eu vou fazer export function imprimir. O que eu vou receber? Lembra que eu falei que quero passar como parâmetro um número desconhecido de objetos?
 
-[00:49] Então vou dizer que recebo um número infinito de parâmetros que eu vou chamar de objetos. Esses objetos vão ser um array do tipo negociacao. Então export function imprimir(... objetos: Array<negociacao>). Fiz isso e o que vou fazer? Vou pegar for (let objeto of objetos) e vou chamar console.log(objeto.paraTexto());.
+[00:49] Então vou dizer que recebo um número infinito de parâmetros que eu vou chamar de objetos. Esses objetos vão ser um array do tipo negociacao. Então export function imprimir(... objetos: Array`<negociacao>`). Fiz isso e o que vou fazer? Vou pegar for (let objeto of objetos) e vou chamar console.log(objeto.paraTexto());.
 
 [01:51] Fiz isso, então eu posso passar uma quantidade de parâmetros aqui que eu vou chamar o paratexto. Flavio, estou sentido que tem alguma coisa estranha aí. Eu também, mas finge que não tem nada de estranho ainda. Vou salvar, voltar lá para o meu negociacao-controller.
 
@@ -913,7 +913,7 @@ Transcrição
 
 [02:36] Vou adicionar aqui a negociação e está lá, imprimiu, chamou o paratexto da minha negociação. Agora eu quero passar a minha imprimir(negociacao, this.negociacoes), mas aí nós caímos no problema. Deu um crash aqui. O que está acontecendo?
 
-[03:02] Está dizendo que negociações não é compatível com o parâmetro negociação. Poxa vida, isso é verdade, porque o meu imprimir só aceita receber objetos do tipo Array<Negociacao>. Como eu resolvo isso? A primeira coisa que passa na sua cabeça é que eu vou transformar esse cara em um array do tipo any, certo?
+[03:02] Está dizendo que negociações não é compatível com o parâmetro negociação. Poxa vida, isso é verdade, porque o meu imprimir só aceita receber objetos do tipo Array`<Negociacao>`. Como eu resolvo isso? A primeira coisa que passa na sua cabeça é que eu vou transformar esse cara em um array do tipo any, certo?
 
 [03:36] Salvei, vou lá para o meu navegador e salvo. Beleza, está compilando, tudo uma maravilha, porque eu disse que o meu imprimível recebe qualquer coisa para que eu possa chamar o paratexto. Volto lá para o meu navegador, recarregado, clico em incluir e olha lá, imprimiu o negociação e imprimiu as negociações também.
 
@@ -929,7 +929,7 @@ Transcrição
 
 ### Aula 5 - Polimorfismo - Vídeo 3
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera, pensem aqui comigo, negociação e negociações, dois modelos materializados usando classe do ECMAScript eu quero que eles sejam imprimíveis. Então o que um objeto imprimível tem em comum? Método paratexto.
 
 [00:33] Então olha o que eu vou fazer. Aqui dentro de “src > controllers > utils” eu vou criar um arquivo que vou chamar imprimível.ts, esse imprimível vai ser uma classe abstrata, então export abstract class Imprimivel. Nós já vimos abstract class aqui, não vimos? Segundo, uma classe abstrata significa que eu não posso fazer new Imprimivel, porque eu não posso criar instâncias dessa classe.
@@ -966,7 +966,7 @@ Transcrição
 
 ### Aula 5 - Interface e métodos - Vídeo 4
 
-Transcrição
+Transcrição  
 [00:00] Vamos continuar. O que nós fizemos? A minha classe negociações e negociação, elas estenderam imprimível e através polimorfismo eu posso referenciá-las através do tipo imprimível, porque eles são imprimíveis. Mas tem uma coisa aqui que não está muito legal.
 
 [00:22] Olha só, nós lançamos mão da classe abstrata porque a classe abstrata me obriga a implementar um método e também me fornece polimorfismo. Só que a pergunta que eu faço, compara essa classe aqui abstrata imprimível com a linda e apaixonante classe view.
@@ -997,13 +997,13 @@ Transcrição
 
 [06:16] Ficou claro, galera? Nós começamos bem devagar para demonstrar como interfaces são poderosas e como elas permitem que nós tenhamos um código flexível e utilize o polimorfismo garantido o Type Safety e por aí vai. Tá bom, galera? É o mesmo comportamento que você tem uma linguagem como Java e por aí vai.
 
-### Aula 5 - Interface em ação
- Próxima Atividade
+### Aula 5 - Interface em ação - Exercício
 
 Olga estudou Java durante um bom tempo, inclusive C#. Ela decidiu replicar um código que havia escrito nessas linguagem em TypeScript.
 
 Ela criou duas classes que representam formas geométricas:
 
+```JavaScript
 class Retangulo {
     
     constructor(private altura: number, private lado: number) {}
@@ -1023,9 +1023,11 @@ class Quadrado {
         return this.lado * this.lado;
     }
 }
-Copiar código
+```
+
 Em seguida, criou a classe CalculadorDeArea. Ela é a responsável em receber N formas geométricas e no final retornar o total da àrea de todas elas. Assim como no ECMASCRIPT 2016, é possível criar métodos estáticos em TypeScript:
 
+```JavaScript
 class CalculadorDeArea {
     
     static calcula(area1: Quadrado, area2: Retangulo): number {
@@ -1033,17 +1035,21 @@ class CalculadorDeArea {
         return area1.calculaArea() + area2.calculaArea();
     }
 }
-Copiar código
+```
+
 Para testar seu código ela fez:
 
+```JavaScript
 const quadrado = new Quadrado(30);
 const retangulo = new Retangulo(50, 30);
 
 const total = CalculadorDeArea.calcula(quadrado, retangulo);
 console.log(total);
-Copiar código
+```
+
 Excelente! Funcionou como esperado. Contudo, ela precisou criar mais uma área calculável:
 
+```JavaScript
 class Circulo {
     
     constructor(private raio: number) {}
@@ -1053,18 +1059,22 @@ class Circulo {
         return Math.PI * this.raio * this.raio;
     }
 }
-Copiar código
+```
+
 O problema agora é que ela precisará alterar o método CalculadorDeArea.calcula para receber agora um objeto do tipo Circulo, inclusive alterar sua lógica para que seja capaz de levar em consideração a nova area. É uma situação na qual herança não ajudaria, pois não faria sentido ela herdar um código já pronto, pois o cálculo da área é sempre diferente para as formas geométricas. Foi então que ela lembrou que o uso de interfaces pode ajudá-la.
 
 Ela criou a interface AreaCalculavel:
 
+```JavaScript
 interface AreaCalculavel {
     
     calculaArea(): number;
 }
-Copiar código
+```
+
 Em seguida, fez com que as três classes Quadrado, Retangulo e Circulo a implementassem:
 
+```JavaScript
 class Retangulo implements AreaCalculavel {
     
     constructor(private altura: number, private lado: number) {}
@@ -1094,133 +1104,34 @@ class Circulo implements AreaCalculavel {
         return Math.PI * this.raio * this.raio;
     }
 }
-Copiar código
+```
+
 Ao implementar a interface AreaCalculavel, todas as classes ganham a obrigação de definir o método definido pela interface. Como elas já definiam esse métodos antes mesmo de implementá-la, o código compilou sem problema algum.
 
 Marque a opção que altera corretamente a classe CalculadorDeArea para que possa lidar com objetos que implementem a interface AreaCalculavel:
 
 Selecione uma alternativa
 
-Interface em ação
- Próxima Atividade
-
-Olga estudou Java durante um bom tempo, inclusive C#. Ela decidiu replicar um código que havia escrito nessas linguagem em TypeScript.
-
-Ela criou duas classes que representam formas geométricas:
-
-class Retangulo {
-    
-    constructor(private altura: number, private lado: number) {}
-
-    calculaArea(): number {
-
-        return this.altura * this.lado;
-    }
-}
-
-class Quadrado {
-    
-    constructor(private lado: number) {}
-
-    calculaArea(): number {
-
-        return this.lado * this.lado;
-    }
-}
-Copiar código
-Em seguida, criou a classe CalculadorDeArea. Ela é a responsável em receber N formas geométricas e no final retornar o total da àrea de todas elas. Assim como no ECMASCRIPT 2016, é possível criar métodos estáticos em TypeScript:
-
-class CalculadorDeArea {
-    
-    static calcula(area1: Quadrado, area2: Retangulo): number {
-
-        return area1.calculaArea() + area2.calculaArea();
-    }
-}
-Copiar código
-Para testar seu código ela fez:
-
-const quadrado = new Quadrado(30);
-const retangulo = new Retangulo(50, 30);
-
-const total = CalculadorDeArea.calcula(quadrado, retangulo);
-console.log(total);
-Copiar código
-Excelente! Funcionou como esperado. Contudo, ela precisou criar mais uma área calculável:
-
-class Circulo {
-    
-    constructor(private raio: number) {}
-
-    calculaArea() {
-
-        return Math.PI * this.raio * this.raio;
-    }
-}
-Copiar código
-O problema agora é que ela precisará alterar o método CalculadorDeArea.calcula para receber agora um objeto do tipo Circulo, inclusive alterar sua lógica para que seja capaz de levar em consideração a nova area. É uma situação na qual herança não ajudaria, pois não faria sentido ela herdar um código já pronto, pois o cálculo da área é sempre diferente para as formas geométricas. Foi então que ela lembrou que o uso de interfaces pode ajudá-la.
-
-Ela criou a interface AreaCalculavel:
-
-interface AreaCalculavel {
-    
-    calculaArea(): number;
-}
-Copiar código
-Em seguida, fez com que as três classes Quadrado, Retangulo e Circulo a implementassem:
-
-class Retangulo implements AreaCalculavel {
-    
-    constructor(private altura: number, private lado: number) {}
-
-    calculaArea(): number {
-
-        return this.altura * this.lado;
-    }
-}
-
-class Quadrado implements AreaCalculavel  {
-    
-    constructor(private lado: number) {}
-
-    calculaArea(): number {
-
-        return this.lado * this.lado;
-    }
-}
-
-class Circulo implements AreaCalculavel {
-    
-    constructor(private raio: number) {}
-
-    calculaArea() {
-
-        return Math.PI * this.raio * this.raio;
-    }
-}
-Copiar código
-Ao implementar a interface AreaCalculavel, todas as classes ganham a obrigação de definir o método definido pela interface. Como elas já definiam esse métodos antes mesmo de implementá-la, o código compilou sem problema algum.
-
-Marque a opção que altera corretamente a classe CalculadorDeArea para que possa lidar com objetos que implementem a interface AreaCalculavel:
+Resposta:
 
 Alternativa correta!
 
+```JavaScript
 class CalculadorDeArea {
     static calcula(...areas: AreaCalculavel[]): number {
         return areas.reduce((total, area) => total + area.calculaArea(), 0);
     }
 }
-
 const quadrado = new Quadrado(30);
 const retangulo = new Retangulo(50, 30);
 const circulo = new Circulo(20);
-
 const total = CalculadorDeArea.calcula(quadrado, retangulo, circulo);
 console.log(total);
+```
 
 ### Aula 5 - Evitando importar negociações duplicadas - Vídeo 5
 
-Transcrição
+Transcrição  
 [00:00] Vamos continuar, vamos lá que esse aqui é bem legal. Olha só, estou lá no meu navegador, vou clicar em importar. Importei. Vou clicar de novo e continuar clicando. O que está acontecendo? Eu estou importando as mesmas negociações que já foram importadas.
 
 [00:25] O que eu preciso fazer aqui no meu código? Eu preciso, na hora que eu estou importando, verificar se a negociação que eu estou importando já foi incluída na minha lista. Se não foi, eu não importo. Para nós sabermos se uma negociação foi incluída ou não, eu vou ter que realizar alguma comparação entre elas.
@@ -1255,7 +1166,7 @@ Transcrição
 
 ### Aula 5 - Interface com Generics - Vídeo 6
 
-Transcrição
+Transcrição  
 [00:00] Eu quero saber se esse ehIgual pra mim faz sentido ter um objeto que é comparável ou igualável. Um objeto que é comparável. Vamos chamar de comparável. Eu quero saber se esse objeto pode ser comparado com outro, se esse objeto pode ser comparado com outro, eu tenho certeza que eu vou ter o método ehIgual?
 
 [00:27] Só que para eu ter vários objetos que sejam comparáveis ou comparável, eu vou ter que forçar eles a implementar o que para eles terem só esse método? Uma interface. Então, olha aqui comigo, eu vou criar a interface comparavel.ts. Vou dar export interface Comparavel.
@@ -1290,7 +1201,7 @@ Transcrição
 
 ### Aula 5 - Estendendo interfaces - Vídeo 7
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera, vamos lá continuar, tem mais uma coisa que eu quero mostrar para vocês. É o seguinte, nós temos a interface imprimível, a interface comparável e toda vez que queremos criar uma classe, faz muito sentido nós implementarmos imprimível, porque queremos.
 
 [00:21] Toda vez que fizer o console.log temos uma representação bacana desse cara no console. E comparável porque se em algum momento precisar comparar esse objeto com outro, eu garanto uma uniformidade em todos os lugares para realizar essa comparação.
@@ -1316,7 +1227,6 @@ Transcrição
 [05:14] Você só não pode uma classe fazer extends para mais de uma. Tá bom, galera? Fica aí essa dica, isso é bem legal para podermos trabalhar, porque estamos trabalhando com interfaces, trabalhando com generics e trabalhando com extends ao mesmo tempo.
 
 ### Aula 5 - Sabatina - Exercício
- Próxima Atividade
 
 Marque apenas as opções verdadeiras à respeito do que aprendemos ao longo do curso:
 
@@ -1325,28 +1235,33 @@ Alternativas corretas!
 > Uma interface pode estender outras interfaces.
 > Uma classe em TypeScript pode implementar quantas interfaces for necessário.
 
-### Aula 5 - Sintaxe inválida
- Próxima Atividade
+### Aula 5 - Sintaxe inválida - Exercício
 
 Marque as opções que apresentam sintaxes válidas no uso de herança e interfaces:
 
 Selecione 2 alternativas
 
 Alternativa correta!  
+
+```JavaScript
 class a extends b implements c {
 }
+```
 
 > A classe a está herdando da classe b e implementando a interface c.
 
 Alternativa correta!  
+
+```JavaScript
 class a extends b implements c, d, e, f {
 }
+```
 
 > A classe a está herdando da classe b e implementando as interfaces c, d, e e f.
 
 ### Aula 5 - Debugando sua aplicações - Vídeo 8
 
-Transcrição
+Transcrição  
 [00:00] Bom, galera, nós chegamos o final do treinamento, mas tem mais uma coisa que eu quero mostrar para vocês. Uma coisa bem legal que depende muito do seu ambiente, mas que vale a pena nós mostrarmos. Como é que se debuga um código em TypeScript?
 
 [00:14] Vamos olhar a nossa aplicação do jeito que está aqui rodando. Se eu volto lá no meu navegador, eu estou na aba console, eu quero “Ctrl + P”, eu quero debugar, eu quero botar um break point no meu código. Nós sabemos que o código que vai rodar aqui é um código em Java Script, mas se eu coloco break points e debugo um código em Java Script, como é que você vai saber qual é a linha correspondente lá no arquivo ts JSON, entenderam?
@@ -1380,17 +1295,14 @@ Transcrição
 [05:20]Tá bom, galera? Então vamos lá que eu quero me despedir de vocês.
 
 ### Aula 5 - Faça como eu fiz
- Próxima Atividade
 
 Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com os próximos cursos que tenham este como pré-requisito.
 
-Ver opinião do instrutor
 Opinião do instrutor
 
 Continue com os seus estudos, e se houver dúvidas, não hesite em recorrer ao nosso fórum!
 
 ### Aula 5 - Projeto final do curso
- Próxima Atividade
 
 Você pode [baixar o projeto final](https://github.com/alura-cursos/typescript-curso-3/archive/27c8802ada97ae1cc140c20f6cc7e79b2b5d988e.zip).
 
@@ -1399,15 +1311,25 @@ Aproveite para explorá-lo e revisar pontos importantes do curso.
 Bons estudos!
 
 ### Aula 5 - O que aprendemos?
- Próxima Atividade
 
 Nesta aula, aprendemos:
 
-Chega de múltiplos console.log
-Aplicação prática do Polimorfismo
-Interface de método
-Evitando importar negociações duplicadas
-Estendendo interfaces
-Geração de sourcemaps e debug da aplicação no navegador
+- Chega de múltiplos console.log
+- Aplicação prática do Polimorfismo
+- Interface de método
+- Evitando importar negociações duplicadas
+- Estendendo interfaces
+- Geração de sourcemaps e debug da aplicação no navegador
 
-### Aula 5 -  - Vídeo 9
+### Aula 5 - Conclusão - Vídeo 9
+
+Transcrição  
+[00:00] Bom, galera, chegamos ao final do terceiro módulo de TypeScript, um curso atualizado com a versão mais recente do TypeScript. Algumas explicações foram reformuladas, o fluxo da aplicação foi modificado. Desde o primeiro módulo eu tentei trazer um curso, do segundo módulo e do terceiro módulo, um curso acessível para todos que estão chegando na linguagem TypeScript.
+
+[00:21] Nós não aprendemos apenas TypeScript, mas aprendemos o paradigma orientado ao objeto, como enquadrar, como utilizar a herança, encapsulamento. Todos esses recursos da orientação objeto com TypeScript. Também falamos sobre as organizações de um projeto.
+
+[00:36] Deixando o terreno preparado para que se você for trabalhar com um projeto com angular, você vai ter grande parte do caminho andado, porque você já vai ter uma intimidade com o decorator, com todos os recursos da linguagem TypeScript.
+
+[00:49] Inclusive, se você for trabalhar com View ou React que usam TypeScript, você também vai ter um conhecimento bem legal para que você possa avançar nesses frameworks sem ter que se preocupar de aprender ao mesmo tempo com o TypeScript.
+
+[01:01] Tá bom, galera? Então, para vocês um abraço, muito sucesso e quem sabe não nos vemos no próximo curso.

@@ -5,6 +5,7 @@ import { DiasDaSemana } from '../enums/dias-da-semana.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
 import { NegociacoesService } from '../services/negociacoes-service.js';
+import { imprimir } from '../utils/imprimir.js';
 import { MensagemView } from '../views/mensagem-view.js';
 import { NegociacoesView } from '../views/negociacoes-view.js';
 
@@ -36,14 +37,26 @@ export class NegociacaoController {
             this.inputQuantidade.value,
             this.inputValor.value
         );
-     
         if (!this.ehDiaUtil(negociacao.data)) {
             this.mensagemView
                 .update('Apenas negociações em dias úteis são aceitas');
             return ;
         }
-
         this.negociacoes.adiciona(negociacao);
+        //---------------------------------------------
+        // console.log(` Data: ${negociacao.data},
+        //     Quantidade: ${negociacao.quantidade},
+        //     Valor: ${negociacao.valor}`);            
+        // //---------------------------------------------
+        // console.log(JSON.stringify(this.negociacoes, null, 2));
+        //---------------------------------------------
+        // console.log(negociacao.paraTexto());
+        // console.log(this.negociacoes.paraTexto());        
+        //---------------------------------------------
+        // const calopsita = 'Miau';
+        // imprimir(negociacao, this.negociacoes, calopsita);
+        //---------------------------------------------
+        imprimir(negociacao, this.negociacoes);
         this.limparFormulario();
         this.atualizaView();
         // const t2 = performance.now();
@@ -52,6 +65,11 @@ export class NegociacaoController {
     //-----------------------------------------------------------------------------------------
     importaDados():void {
         this.negociacoesService.obterNegociacoesDoDia()
+        .then(negociacoesDeHoje => {
+            return negociacoesDeHoje.filter(negociacaoDeHoje => {
+                return !this.negociacoes.lista().some(negociacao => negociacao.ehIgual(negociacaoDeHoje));
+            });
+        })
         .then(negociacoesDeHoje => {
             for(let negociacao of negociacoesDeHoje) {
                 this.negociacoes.adiciona(negociacao);
